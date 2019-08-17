@@ -1,0 +1,138 @@
+---
+title: "Introduction to R"
+subtitle: 'For Psychologists and Neuroscientists'
+author: "Dominique Makowski"
+date: "30/09/2019"
+output:
+  ioslides_presentation:
+    logo: images/logo.jpg
+    widescreen: false
+    incremental: true
+self_contained: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(emo)
+```
+
+```{r include=FALSE, eval=FALSE}
+# Necessary packages
+install.packages(knitr)
+install.packages(tidyverse)
+install.packages(lme4)
+install.packages(rstanarm)
+install.packages(report)
+```
+
+
+## Outline
+
+1. Conceptual intro
+2. Tools (R, Rstudio...)
+3. Packages and data
+4. Basic tests (correlations, *t*-tests, ANOVAs)
+5. GLMs
+6. Mixed Models
+7. Taste of Bayes
+
+
+
+
+## Why R? {.build}
+
+![](images/barrett2019Rtrend.png){width=90%}
+
+## Why R?
+
+![](images/barrett2019sixreasons.png){width=90%}
+
+
+## Why R?
+### **R *vs.* SPSS, Excel, SAS...**
+
+- Free
+- Open-source
+- Cross-platform
+- Safe for your data
+- Incredible community
+- Gold standart accross science
+- Cutting-edge statistics and methods
+- Reproducible research
+
+
+## Why R?
+### **R *vs.* Python**
+
+- Python for signal processing, machine learning and other applications
+- R for data manipulation, statistics, visualisation and communication ([1](https://neuropsychology.shinyapps.io/patientassessmentapp/), [2](https://malco.io/), [3](https://github.com/DominiqueMakowski/teaching/R/2019_09_CBL_workshop/))<!-- websites, presentations, pdf reports -->
+- Use both!
+
+## Old R *vs.* new R {.build}
+
+![](images/logo_r.png){width=15%}
+
+```{r echo = TRUE, eval=FALSE}
+# base R
+data[data["col1"] < 3, c("col2", "col3" )]
+```
+
+![](images/logo_tidyverse.png){width=15%}
+
+```{r echo = TRUE, eval=FALSE}
+library(tidyverse)
+
+data %>%
+  filter(col1 < 3) %>%
+  select(col2, col3) 
+```
+
+
+## R and R studio
+
+- Hands on!
+- Editor and Console
+- Theme
+- Create an Rmarkdown file (`chunk output in console`)
+- `R` chunks vs. `markdown` text
+- Shortcuts
+  - `CTLR + ENTER`: Run the selection
+  - `CTRL + SHIFT + C`: Comment selection
+  - `CTRL + SHIFT + M`: Ceci n'est pas une pipe `%>%`
+
+
+## Install and Import Packages `r emo::ji("package")`
+
+- Everything is done through **packages**
+- Packages provide **new functions**
+- The main challenge in R is not *"if something is possible"*, but rather *"what is the package that implements it the best"*
+- Packages have to be *installed* only once, and *loaded* whenever you want to use their functions
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Load the package
+library(bayestestR)
+```
+
+## Discover functions and documentation
+
+- **Don't learn the functions!!!** Know what you want to do, and search for it
+- Browse functions through autocompletion (`package::<TAB>`)
+
+```{r echo = TRUE, eval=FALSE}
+bayestestR::hdi()
+```
+
+- Show documentation (`F1` or `?function`)
+- Google the CRAN repository page of the package ([`"bayestestR CRAN"`](https://www.google.com/search?q=bayestestR+CRAN&rlz=1C1CHBD_frSG849SG849&oq=bayestestR+CRAN&aqs=chrome..69i57j69i60l3j69i59.706j0j7&sourceid=chrome&ie=UTF-8))
+- Check out the manual, the Github page or the *vignettes*
+
+## Load data
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df <- read.csv("materials/emotion.csv")
+```
+
+## Load data
