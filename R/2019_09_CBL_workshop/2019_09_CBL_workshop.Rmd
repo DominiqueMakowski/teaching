@@ -19,15 +19,19 @@ knitr::opts_chunk$set(echo = FALSE)
 library(emo)
 ```
 
-```{r include=FALSE, eval=FALSE}
-# Necessary packages
-install.packages(knitr)
-install.packages(tidyverse)
-install.packages(lme4)
-install.packages(rstanarm)
-install.packages(report)
+
+## Prerequisites
+
+- Install necessary packages
+
+```{r include=TRUE, eval=FALSE}
+install.packages(c("devtools", "tidyverse", "knitr", "lme4", "plotly", "BayesFactor", "rstanarm"))
+devtools::install_github("easystats/easystats")
 ```
 
+- Download the 'emotion' dataset in the `materials` folder at https://github.com/DominiqueMakowski/teaching
+
+<!-- https://raw.githubusercontent.com/DominiqueMakowski/teaching/master/R/2019_09_CBL_workshop/materials/emotion.csv -->
 
 ## Outline
 
@@ -35,14 +39,21 @@ install.packages(report)
 2. Tools (R, Rstudio...)
 3. Packages and data
 4. Basic tests (correlations, *t*-tests, ANOVAs)
-5. GLMs
+5. Regressions (GLMs)
 6. Mixed Models
 7. Taste of Bayes
 
 
+## About me
 
+- I am not a statistician
+- I am not a programmer
+- I am not a computer scientist
+- I am not a geek *(originally...)*
 
 ## Why R? {.build}
+
+- To catch up with the trend
 
 ![](images/barrett2019Rtrend.png){width=90%}
 
@@ -54,11 +65,26 @@ install.packages(report)
 ## Why R?
 ### **R *vs.* SPSS, Excel, SAS...**
 
+![](images/spss_dying.png){width=100%}
+
+<!-- ```{r echo = FALSE, warning=FALSE, message=FALSE} -->
+<!-- library(tidyverse) -->
+
+<!-- read.csv("scripts/citations.csv") %>%  -->
+<!--   ggplot(aes(x = Year, y = Citations, color = Software)) + -->
+<!--   geom_line() + -->
+<!--   scale_y_continuous(labels = scales::number) -->
+<!-- ``` -->
+
+
+## Why R?
+### **R *vs.* SPSS, Excel, SAS...**
+
 - Free
 - Open-source
 - Cross-platform
 - Safe for your data
-- Incredible community
+- Incredible community (twitter, stackoverflow, github...)
 - Gold standart accross science
 - Cutting-edge statistics and methods
 - Reproducible research
@@ -68,8 +94,18 @@ install.packages(report)
 ### **R *vs.* Python**
 
 - Python for signal processing, machine learning and other applications
-- R for data manipulation, statistics, visualisation and communication ([1](https://neuropsychology.shinyapps.io/patientassessmentapp/), [2](https://malco.io/), [3](https://github.com/DominiqueMakowski/teaching/R/2019_09_CBL_workshop/))<!-- websites, presentations, pdf reports -->
+- R for data manipulation, statistics, visualisation and communication ([1](https://neuropsychology.shinyapps.io/patientassessmentapp/), [2](https://malco.io/), [3](https://github.com/DominiqueMakowski/teaching/blob/master/R/2019_09_CBL_workshop/2019_09_CBL_workshop.Rmd))<!-- websites, presentations, pdf reports -->
 - Use both!
+
+## Long road ahead
+
+- Steep learning curve
+- Many frustrating moments
+- People think "*now it's not the best time for me to learn it, because I have to deliver X. I'll do it when* `<insertSomething>`" 
+- Every minute invested in learning R will be worth it
+- You won't regret it!
+
+
 
 ## Old R *vs.* new R {.build}
 
@@ -98,28 +134,28 @@ data %>%
 - Theme
 - Create an Rmarkdown file (`chunk output in console`)
 - `R` chunks vs. `markdown` text
+- Try clicking on `Knit`
 - Shortcuts
   - `CTLR + ENTER`: Run the selection
   - `CTRL + SHIFT + C`: Comment selection
   - `CTRL + SHIFT + M`: Ceci n'est pas une pipe `%>%`
 
-
-## Install and Import Packages `r emo::ji("package")`
+## Install and Import Packages `r emo::ji("package")` {.build}
 
 - Everything is done through **packages**
 - Packages provide **new functions**
-- The main challenge in R is not *"if something is possible"*, but rather *"what is the package that implements it the best"*
+- The main challenge in R is not *"if something is possible"*, but rather *"what is the package that implements it the best"* (importance of sating "tuned", r-bloggers, twitter, github...)
 - Packages have to be *installed* only once, and *loaded* whenever you want to use their functions
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # Load the package
-library(bayestestR)
+library(tidyverse)
 ```
 
-## Discover functions and documentation
+## Discover functions and documentation {.build}
 
 - **Don't learn the functions!!!** Know what you want to do, and search for it
-- Browse functions through autocompletion (`package::<TAB>`)
+- Browse functions through autocompletion (`<TAB>`)
 
 ```{r echo = TRUE, eval=FALSE}
 bayestestR::hdi()
@@ -129,10 +165,271 @@ bayestestR::hdi()
 - Google the CRAN repository page of the package ([`"bayestestR CRAN"`](https://www.google.com/search?q=bayestestR+CRAN&rlz=1C1CHBD_frSG849SG849&oq=bayestestR+CRAN&aqs=chrome..69i57j69i60l3j69i59.706j0j7&sourceid=chrome&ie=UTF-8))
 - Check out the manual, the Github page or the *vignettes*
 
-## Load data
+## Load data {.build}
+
+- A classic code line containg a *function* (`f()`), to which we provide inputs via *arguments* (`f(x)`) and that outputs something that be stored in an object (`y <- f(x)`)
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df <- read.csv("materials/emotion.csv")
 ```
 
-## Load data
+<!-- df <- read.csv("https://raw.githubusercontent.com/DominiqueMakowski/teaching/master/R/2019_09_CBL_workshop/materials/emotion.csv") -->
+
+- Check the documentation of the function. Many other possible arguments with **default** values, that we can override.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df <- read.csv("materials/emotion.csv", stringsAsFactors = FALSE)
+```
+
+- Click on the object in the **Environment** panel
+- If the output of a function is not stored in an object, R will *print* it.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df
+```
+
+
+## Explore the data {.build}
+
+- Useful functions to describe objects, such as `summary()` or `report()` (in the easystats collection)
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+library(easystats)
+```
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+report(df)
+```
+
+## Explore the data {.build}
+
+- Young and healthy adults watched pictures, that were either **Negative** or **Neutral** (the `emotion_condition` variable)
+- For each picture (48 different pictures), they had to rate the **Intensity** (arousal) and **Valence** (positive - negative) of the emotion that they felt, as well as the **Autobiographical link** (how do they personally relate to the content of the picture)
+- 30 min after the presentation, participants had to **recall** the images
+
+
+
+
+## Explore the data {.build}
+
+- Report the sample
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+report_participants(df, age = "Participant_Age", 
+                    sex = "Participant_Sex", 
+                    participant = "Participant_ID")
+```
+
+## Data Manipulation {.build}
+
+- Summarize variables by condition
+- The pipes (`%>%`) make the workflow easier to read (take this, do that, then that, ...)
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df_condition <- df %>% 
+  group_by(Participant_ID, Emotion_Condition) %>% 
+  summarise(Arousal = mean(Subjective_Arousal),
+            Autobio = mean(Autobiographical_Link),
+            Sex = unique(Participant_Sex))
+``` 
+
+
+## Data Manipulation {.build}
+
+- Summarize variables by condition
+- The pipes (`%>%`) make the workflow easier to read (take this, do that, then that, ...)
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+head(df_condition)
+```
+
+## Data Manipulation {.build}
+
+- From *long* format to *wide*
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df_sub <- df_condition %>% 
+  pivot_wider(names_from = "Emotion_Condition",
+              values_from = c("Arousal", "Autobio"))
+df_sub
+```
+
+## Accessing things in objects {.build}
+
+- Use the dollar `$` sign to access a specific variable of a dataframe
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df_sub$Arousal_Negative
+median(df_sub$Arousal_Negative)
+median(df_sub$Arousal_Neutral)
+```
+
+## *t*-tests {.build}
+
+- *t*-tests can be performed using the `t.test` function
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(df_sub$Arousal_Negative, df_sub$Arousal_Neutral)
+```
+
+
+## *t*-tests
+
+- *t*-tests can be performed using the `t.test` function
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(df_sub$Arousal_Negative, df_sub$Arousal_Neutral) %>% 
+  report()
+```
+
+
+
+## Correlation {.build}
+
+- Correlations can be done in a similar way
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+cor.test(df_sub$Autobio_Negative, df_sub$Arousal_Negative)
+```
+
+## Correlation {.build}
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+p <- df_sub %>% 
+  ggplot(aes(x = Autobio_Negative, y = Arousal_Negative)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+p
+```
+
+## Interactive plots
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+library(plotly)
+
+ggplotly(p)
+```
+
+
+## Create New Variables {.build}
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df_sub$Autobio_Binary <- ifelse(
+  df_sub$Autobio_Negative > mean(df_sub$Autobio_Negative),
+  "High", "Low")
+```
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+report(df_sub$Autobio_Binary)
+```
+
+
+## ANOVAs {.build}
+
+- Done with the `aov()` function (Analysis Of Variance)
+- The first argument is a formula `y ~ a + b` 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+model <- aov(Arousal_Negative ~ Sex * Autobio_Binary, data = df_sub)
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+result <- report(model)
+to_table(result)
+```
+
+## Boxplots {.build}
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df_sub %>% 
+  ggplot(aes(x = Sex, y = Autobio_Binary, fill = Arousal_Negative)) +
+  geom_boxplot()
+```
+
+
+## Regressions {.build}
+
+- Most of the "tests" taught *are* linear models (https://lindeloev.github.io/tests-as-linear/)
+- Much more informative and powerful
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+model <- aov(Arousal_Negative ~ Sex * Autobio_Binary, data = df_sub)
+```
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+model <- lm(Arousal_Negative ~ Sex * Autobio_Binary, data = df_sub)
+```
+
+## Regressions
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+result <- report(model)
+to_table(result)
+result
+```
+
+## Regressions {.build}
+
+- Can mix continuous and categorical variables
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+model <- lm(Arousal_Negative ~ Sex * Autobio_Negative, data = df_sub) 
+
+model %>% 
+  report() %>% 
+  to_table()
+```
+
+## Model Visualisation (Optional) {.build}
+
+- A model can best be understood when visualised 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+model %>% 
+  estimate_link() %>% 
+  ggplot(aes(y = Predicted, x = Autobio_Negative)) + 
+  geom_ribbon(aes(ymin=CI_low, ymax=CI_high, fill=Sex), alpha = 0.3) +
+  geom_line(aes(color = Sex)) 
+  ylab("Predicted Arousal")
+```
+
+## Model Visualisation (Optional) {.build}
+
+- Add data points whenever possible!
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+model %>% 
+  estimate_link() %>% 
+  ggplot(aes(y = Predicted, x = Autobio_Negative)) + 
+  geom_ribbon(aes(ymin=CI_low, ymax=CI_high, fill=Sex), alpha = 0.3) +
+  geom_line(aes(color = Sex)) + 
+  ylab("Predicted Arousal") +
+  geom_point(data = df_sub, aes(y = Arousal_Negative, color = Sex))
+```
+
+
+## Mixed Models {.build}
+
+- Is there a relationship between autobiographical link and arousal for the neutral pictures?
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+lm(Arousal ~ Emotion_Condition * Autobio, data = df_condition) %>% 
+  report() %>% 
+  to_table()
+```
+
+## Mixed Models {.build}
+
+- Is there a relationship between autobiographical link and arousal for the neutral pictures?
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(lme4)
+
+lmer(Arousal ~ Emotion_Condition * Autobio + (1|Participant_ID), 
+     data = df_condition) %>% 
+  report() %>% 
+  to_table()
+```
+
+
+## Resources
+
+- https://easystats.github.io/blog/resources/
+- Thank you <font size="4">(`dom.makowski@gmail.com`, twitter `@Dom_Makowski`)</font> 
