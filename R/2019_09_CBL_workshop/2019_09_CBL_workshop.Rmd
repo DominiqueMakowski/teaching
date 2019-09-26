@@ -437,6 +437,15 @@ model %>%
 report(df)
 ```
 
+## A Logistic Mixed Model
+
+- Investigate the determinants of item recall
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+report(df)
+```
+
+
 ## Resources
 
 - https://easystats.github.io/blog/resources/
