@@ -55,17 +55,17 @@ devtools::install_github("easystats/easystats")
 
 - To catch up with the trend
 
-![](images/barrett2019Rtrend.png){width=90%}
+![](images/barrett2019Rtrend.png){width=75%}
+
+<!-- ## Why R? -->
+<!-- ![](images/barrett2019sixreasons.png){width=90%} -->
+
 
 ## Why R?
 
-![](images/barrett2019sixreasons.png){width=90%}
+- To catch up with the trend
 
-
-## Why R?
-### **R *vs.* SPSS, Excel, SAS...**
-
-![](images/spss_dying.png){width=100%}
+![](images/spss_dying.png){width=95%}
 
 <!-- ```{r echo = FALSE, warning=FALSE, message=FALSE} -->
 <!-- library(tidyverse) -->
@@ -94,14 +94,14 @@ devtools::install_github("easystats/easystats")
 ### **R *vs.* Python**
 
 - Python for signal processing, machine learning and other applications
-- R for data manipulation, statistics, visualisation and communication ([1](https://neuropsychology.shinyapps.io/patientassessmentapp/), [2](https://malco.io/), [3](https://github.com/DominiqueMakowski/teaching/blob/master/R/2019_09_CBL_workshop/2019_09_CBL_workshop.Rmd))<!-- websites, presentations, pdf reports -->
+- R for data manipulation, statistics, visualisation and communication ([1](https://neuropsychology.shinyapps.io/patientassessmentapp/), [2](https://malco.io/), [3](https://github.com/easystats/easystats/blob/master/publications/makowski_2019_bayesian/manuscript/preprint.pdf),  [4](https://github.com/DominiqueMakowski/teaching/blob/master/R/2019_09_CBL_workshop/2019_09_CBL_workshop.Rmd))<!-- websites, presentations, pdf reports -->
 - Use both!
 
 ## Long road ahead {.build}
 
-- Steep learning curve
 - No course or workshop will teach you R
 - Just dive in and try to accomplish a goal
+- Steep learning curve
 - Many frustrating moments
 - People think "*now it's not the best time for me to learn it, because I have to deliver X. I'll do it when* `<insertSomething>`" 
 - Every minute invested in learning R will be worth it
@@ -136,6 +136,7 @@ data %>%
 - Theme
 - Create an Rmarkdown file (`chunk output in console`)
 - `R` chunks vs. `markdown` text
+- Remove the first code chunk
 - Try clicking on `Knit`
 - Shortcuts
   - `CTLR + ENTER`: Run the selection
@@ -169,6 +170,7 @@ bayestestR::hdi()
 
 ## Load data {.build}
 
+- Session -> Set Working Directory -> to source file location
 - A classic code line containg a *function* (`f()`), to which we provide inputs via *arguments* (`f(x)`) and that outputs something that be stored in an object (`y <- f(x)`)
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -176,6 +178,8 @@ df <- read.csv("materials/emotion.csv")
 ```
 
 <!-- df <- read.csv("https://raw.githubusercontent.com/DominiqueMakowski/teaching/master/R/2019_09_CBL_workshop/materials/emotion.csv") -->
+
+## Load data {.build}
 
 - Check the documentation of the function. Many other possible arguments with **default** values, that we can override.
 
@@ -495,4 +499,5 @@ model %>%
 ## Resources
 
 - https://easystats.github.io/blog/resources/
+- Bayesian tutorial: https://easystats.github.io/bayestestR/articles/bayestestR.html
 - Thank you <font size="4">(`dom.makowski@gmail.com`, twitter `@Dom_Makowski`)</font> 
