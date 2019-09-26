@@ -100,6 +100,8 @@ devtools::install_github("easystats/easystats")
 ## Long road ahead {.build}
 
 - Steep learning curve
+- No course or workshop will teach you R
+- Just dive in and try to accomplish a goal
 - Many frustrating moments
 - People think "*now it's not the best time for me to learn it, because I have to deliver X. I'll do it when* `<insertSomething>`" 
 - Every minute invested in learning R will be worth it
@@ -181,7 +183,7 @@ df <- read.csv("materials/emotion.csv")
 df <- read.csv("materials/emotion.csv", stringsAsFactors = FALSE)
 ```
 
-- Click on the object in the **Environment** panel
+- Click on the object in the **Environment** panel to see it
 - If the output of a function is not stored in an object, R will *print* it.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -202,8 +204,8 @@ report(df)
 
 ## Explore the data {.build}
 
-- Young and healthy adults watched pictures, that were either **Negative** or **Neutral** (the `emotion_condition` variable)
-- For each picture (48 different pictures), they had to rate the **Intensity** (arousal) and **Valence** (positive - negative) of the emotion that they felt, as well as the **Autobiographical link** (how do they personally relate to the content of the picture)
+- Young and healthy adults watched pictures, that were either **Negative** or **Neutral** (the **`condition` variable**)
+- For each picture (48 different items), they had to rate the **Intensity** (arousal) and **Valence** (positive - negative) of the emotion that they felt, as well as the **Self-Relevance** (the "SelfRelevancegraphical link", i.e., how do they personally relate to the content of the picture)
 - 30 min after the presentation, participants had to **recall** the images
 
 
@@ -214,8 +216,8 @@ report(df)
 - Report the sample
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-report_participants(df, age = "Participant_Age", 
-                    sex = "Participant_Sex", 
+report_participants(df, age = "Age", 
+                    sex = "Sex", 
                     participant = "Participant_ID")
 ```
 
@@ -226,10 +228,10 @@ report_participants(df, age = "Participant_Age",
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df_condition <- df %>% 
-  group_by(Participant_ID, Emotion_Condition) %>% 
-  summarise(Arousal = mean(Subjective_Arousal),
-            Autobio = mean(Autobiographical_Link),
-            Sex = unique(Participant_Sex))
+  group_by(Participant_ID, Condition) %>% 
+  summarise(Arousal = mean(Arousal),
+            SelfRelevance = mean(SelfRelevance),
+            Sex = unique(Sex))
 ``` 
 
 
@@ -248,8 +250,8 @@ head(df_condition)
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df_sub <- df_condition %>% 
-  pivot_wider(names_from = "Emotion_Condition",
-              values_from = c("Arousal", "Autobio"))
+  pivot_wider(names_from = "Condition",
+              values_from = c("Arousal", "SelfRelevance"))
 df_sub
 ```
 
@@ -288,14 +290,14 @@ t.test(df_sub$Arousal_Negative, df_sub$Arousal_Neutral) %>%
 - Correlations can be done in a similar way
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-cor.test(df_sub$Autobio_Negative, df_sub$Arousal_Negative)
+cor.test(df_sub$SelfRelevance_Negative, df_sub$Arousal_Negative)
 ```
 
 ## Correlation {.build}
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 p <- df_sub %>% 
-  ggplot(aes(x = Autobio_Negative, y = Arousal_Negative)) +
+  ggplot(aes(x = SelfRelevance_Negative, y = Arousal_Negative)) +
   geom_point() +
   geom_smooth(method = "lm")
 p
@@ -313,12 +315,12 @@ ggplotly(p)
 ## Create New Variables {.build}
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-df_sub$Autobio_Binary <- ifelse(
-  df_sub$Autobio_Negative > mean(df_sub$Autobio_Negative),
+df_sub$SelfRelevance_Binary <- ifelse(
+  df_sub$SelfRelevance_Negative > mean(df_sub$SelfRelevance_Negative),
   "High", "Low")
 ```
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-report(df_sub$Autobio_Binary)
+report(df_sub$SelfRelevance_Binary)
 ```
 
 
@@ -328,19 +330,20 @@ report(df_sub$Autobio_Binary)
 - The first argument is a formula `y ~ a + b` 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-model <- aov(Arousal_Negative ~ Sex * Autobio_Binary, data = df_sub)
+model <- aov(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
 ```
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 result <- report(model)
 to_table(result)
+result
 ```
 
 ## Boxplots {.build}
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df_sub %>% 
-  ggplot(aes(x = Sex, y = Autobio_Binary, fill = Arousal_Negative)) +
+  ggplot(aes(x = Sex, y = SelfRelevance_Binary, fill = Arousal_Negative)) +
   geom_boxplot()
 ```
 
@@ -351,10 +354,10 @@ df_sub %>%
 - Much more informative and powerful
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-model <- aov(Arousal_Negative ~ Sex * Autobio_Binary, data = df_sub)
+model <- aov(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
 ```
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-model <- lm(Arousal_Negative ~ Sex * Autobio_Binary, data = df_sub)
+model <- lm(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
 ```
 
 ## Regressions
@@ -370,7 +373,7 @@ result
 - Can mix continuous and categorical variables
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-model <- lm(Arousal_Negative ~ Sex * Autobio_Negative, data = df_sub) 
+model <- lm(Arousal_Negative ~ Sex * SelfRelevance_Negative, data = df_sub) 
 
 model %>% 
   report() %>% 
@@ -384,7 +387,7 @@ model %>%
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 model %>% 
   estimate_link() %>% 
-  ggplot(aes(y = Predicted, x = Autobio_Negative)) + 
+  ggplot(aes(y = Predicted, x = SelfRelevance_Negative)) + 
   geom_ribbon(aes(ymin=CI_low, ymax=CI_high, fill=Sex), alpha = 0.3) +
   geom_line(aes(color = Sex)) 
   ylab("Predicted Arousal")
@@ -397,7 +400,7 @@ model %>%
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 model %>% 
   estimate_link() %>% 
-  ggplot(aes(y = Predicted, x = Autobio_Negative)) + 
+  ggplot(aes(y = Predicted, x = SelfRelevance_Negative)) + 
   geom_ribbon(aes(ymin=CI_low, ymax=CI_high, fill=Sex), alpha = 0.3) +
   geom_line(aes(color = Sex)) + 
   ylab("Predicted Arousal") +
@@ -407,22 +410,22 @@ model %>%
 
 ## Mixed Models {.build}
 
-- Is there a relationship between autobiographical link and arousal for the neutral pictures?
+- Is there a relationship between SelfRelevancegraphical link and arousal for the neutral pictures?
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-lm(Arousal ~ Emotion_Condition * Autobio, data = df_condition) %>% 
+lm(Arousal ~ Condition * SelfRelevance, data = df_condition) %>% 
   report() %>% 
   to_table()
 ```
 
 ## Mixed Models {.build}
 
-- Is there a relationship between autobiographical link and arousal for the neutral pictures?
+- Is there a relationship between SelfRelevancegraphical link and arousal for the neutral pictures?
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(lme4)
 
-model <- lmer(Arousal ~ Emotion_Condition * Autobio + (1|Participant_ID), data = df_condition)
+model <- lmer(Arousal ~ Condition * SelfRelevance + (1|Participant_ID), data = df_condition)
 
 model %>% 
   report() %>% 
@@ -442,8 +445,51 @@ report(df)
 - Investigate the determinants of item recall
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-report(df)
+model <- glmer(Recall ~ Condition * SelfRelevance + 
+                 (1|Participant_ID) + (1|Item_Name), family = "binomial", data = df)
+report(model) %>% 
+  to_table()
 ```
+
+## A Bayesian Logistic Mixed Model {.build}
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+library(rstanarm)
+
+model <- stan_glmer(Recall ~ Condition * SelfRelevance + 
+                      (1|Participant_ID) + (1|Item_Name), 
+                    family = "binomial", data = df)
+```
+
+## A Bayesian Logistic Mixed Model
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, results="hide"}
+library(rstanarm)
+
+model <- stan_glmer(Recall ~ Condition * SelfRelevance + 
+                      (1|Participant_ID) + (1|Item_Name), 
+                    family = "binomial", data = df, iter = 500)
+```
+
+## A Bayesian Logistic Mixed Model
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+report(model) %>% 
+  to_table()
+```
+
+## Visualisation
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+model %>% 
+  estimate_link() %>% 
+  ggplot(aes(x = SelfRelevance, y = Median)) +
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high, fill = Condition), alpha = 0.2) +
+  geom_line(aes(color = Condition), size = 1)  + 
+  theme_modern() +
+  ylab("Probability of Recalling the Item")
+```
+
 
 
 ## Resources

@@ -1,4 +1,4 @@
-"Participant_ID","Participant_Age","Participant_Sex","Item_Category","Item_Name","Trial_Order","Emotion_Condition","Subjective_Arousal","Subjective_Valence","Autobiographical_Link","Recall"
+"Participant_ID","Age","Sex","Item_Category","Item_Name","Trial_Order","Condition","Arousal","Valence","SelfRelevance","Recall"
 "1S",18.3846680355921,"Female","People","People_158_h",1,"Neutral",12.2395833333333,0.520833333333343,63.28125,TRUE
 "1S",18.3846680355921,"Female","Faces","Faces_045_h",2,"Neutral",16.40625,4.16666666666666,22.1354166666667,FALSE
 "1S",18.3846680355921,"Female","People","People_138_h",3,"Neutral",25.5208333333333,25.5208333333333,55.9895833333333,TRUE
