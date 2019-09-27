@@ -20,12 +20,13 @@ library(emo)
 ```
 
 
-## Prerequisites
+## Prerequisites {.build}
 
-- Install necessary packages
+- Install necessary packages 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
-install.packages(c("devtools", "tidyverse", "knitr", "lme4", "plotly", "BayesFactor", "rstanarm"))
+install.packages(c("devtools", "tidyverse", "knitr", 
+                   "lme4", "plotly", "BayesFactor", "rstanarm"))
 devtools::install_github("easystats/easystats")
 ```
 
