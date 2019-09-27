@@ -24,7 +24,7 @@ library(emo)
 
 - Install necessary packages
 
-```{r include=TRUE, eval=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 install.packages(c("devtools", "tidyverse", "knitr", "lme4", "plotly", "BayesFactor", "rstanarm"))
 devtools::install_github("easystats/easystats")
 ```
@@ -44,12 +44,17 @@ devtools::install_github("easystats/easystats")
 7. Taste of Bayes
 
 
-## About me
+## About me {.build}
 
 - I am not a statistician
 - I am not a programmer
 - I am not a computer scientist
 - I am not a geek *(originally...)*
+
+## About you {.build}
+
+- Programming?
+- SPSS? MatLab? Python? ...
 
 ## Why R? {.build}
 
@@ -147,7 +152,7 @@ data %>%
 
 - Everything is done through **packages**
 - Packages provide **new functions**
-- The main challenge in R is not *"if something is possible"*, but rather *"what is the package that implements it the best"* (importance of sating "tuned", r-bloggers, twitter, github...)
+- The main challenge in R is not *"if something is possible"*, but rather *"what is the package that implements it the best"* (importance of staying "tuned", r-bloggers, twitter, github...)
 - Packages have to be *installed* only once, and *loaded* whenever you want to use their functions
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -157,21 +162,32 @@ library(tidyverse)
 
 ## Discover functions and documentation {.build}
 
-- **Don't learn the functions!!!** Know what you want to do, and search for it
-- Browse functions through autocompletion (`<TAB>`)
+- **Don't learn the functions!!!** Know what you want to do, and search for it (on google)
 
 ```{r echo = TRUE, eval=FALSE}
-bayestestR::hdi()
+anova()
 ```
 
 - Show documentation (`F1` or `?function`)
 - Google the CRAN repository page of the package ([`"bayestestR CRAN"`](https://www.google.com/search?q=bayestestR+CRAN&rlz=1C1CHBD_frSG849SG849&oq=bayestestR+CRAN&aqs=chrome..69i57j69i60l3j69i59.706j0j7&sourceid=chrome&ie=UTF-8))
 - Check out the manual, the Github page or the *vignettes*
 
+
+## Summary: Where to find help {.build}
+
+- Google
+- Stack Overflow
+- Google
+- Github (create issues)
+- Stack Overflow
+- Really, Stack Overflow
+
+
 ## Load data {.build}
 
-- Session -> Set Working Directory -> to source file location
-- A classic code line containg a *function* (`f()`), to which we provide inputs via *arguments* (`f(x)`) and that outputs something that be stored in an object (`y <- f(x)`)
+- **Session -> Set Working Directory -> to Source File Location**
+- A classic code line containg a *function* (e.g., `f()`), to which we provide inputs via *arguments* (e.g., `f(x)`) and that outputs something that be stored in an object (e.g., `y <- f(x)`)
+- Assignments are traditionnaly done with `<-`, but `=` is equivalent
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df <- read.csv("materials/emotion.csv")
@@ -179,13 +195,13 @@ df <- read.csv("materials/emotion.csv")
 
 <!-- df <- read.csv("https://raw.githubusercontent.com/DominiqueMakowski/teaching/master/R/2019_09_CBL_workshop/materials/emotion.csv") -->
 
-## Load data {.build}
-
 - Check the documentation of the function. Many other possible arguments with **default** values, that we can override.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df <- read.csv("materials/emotion.csv", stringsAsFactors = FALSE)
 ```
+
+## Explore the data {.build}
 
 - Click on the object in the **Environment** panel to see it
 - If the output of a function is not stored in an object, R will *print* it.
@@ -499,5 +515,5 @@ model %>%
 ## Resources
 
 - https://easystats.github.io/blog/resources/
-- Bayesian tutorial: https://easystats.github.io/bayestestR/articles/bayestestR.html
+- Bayesian tutorial: https://easystats.github.io/bayestestR/
 - Thank you <font size="4">(`dom.makowski@gmail.com`, twitter `@Dom_Makowski`)</font> 
