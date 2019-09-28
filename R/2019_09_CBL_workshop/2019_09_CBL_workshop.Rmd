@@ -30,6 +30,13 @@ install.packages(c("devtools", "tidyverse", "knitr",
 devtools::install_github("easystats/easystats")
 ```
 
+- Check if packages installed 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+library(tidyverse)
+library(easystats)
+```
+
 - Download the 'emotion' dataset in the `materials` folder at https://github.com/DominiqueMakowski/teaching
 
 <!-- https://raw.githubusercontent.com/DominiqueMakowski/teaching/master/R/2019_09_CBL_workshop/materials/emotion.csv -->
@@ -354,6 +361,8 @@ report(df_sub$SelfRelevance_Binary)
 model <- aov(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
 ```
 
+## ANOVAs
+
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 result <- report(model)
 to_table(result)
@@ -364,8 +373,21 @@ result
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df_sub %>% 
-  ggplot(aes(x = Sex, y = SelfRelevance_Binary, fill = Arousal_Negative)) +
+  ggplot(aes(x = SelfRelevance_Binary, y = Arousal_Negative, fill = Sex)) +
   geom_boxplot()
+```
+
+## Boxplots {.build}
+
+- Reverse x-axis Order 
+- Colors 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+df_sub %>% 
+  ggplot(aes(x = fct_rev(SelfRelevance_Binary), y = Arousal_Negative, fill = Sex)) +
+  geom_boxplot() +
+  theme_modern() +
+  scale_fill_manual(values = c("pink", "lightblue"))
 ```
 
 
@@ -446,7 +468,8 @@ lm(Arousal ~ Condition * SelfRelevance, data = df_condition) %>%
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(lme4)
 
-model <- lmer(Arousal ~ Condition * SelfRelevance + (1|Participant_ID), data = df_condition)
+model <- lmer(Arousal ~ Condition * SelfRelevance + (1|Participant_ID), 
+              data = df_condition)
 
 model %>% 
   report() %>% 
@@ -467,7 +490,8 @@ report(df)
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 model <- glmer(Recall ~ Condition * SelfRelevance + 
-                 (1|Participant_ID) + (1|Item_Name), family = "binomial", data = df)
+                 (1|Participant_ID) + (1|Item_Name), 
+               family = "binomial", data = df)
 report(model) %>% 
   to_table()
 ```
