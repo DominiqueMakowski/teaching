@@ -64,7 +64,7 @@ library(easystats)
 - Programming?
 - SPSS? MatLab? Python? ...
 
-## Why R? {.build}
+## Why R? 
 
 - To catch up with the trend
 
@@ -119,7 +119,7 @@ library(easystats)
 - People think "*now it's not the best time for me to learn it, because I have to deliver X. I'll do it when* `<insertSomething>`" 
 - Every minute invested in learning R will be worth it
 - You won't regret it!
-
+- Biggest blockers: **fear and apprehension**
 
 
 ## Old R *vs.* new R {.build}
@@ -195,6 +195,7 @@ anova()
 
 - **Session -> Set Working Directory -> to Source File Location**
 - A classic code line containg a *function* (e.g., `f()`), to which we provide inputs via *arguments* (e.g., `f(x)`) and that outputs something that be stored in an object (e.g., `y <- f(x)`)
+- There are usually multiple arguments to function (e.g., `y <- f(x, great_workshop=TRUE, great_audience=TRUE)`)
 - Assignments are traditionnaly done with `<-`, but `=` is equivalent
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -212,7 +213,7 @@ df <- read.csv("materials/emotion.csv", stringsAsFactors = FALSE)
 ## Explore the data {.build}
 
 - Click on the object in the **Environment** panel to see it
-- If the output of a function is not stored in an object, R will *print* it.
+- If the output of a function is not stored in an object, R will *print* it
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df
@@ -233,7 +234,7 @@ report(df)
 ## Explore the data {.build}
 
 - Young and healthy adults watched pictures, that were either **Negative** or **Neutral** (the **`condition` variable**)
-- For each picture (48 different items), they had to rate the **Intensity** (arousal) and **Valence** (positive - negative) of the emotion that they felt, as well as the **Self-Relevance** (the "SelfRelevancegraphical link", i.e., how do they personally relate to the content of the picture)
+- For each picture (48 different items), they had to rate the **Intensity** (arousal) and **Valence** (positive - negative) of the emotion that they felt, as well as the **Self-Relevance** (the "autobiographical link", i.e., how do they personally relate to the content of the picture)
 - 30 min after the presentation, participants had to **recall** the images
 
 
@@ -263,10 +264,7 @@ df_condition <- df %>%
 ``` 
 
 
-## Data Manipulation {.build}
-
-- Summarize variables by condition
-- The pipes (`%>%`) make the workflow easier to read (take this, do that, then that, ...)
+## Data Manipulation
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 head(df_condition)
@@ -302,15 +300,26 @@ t.test(df_sub$Arousal_Negative, df_sub$Arousal_Neutral)
 ```
 
 
-## *t*-tests
+## *t*-tests {.build}
 
-- *t*-tests can be performed using the `t.test` function
+- The `report()` function can also be used in this case
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 t.test(df_sub$Arousal_Negative, df_sub$Arousal_Neutral) %>% 
   report()
 ```
 
+- About *pipes* (`%>%`):
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+f(x, something=TRUE)
+x %>% f(something=TRUE)
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+result <- t.test(df_sub$Arousal_Negative, df_sub$Arousal_Neutral)
+report(result)
+```
 
 
 ## Correlation {.build}
@@ -321,7 +330,19 @@ t.test(df_sub$Arousal_Negative, df_sub$Arousal_Neutral) %>%
 cor.test(df_sub$SelfRelevance_Negative, df_sub$Arousal_Negative)
 ```
 
-## Correlation {.build}
+## Bayesian correlation {.build}
+
+- Need to load the `BayesFactor` package (case-sensitive!)
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(BayesFactor)
+
+correlationBF(df_sub$SelfRelevance_Negative, df_sub$Arousal_Negative) %>% 
+  model_parameters()
+```
+
+
+## Correlation Plot {.build}
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 p <- df_sub %>% 
@@ -331,14 +352,22 @@ p <- df_sub %>%
 p
 ```
 
-## Interactive plots
+
+## Interactive plots {.build}
+
+- Try this:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 library(plotly)
-
 ggplotly(p)
 ```
 
+## Conclusion {.build}
+
+- Negative pictures elicit significantly more emotional **arousal**
+- Anecdotal evidence for a positive correlation between the **self-relevance** and **arousal** for negative pictures
+- New hypothesis: Could this be modulated by **Sex**?
+- How? An ANOVA `Sex * self-relevance`?
 
 ## Create New Variables {.build}
 
@@ -361,12 +390,12 @@ report(df_sub$SelfRelevance_Binary)
 model <- aov(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
 ```
 
-## ANOVAs
+## ANOVAs {.build}
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 result <- report(model)
-to_table(result)
 result
+to_table(result)
 ```
 
 ## Boxplots {.build}
@@ -377,10 +406,9 @@ df_sub %>%
   geom_boxplot()
 ```
 
-## Boxplots {.build}
+## Boxplots (nicer) {.build}
 
-- Reverse x-axis Order 
-- Colors 
+- Reverse x-axis Order, tweak colors 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 df_sub %>% 
@@ -401,14 +429,15 @@ model <- aov(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
 ```
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 model <- lm(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
+anova(model)
 ```
 
 ## Regressions
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 result <- report(model)
-to_table(result)
 result
+to_table(result)
 ```
 
 ## Regressions {.build}
@@ -451,9 +480,10 @@ model %>%
 ```
 
 
-## Mixed Models {.build}
+## Adding the Condition
 
-- Is there a relationship between SelfRelevancegraphical link and arousal for the neutral pictures?
+- Let's drop the sex but investigate the whole set of pictures (including neutral)
+- Is there a relationship between self-relevance and arousal for the neutral pictures?
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 lm(Arousal ~ Condition * SelfRelevance, data = df_condition) %>% 
@@ -463,7 +493,7 @@ lm(Arousal ~ Condition * SelfRelevance, data = df_condition) %>%
 
 ## Mixed Models {.build}
 
-- Is there a relationship between SelfRelevancegraphical link and arousal for the neutral pictures?
+- There is a hierarchical (i.e., grouped) structure
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(lme4)
@@ -484,7 +514,7 @@ model %>%
 report(df)
 ```
 
-## A Logistic Mixed Model
+## A Logistic Mixed Model {.build}
 
 - Investigate the determinants of item recall
 
