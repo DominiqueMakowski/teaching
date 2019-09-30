@@ -465,9 +465,7 @@ model %>%
   ylab("Predicted Arousal")
 ```
 
-## Model Visualisation (Optional) {.build}
-
-- Add data points whenever possible!
+## Model Visualisation (with points) {.build}
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 model %>% 
@@ -475,7 +473,6 @@ model %>%
   ggplot(aes(y = Predicted, x = SelfRelevance_Negative)) + 
   geom_ribbon(aes(ymin=CI_low, ymax=CI_high, fill=Sex), alpha = 0.3) +
   geom_line(aes(color = Sex)) + 
-  ylab("Predicted Arousal") +
   geom_point(data = df_sub, aes(y = Arousal_Negative, color = Sex))
 ```
 
@@ -571,6 +568,7 @@ model %>%
 
 - https://easystats.github.io/blog/resources/
 - Bayesian tutorial: https://easystats.github.io/bayestestR/
+- Structural modelling: https://easystats.github.io/parameters/articles/efa_cfa.html
 - **Thank you!**
 
 
