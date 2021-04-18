@@ -395,7 +395,7 @@ model <- aov(Arousal_Negative ~ Sex * SelfRelevance_Binary, data = df_sub)
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 result <- report(model)
 result
-to_table(result)
+as.data.frame(result)
 ```
 
 ## Boxplots {.build}
@@ -437,7 +437,7 @@ anova(model)
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 result <- report(model)
 result
-to_table(result)
+as.data.frame(result)
 ```
 
 ## Regressions {.build}
@@ -449,7 +449,7 @@ model <- lm(Arousal_Negative ~ Sex * SelfRelevance_Negative, data = df_sub)
 
 model %>% 
   report() %>% 
-  to_table()
+  as.data.frame()
 ```
 
 ## Model Visualisation (Optional) {.build}
@@ -485,7 +485,7 @@ model %>%
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 lm(Arousal ~ Condition * SelfRelevance, data = df_condition) %>% 
   report() %>% 
-  to_table()
+  as.data.frame()
 ```
 
 ## Mixed Models {.build}
@@ -500,7 +500,7 @@ model <- lmer(Arousal ~ Condition * SelfRelevance + (1|Participant_ID),
 
 model %>% 
   report() %>% 
-  to_table()
+  as.data.frame()
 ```
 
 ## Predicting the Recall of Items {.build}
@@ -520,7 +520,7 @@ model <- glmer(Recall ~ Condition * SelfRelevance +
                  (1|Participant_ID) + (1|Item_Name), 
                family = "binomial", data = df)
 report(model) %>% 
-  to_table()
+  as.data.frame()
 ```
 
 ## A Bayesian Logistic Mixed Model {.build}
@@ -547,7 +547,7 @@ model <- stan_glmer(Recall ~ Condition * SelfRelevance +
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 report(model) %>% 
-  to_table()
+  as.data.frame()
 ```
 
 ## Visualisation
@@ -555,7 +555,7 @@ report(model) %>%
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 model %>% 
   estimate_link() %>% 
-  ggplot(aes(x = SelfRelevance, y = Median)) +
+  ggplot(aes(x = SelfRelevance, y = Predicted)) +
   geom_ribbon(aes(ymin = CI_low, ymax = CI_high, fill = Condition), alpha = 0.2) +
   geom_line(aes(color = Condition), size = 1)  + 
   theme_modern() +

@@ -1,0 +1,74 @@
+---
+title: "Introduction to Mixed Models using R"
+author: Dominique Makowski
+date: March 22, 2005
+output:
+  revealjs::revealjs_presentation:
+    theme: night
+    highlight: pygments
+    center: false
+    self_contained: true
+    reveal_options:
+      slideNumber: true
+      previewLinks: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+library(ggplot2)
+library(dplyr)
+```
+
+# What are Mixed Models
+
+## All statistical tests are linear models
+
+![](https://lindeloev.github.io/tests-as-linear/linear_tests_cheat_sheet.png)
+
+<small>[https://lindeloev.github.io/tests-as-linear](https://lindeloev.github.io/tests-as-linear/) *(Google "tests linear models")*</small>
+
+## Whole World of Models
+
+- LM: Linear Model
+>- GLM: General Linear Model (logistic, count, ...)
+>- GAM: General Additive Model 
+>- GLMM / GAMM: **Mixed** GLM / GAM
+>- Bayesian Models
+
+## What does "Mixed" Mean
+
+- Full name actually "Mixed **Effects** Model"
+>- Includes **random effects** on top of the **fixed effects** (the model's main predictors)
+>- Better term is "Hierarchical"
+>- Hierarchical data is organized in *groups* which by themselves create some specific variability
+>- Groups can be anything, e.g., participants, items, datasets, ...
+
+## Why use Mixed Models
+
+- Powerful (allows the quantification of a lot of interesting parameters)
+>- Appropriate for the data we have in psychology / neuroscience
+>- In 98\% of cases, there is no reason to use anything else than mixed models
+>- Should be the default of stats in psychology
+
+# Preparation
+
+```{r, include = FALSE}
+# Make data
+df <- correlation::simulate_simpson(n = 50, groups = 40)
+
+names(df) <- c("RT", "Difficulty", "Participant")
+summary(as.factor(df$Participant))
+ggplot(df, aes(y=RT, x=Difficulty, color = Participant)) + geom_point()
+
+```
+
+## Reading data
+
+## 
+
+# ANOVA
+
+# Linear Model
+
+# Linear Mixed Model
