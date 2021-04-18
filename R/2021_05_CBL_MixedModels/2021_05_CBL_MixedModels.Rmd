@@ -30,7 +30,7 @@ library(dplyr)
 
 ## Whole World of Models
 
-- LM: Linear Model
+>- LM: Linear Model
 >- GLM: General Linear Model (logistic, count, ...)
 >- GAM: General Additive Model 
 >- GLMM / GAMM: **Mixed** GLM / GAM
@@ -38,7 +38,7 @@ library(dplyr)
 
 ## What does "Mixed" Mean
 
-- Full name actually "Mixed **Effects** Model"
+>- Full name actually "Mixed **Effects** Model"
 >- Includes **random effects** on top of the **fixed effects** (the model's main predictors)
 >- Better term is "Hierarchical"
 >- Hierarchical data is organized in *groups* which by themselves create some specific variability
@@ -46,21 +46,24 @@ library(dplyr)
 
 ## Why use Mixed Models
 
-- Powerful (allows the quantification of a lot of interesting parameters)
+>- Powerful (allows the quantification of a lot of interesting parameters)
 >- Appropriate for the data we have in psychology / neuroscience
 >- In 98\% of cases, there is no reason to use anything else than mixed models
 >- Should be the default of stats in psychology
 
 # Preparation
 
-```{r, include = FALSE}
+```{r, include = FALSE, eval = FALSE}
 # Make data
-df <- correlation::simulate_simpson(n = 50, groups = 40)
+df <- correlation::simulate_simpson(n = 30, groups = 40, group_prefix = "S", difference=0.3)
 
 names(df) <- c("RT", "Difficulty", "Participant")
 summary(as.factor(df$Participant))
-ggplot(df, aes(y=RT, x=Difficulty, color = Participant)) + geom_point()
+ggplot(df, aes(y=RT, x=Difficulty, color = Participant)) + 
+  geom_point() +
+  geom_smooth(se = FALSE)
 
+write.csv(df, "data.csv", row.names = FALSE)
 ```
 
 ## Reading data
