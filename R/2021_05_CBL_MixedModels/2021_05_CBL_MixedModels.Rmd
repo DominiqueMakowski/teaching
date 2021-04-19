@@ -1,11 +1,11 @@
 ---
 title: "Introduction to Mixed Models using R"
-author: Dominique Makowski
-date: March 22, 2005
+author: "Dominique Makowski"
+date: "May 2021"
 output:
   revealjs::revealjs_presentation:
     theme: night
-    highlight: pygments
+    highlight: zenburn
     center: false
     self_contained: true
     reveal_options:
@@ -18,9 +18,16 @@ editor_options:
 ```{r, include = FALSE}
 library(ggplot2)
 library(dplyr)
+
+options(width = 80)
 ```
 
 # What are Mixed Models
+
+
+<!-- Send link by email: -->
+<!-- https://dominiquemakowski.github.io/teaching/R/2021_05_CBL_MixedModels/2021_05_CBL_MixedModels.html -->
+
 
 ## All statistical tests are linear models
 
@@ -38,40 +45,235 @@ library(dplyr)
 
 ## What does "Mixed" Mean
 
->- Full name actually "Mixed **Effects** Model"
+>- Full name actually "Mixed **Effects**" Model
 >- Includes **random effects** on top of the **fixed effects** (the model's main predictors)
->- Better term is "Hierarchical"
->- Hierarchical data is organized in *groups* which by themselves create some specific variability
+>- Confusing names
+
+
+>- Better term is "Hierarchical" Model
+>- Hierarchical data is organized in *groups* which by themselves explain some variance
 >- Groups can be anything, e.g., participants, items, datasets, ...
 
 ## Why use Mixed Models
 
 >- Powerful (allows the quantification of a lot of interesting parameters)
 >- Appropriate for the data we have in psychology / neuroscience
->- In 98\% of cases, there is no reason to use anything else than mixed models
+>- In 99\% of cases, there is no reason to use anything else than mixed models
 >- Should be the default of stats in psychology
 
 # Preparation
 
-```{r, include = FALSE, eval = FALSE}
+## Packages
+
+```{r eval = FALSE}
+install.packages(c("dplyr", "ggplot2", "lme4",
+                   "modelbased", "report"))
+```
+
+```{r message=FALSE, warning=FALSE}
+# Data Wrangling and plotting
+library(dplyr)
+library(ggplot2)
+
+# Model fitting
+library(lme4)
+
+# Model analysis
+library(modelbased)
+library(report)
+```
+
+## Data
+```{r, include = FALSE, eval = TRUE}
 # Make data
-df <- correlation::simulate_simpson(n = 30, groups = 40, group_prefix = "S", difference=0.3)
+df <- correlation::simulate_simpson(n = 20, groups = 40, group_prefix = "S", difference=0.3)
 
 names(df) <- c("RT", "Difficulty", "Participant")
-summary(as.factor(df$Participant))
+
+# Add noise
+df$RT <- df$RT + rnorm(nrow(df), 0, 0.1 * diff(range(df$RT)))
+
+
 ggplot(df, aes(y=RT, x=Difficulty, color = Participant)) + 
   geom_point() +
-  geom_smooth(se = FALSE)
+  geom_smooth(method = "lm", se = FALSE)
 
 write.csv(df, "data.csv", row.names = FALSE)
 ```
 
-## Reading data
+```{r eval = FALSE}
+# Load data from URL (must be on one line)
+df <- read.csv("https://raw.githubusercontent.com/
+                DominiqueMakowski/teaching/master/
+                R/2021_05_CBL_MixedModels/data.csv")
+```
+```{r include = FALSE, eval = FALSE}
+df <- read.csv("https://raw.githubusercontent.com/DominiqueMakowski/teaching/master/R/2021_05_CBL_MixedModels/data.csv")
+```
 
-## 
+
+```{r}
+report(df)
+```
+
+## Aim
+
+>- 40 participants did a task with 20 trials
+>- For each trial, their RT was recorded and they reported the "subjective" difficulty
+
+
+>- **What's the relationship between RT and Subjective Difficulty?**
+>- **Hypothesis**: Higher subjective difficulty = Higher RT (slower reaction)
+
+
+
 
 # ANOVA
 
+## Summarize the data by participant
+
+- repeated-measures ANOVAs are a statistical abominations
+- We need to group participants based on their average RT and reported difficulty
+
+```{r}
+dfsub <- df %>% 
+  group_by(Participant) %>% 
+  summarise_all(mean)
+
+dfsub
+```
+
+## Dichotomize the participants
+
+- We split the participants into 2 groups based on their average difficulty
+
+```{r}
+dfsub$Difficulty_Group <- ifelse(dfsub$Difficulty < mean(dfsub$Difficulty),
+                                 "Reported_Easy", "Reported_Hard")
+```
+
+## Run an ANOVA
+
+```{r}
+model <- anova(lm(RT ~ Difficulty_Group, data = dfsub))
+
+report(model)
+```
+
+## Conclusion
+
+:shrug:
+
 # Linear Model
 
+## Group as Predictor 
+
+```{r}
+model <- lm(RT ~ Difficulty_Group, data = dfsub)
+
+report(model)
+```
+
+## Continuous Predictor
+
+
+```{r}
+model <- lm(RT ~ Difficulty, data = dfsub)
+
+report(model)
+```
+
+The two parameters are the **intercept** and the **slope**.
+
+## Visualization (1) relation estimation
+
+```{r}
+viz_data <- estimate_relation(model)
+viz_data
+```
+
+## Visualization (2) relation plotting
+
+
+```{r}
+p <- ggplot(data = viz_data, aes(x = Difficulty, y = Predicted)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), alpha = 0.3)
+p
+```
+
+## Visualization (3) add original data
+
+```{r}
+p <- p + 
+  geom_point(data = dfsub, aes(x = Difficulty, y = RT))
+p
+```
+
 # Linear Mixed Model
+
+## Using all data
+
+```{r}
+model <- lm(RT ~ Difficulty, data = df)
+
+summary(report(model))
+```
+
+Problems:
+
+- Assumed independence of observations
+- Inflated statistical power
+- Information about group lost
+
+Solutions:
+
+- Mixed model
+
+## Fitting a mixed model (random intercept)
+
+```{r}
+model <- lmer(RT ~ Difficulty + (1|Participant), data = df)
+
+report(model)
+```
+
+## Visualizing 
+
+```{r}
+viz_data <- estimate_relation(model)
+
+p <- ggplot(data = viz_data, aes(x = Difficulty, y = Predicted)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), alpha = 0.3) + 
+  geom_point(data = df, aes(x = Difficulty, y = RT))
+p
+```
+
+## Visualizing - color
+
+```{r}
+p <- ggplot(data = viz_data, aes(x = Difficulty, y = Predicted)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), alpha = 0.3) + 
+  geom_point(data = df, aes(x = Difficulty, y = RT, color = Participant))
+p
+```
+
+
+## Extract Random Effects
+
+```{r}
+viz_data <- estimate_relation(model, include_random = TRUE, preserve_range = TRUE)
+
+p <- p + 
+  geom_line(data = viz_data, aes(color = Participant))
+p
+```
+
+
+- The "fixed" effects are informed by random effects, and **vice versa** (shrinkage)
+
+
+## Mixed model (random intercept and random slope)
+
