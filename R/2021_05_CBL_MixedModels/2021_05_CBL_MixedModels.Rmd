@@ -38,10 +38,11 @@ options(width = 80)
 ## Whole World of Models
 
 >- LM: Linear Model
->- GLM: General Linear Model (logistic, count, ...)
+>- GLM: General Linear Model (logistic, count, zero-inflated, ...)
 >- GAM: General Additive Model 
 >- GLMM / GAMM: **Mixed** GLM / GAM
 >- Bayesian Models
+>- <small>e.g. *Bayesian Mixed Zero-Inflated General Additive Model*</small>
 
 ## What does "Mixed" Mean
 
@@ -52,7 +53,7 @@ options(width = 80)
 
 >- Better term is "Hierarchical" Model
 >- Hierarchical data is organized in *groups* which by themselves explain some variance
->- Groups can be anything, e.g., participants, items, datasets, ...
+>- Groups can be any structure in the data, e.g., participants, items, datasets, ...
 
 ## Why use Mixed Models
 
@@ -66,8 +67,7 @@ options(width = 80)
 ## Packages
 
 ```{r eval = FALSE}
-install.packages(c("dplyr", "ggplot2", "lme4",
-                   "modelbased", "report"))
+install.packages(c("dplyr", "ggplot2", "lme4", "parameters", "modelbased", "report"))
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -79,19 +79,22 @@ library(ggplot2)
 library(lme4)
 
 # Model analysis
-library(modelbased)
 library(report)
+library(parameters)
+library(modelbased)
 ```
 
 ## Data
 ```{r, include = FALSE, eval = TRUE}
+set.seed(333)
+
 # Make data
-df <- correlation::simulate_simpson(n = 20, groups = 40, group_prefix = "S", difference=0.3)
+df <- correlation::simulate_simpson(n = 25, groups = 40, group_prefix = "S", difference=0.3)
 
 names(df) <- c("RT", "Difficulty", "Participant")
 
 # Add noise
-df$RT <- df$RT + rnorm(nrow(df), 0, 0.1 * diff(range(df$RT)))
+df$RT <- df$RT + rnorm(nrow(df), 0, 0.15 * diff(range(df$RT)))
 
 
 ggplot(df, aes(y=RT, x=Difficulty, color = Participant)) + 
@@ -116,9 +119,9 @@ df <- read.csv("https://raw.githubusercontent.com/DominiqueMakowski/teaching/mas
 report(df)
 ```
 
-## Aim
+## Data and Goals
 
->- 40 participants did a task with 20 trials
+>- 25 participants did a task with 40 trials (= 1000 observations)
 >- For each trial, their RT was recorded and they reported the "subjective" difficulty
 
 
@@ -130,10 +133,12 @@ report(df)
 
 # ANOVA
 
-## Summarize the data by participant
+>- repeated-measures ANOVAs are a statistical abominations
+>- We need to group participants based on their average RT and reported difficulty
 
-- repeated-measures ANOVAs are a statistical abominations
-- We need to group participants based on their average RT and reported difficulty
+## Summarize the data by participant 
+
+- aka, get **individual difficulty scores**
 
 ```{r}
 dfsub <- df %>% 
@@ -154,19 +159,43 @@ dfsub$Difficulty_Group <- ifelse(dfsub$Difficulty < mean(dfsub$Difficulty),
 
 ## Run an ANOVA
 
-```{r}
-model <- anova(lm(RT ~ Difficulty_Group, data = dfsub))
+```{r eval = FALSE}
+model <- aov(RT ~ Difficulty_Group, data = dfsub)
 
 report(model)
+```
+```{r echo = FALSE}
+model <- aov(RT ~ Difficulty_Group, data = dfsub)
+
+report(model, verbose = FALSE)
 ```
 
 ## Conclusion
 
-:shrug:
+>- :shrug:
+
+## Conclusion (2)
+
+>- ANOVAs are just uninformative summaries of linear models
+
+
+```{r}
+model <- anova(lm(RT ~ 1 + Difficulty_Group, data = dfsub))
+
+report(model)
+```
+
 
 # Linear Model
 
-## Group as Predictor 
+![](lm.jpg)
+
+>- $y = a + b_{x}$  equivalent to  $y \thicksim a_{1} + b_{x}$
+>- becomes in R: $response \thicksim Intercept(1) + \beta 1(Var1)$
+
+## In R
+
+- The "Intercept" (`~ 1 + ...`) is added by default
 
 ```{r}
 model <- lm(RT ~ Difficulty_Group, data = dfsub)
@@ -230,7 +259,7 @@ Solutions:
 
 - Mixed model
 
-## Fitting a mixed model (random intercept)
+## Mixed model (random intercept)
 
 ```{r}
 model <- lmer(RT ~ Difficulty + (1|Participant), data = df)
@@ -238,7 +267,13 @@ model <- lmer(RT ~ Difficulty + (1|Participant), data = df)
 report(model)
 ```
 
-## Visualizing 
+### Get parameters
+
+```{r}
+parameters(model, effects = "fixed")
+```
+
+### Visualizing 
 
 ```{r}
 viz_data <- estimate_relation(model)
@@ -250,7 +285,7 @@ p <- ggplot(data = viz_data, aes(x = Difficulty, y = Predicted)) +
 p
 ```
 
-## Visualizing - color
+### Visualizing - color
 
 ```{r}
 p <- ggplot(data = viz_data, aes(x = Difficulty, y = Predicted)) +
@@ -261,19 +296,70 @@ p
 ```
 
 
-## Extract Random Effects
+### Visualizing - random
 
 ```{r}
-viz_data <- estimate_relation(model, include_random = TRUE, preserve_range = TRUE)
+viz_data_random <- estimate_relation(model, 
+                                     include_random = TRUE, 
+                                     preserve_range = TRUE,
+                                     length = 100)
 
 p <- p + 
-  geom_line(data = viz_data, aes(color = Participant))
+  geom_line(data = viz_data_random, aes(color = Participant))
+p
+```
+
+- The model estimates two "fixed" parameters (accross participants) of difficulty: the **intercept** and the **slope**
+- It estimates intercepts for all groups (the "random" variable)
+- The "fixed" effects are informed by random effects, and **vice versa** (shrinkage)
+
+## Mixed model (random intercept and random slope)
+
+```{r}
+model <- lmer(RT ~ 1 + Difficulty + (1 + Difficulty | Participant), data = df)
+
+parameters(model, effects = "fixed")
+```
+
+- Both the intercept and the slope are estimated as fixed effects and for each level of the random variable
+
+
+### Visualizing
+
+```{r}
+p <- ggplot(data = viz_data, aes(x = Difficulty, y = Predicted)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), alpha = 0.3) + 
+  geom_point(data = df, aes(x = Difficulty, y = RT, color = Participant))
 p
 ```
 
 
-- The "fixed" effects are informed by random effects, and **vice versa** (shrinkage)
+### Extracting random parameters
 
+```{r}
+dfrandom <- parameters(model, effects = "random", group_level = TRUE)
 
-## Mixed model (random intercept and random slope)
+as.data.frame(dfrandom)
+```
 
+### Back to the individual scores
+
+```{r}
+dfsub$random_coef <- dfrandom %>% 
+  filter(Parameter == "(Intercept)") %>% 
+  pull(Coefficient)
+
+report(cor.test(dfsub$Difficulty, dfsub$random_coef))
+```
+
+### Resources
+
+- Mixed models
+  - **Mixed Models with R**
+  - Singmann, H., \& Kellen, D. (2019). **An Introduction to Mixed Models for Experimental Psychology**. *(preprint available online)*
+
+- General / Other
+  - **R for Psychological Science** *(https://psyr.djnavarro.net/)*
+  - **YaRrr! The Pirate’s Guide to R** *(https://bookdown.org/ndphillips/YaRrr/)*
+  - **GAMs in R** *(https://noamross.github.io/gams-in-r-course/)*
