@@ -6,7 +6,7 @@
 # Just answer "no" (or "yes", it doesn't really matter) and let it install
 
 # NOTE: It might ask (in the console) whether to update only from source or something like that,
-# and waiting for your to enter a response. Just press ENTER and let it finish
+# and waiting for you to enter a response. Just press ENTER and let it finish
 
 
 # Download and install

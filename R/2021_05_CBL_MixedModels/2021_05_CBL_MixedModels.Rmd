@@ -124,7 +124,7 @@ df <- read.csv("https://raw.githubusercontent.com/
                 DominiqueMakowski/teaching/master/
                 R/2021_05_CBL_MixedModels/data.csv")
 ```
-```{r include = FALSE, eval = FALSE}
+```{r include = FALSE, eval = TRUE}
 df <- read.csv("https://raw.githubusercontent.com/DominiqueMakowski/teaching/master/R/2021_05_CBL_MixedModels/data.csv")
 ```
 
