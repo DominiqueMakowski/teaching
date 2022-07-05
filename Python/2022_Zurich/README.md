@@ -1,6 +1,11 @@
 # Advanced Python for Psychologists
 
+- University of Zürich
+- 7, 8, 11th July 2022
+
 This folder contains the material used for this lecture.
+
+- [**Download Slides (.pptx)**](https://github.com/DominiqueMakowski/teaching/raw/master/Python/2022_Zurich/AdvancedPython_2022.pptx)
 
 ## Exercice your pull requests
 
