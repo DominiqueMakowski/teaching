@@ -43,8 +43,6 @@ This folder contains the material used for this lecture.
 
 ### For MP
 
-- MP must delete this line
-
 ### For NR
 
 - NR must delete this line
