@@ -31,7 +31,6 @@ This folder contains the material used for this lecture.
 
 ### For ZM
 
-- ZM must delete this line
 
 ### For CM
 
