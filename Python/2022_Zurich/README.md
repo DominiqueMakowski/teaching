@@ -58,7 +58,3 @@ This folder contains the material used for this lecture.
 - LS must delete this line
 
 ### For GS
-
-- GS must delete this line
-
-
