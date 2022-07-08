@@ -47,8 +47,6 @@ This folder contains the material used for this lecture.
 
 ### For NR
 
-- NR must delete this line
-
 ### For AR
 
 - AR must delete this line
