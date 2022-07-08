@@ -23,7 +23,7 @@ This folder contains the material used for this lecture.
 
 ### For PK
 
-- PK must delete this line
+
 
 ### For SL
 
