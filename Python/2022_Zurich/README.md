@@ -51,7 +51,7 @@ This folder contains the material used for this lecture.
 
 ### For AR
 
-- AR must delete this line
+
 
 ### For LS
 
