@@ -35,8 +35,6 @@ This folder contains the material used for this lecture.
 
 ### For CM
 
-- CM must delete this line
-
 ### For FM
 
 - FM must delete this line
