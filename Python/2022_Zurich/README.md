@@ -15,7 +15,7 @@ This folder contains the material used for this lecture.
 
 ### For RC
 
-- RC must delete this line
+
 
 ### For RJ
 
