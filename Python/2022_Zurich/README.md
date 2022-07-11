@@ -48,6 +48,4 @@ This folder contains the material used for this lecture.
 
 ### For LS
 
-- LS must delete this line
-
 ### For GS
