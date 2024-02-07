@@ -594,8 +594,8 @@ iris |>
 - A pipe takes the output of the previous function as the first argument of the next
 - What will `True * 3` return?
 - What will `TRUE / 10` return?
-- I do `ggplot(iris, aes(x="Sepal.Length", y="Petal.Length")` but it throws an error. Why?
-- I do `ggplot(iris, aes(x=Sepal.Length, y=Petal.length)` but it throws an error. Why?
+- I do `ggplot(iris, aes(x="Sepal.Length", y="Petal.Length"))` but it throws an error. Why?
+- I do `ggplot(iris, aes(x=Sepal.Length, y=Petal.length))` but it throws an error. Why?
 
 ## Distributions {.center background-color="#212121"}
 
@@ -966,9 +966,11 @@ p + facet_wrap(~parameters)
 
 ## Random draws
 
-::: {.nonincremental .stretch}
+::: {.stretch}
 
 - Let's draw 10 times 1 trial with a probability of 0.5
+
+:::: {.fragment}
 
 ```{r}
 #| echo: true
@@ -976,6 +978,26 @@ p + facet_wrap(~parameters)
 y <- rbinom(10, size=1, prob=0.5)
 y
 ```
+
+::::
+
+- This is equivalent to:
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+y <- c()
+for(i in 1:10) {
+  y <- c(y, sample(c(0, 1), replace = TRUE))
+}
+y
+```
+
+::::
+
+- The "probability" argument changes the ratio of 0s and 1s
 
 :::: {.fragment}
 
