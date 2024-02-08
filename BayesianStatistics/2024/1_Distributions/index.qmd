@@ -1424,7 +1424,7 @@ data.frame(x = runif(50000, min=-10, max=10)) |>
 ## Beta Distribution
 
 
-- The Beta distribution models probabilities of probabilities
+- The Beta distribution can be used to model probabilities
 - Defined by two shape parameters, **α** and **β** (`shape1` \& `shape2`)^[Note that other parameterizations exist, especially in Beta-regression models]
 - Only expressed in the range $]0, 1[$ (i.e., null outside of this range)
 
