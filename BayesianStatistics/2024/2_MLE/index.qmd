@@ -13,6 +13,7 @@ format:
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
     incremental: true
     chalkboard: true
+    scrollable: true
     slide-number: "c/t"
     highlight-style: "github-dark"
     code-line-numbers: false
@@ -554,7 +555,7 @@ summary(model)
 ::: {.stretch}
 
 - The **t-value** is the ratio between the **coefficient** and its **standard error**
-- It can be seen as a "**standardized**" coefficient (independent of the scale/unit of the variable)
+- It can be seen as a "**standardized**" index of the coefficient's precision (independent of the scale/unit of the variable)
 - It corresponds to a point on a *t*-distribution of corresponding degrees of freedom (df), centered at 0
 - This *t*-distribution is the assumption made in Frequentist statistics about the distribution of coefficients (effects) **under the null hypothesis**
   - Not to be confused with the distribution of residuals (which is assumed to be *Normal*)
@@ -566,7 +567,7 @@ summary(model)
 
 ::: {.nonincremental .stretch}
 
-- The *t*-value shows how likely our coefficient compared to the assumed distributions fo possible coefficient under the **null hypothesis** (i.e., if there is an absence of effect)
+- The *t*-value shows how likely our coefficient compared to the assumed distributions of possible coefficient under the **null hypothesis** (i.e., if there is an absence of effect)
 
 ```{r}
 #| echo: true
@@ -621,28 +622,37 @@ df |>
 
 ## Is our coefficient big?
 
-::: {.nonincremental .stretch}
+
+::: {.columns}
+
+:::: {.column width="50%"}
 
 - Is our coefficient likely to be observed under the null hypothesis?
   - What is the *probability* $p$ to obtain a coefficient at least *as big as ours* (in both directions) under the null hypothesis?
   - $Prob > |t|$
 
+::::: {.fragment}
+
+
 ```{r}
 #| echo: true
 
-prob <- pt(-t_value, df=30, lower.tail = TRUE) + pt(t_value, df=30, lower.tail = FALSE)
+prob <- pt(-t_value, df=30, lower.tail = TRUE) + 
+  pt(t_value, df=30, lower.tail = FALSE)
+
 round(prob, 4)
 ```
 
-:::: {.fragment}
+:::::
 
 - Look again at your summary...
 
 ::::
 
-:::: {.fragment}
+:::: {.column}
 
-- **It is the *p*-value!**
+::::: {.fragment}
+
 
 ```{r}
 #| echo: false
@@ -650,19 +660,24 @@ round(prob, 4)
 summary(model)
 ```
 
+:::::
+
+- **It is the *p*-value!**
+- You computed the *p*-value by hand!
+
 ::::
 
 :::
 
-- You computed the *p*-value by hand!
+
 
 ## *p*-value
 
 ::: {style="font-size: 80%"}
 
-- The **p-value** is the probability of observing a value >= to the **t-value** under the null hypothesis. In other words, it is the probability of obtaining test results at least as big as the result actually observed if we repeat it an infinite amount of times and there is no true effect.
+- The **p-value** is the probability of observing a value >= to the ***t*-value** under the null hypothesis. In other words, it is the probability of obtaining test results at least as big as the result actually observed if we repeat it an infinite amount of times and there is no true effect.
   - It is quite convoluted... 
-- Is not a "trivial" value. It has some delicate aspects.
+  - Is not a "trivial" value. It has some delicate aspects.
 - **Estimation**: It is the product of several complicated steps:
   - Estimate the SE of the coefficients (this is not a straightforward process)
   - Estimate the *df* (degrees of freedom) of the model (this is also problematic for complex models, e.g., mixed models)
@@ -714,7 +729,7 @@ df |>
 
 - Can we do better and get more intuitive quantities? 
   - The answer starts with **"B"**... 
-  - And ends with **"ootstrapping"**
+  - And ends with **"...ootstrapping"**
 
 
 ## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
