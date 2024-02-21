@@ -594,10 +594,10 @@ df |>
 
 :::
 
-## Is our coefficient big?
+## Is our coefficient "big" (i.e., precise)?
 
 - Is our coefficient likely to be observed under the null hypothesis?
-  - What is the *probability* to obtain a coefficient at least *as big as ours* (in both directions) under the null hypothesis?
+  - What is the *probability* to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
   - $Prob > |t|$
 
 ```{r}
@@ -620,7 +620,7 @@ df |>
        title = paste0("t-Distribution (df=30); ", "t-value = ", round(t_value, 2), "\n"))
 ```
 
-## Is our coefficient big?
+## Is our coefficient "big" (i.e., precise)?
 
 
 ::: {.columns}
@@ -628,7 +628,7 @@ df |>
 :::: {.column width="50%"}
 
 - Is our coefficient likely to be observed under the null hypothesis?
-  - What is the *probability* $p$ to obtain a coefficient at least *as big as ours* (in both directions) under the null hypothesis?
+  - What is the *probability* $p$ to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
   - $Prob > |t|$
 
 ::::: {.fragment}
@@ -675,7 +675,7 @@ summary(model)
 
 ::: {style="font-size: 80%"}
 
-- The **p-value** is the probability of observing a value >= to the ***t*-value** under the null hypothesis. In other words, it is the probability of obtaining test results at least as big as the result actually observed if we repeat it an infinite amount of times and there is no true effect.
+- The **p-value** is the probability of observing a value >= to the ***t*-value** under the null hypothesis. In other words, it is the probability of obtaining test results at least as "big" (precisely away from 0) as the result actually observed if we repeat it an infinite amount of times and there is no true effect.
   - It is quite convoluted... 
   - Is not a "trivial" value. It has some delicate aspects.
 - **Estimation**: It is the product of several complicated steps:

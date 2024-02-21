@@ -5,3 +5,5 @@
 
 - [Lecture 1](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/1_Distributions)
 - [Lecture 2](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/2_MLE)
+- [Lecture 3](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/3_Bootstrapping)
+- [Lecture 4](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/4_BayesTheorem)

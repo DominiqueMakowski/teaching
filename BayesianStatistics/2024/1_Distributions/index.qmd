@@ -586,6 +586,22 @@ iris |>
 
 :::
 
+
+
+## For loops
+
+
+TODO
+- Introduce the idea of sequences (1:10) to iterate on, concept of iterations
+- Introduce the idea of initalization of empty objects and sequential combination
+
+## Functions 
+
+
+TODO
+
+
+
 ## Quizz Time {background-color="#FFAB91"}
 
 - `1 + "1"` returns an error. Why?
