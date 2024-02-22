@@ -978,7 +978,8 @@ Observations: 32</code></pre>
 <h2>Credible Interval - ETI</h2>
 <ul>
 <li class="fragment">The <strong>Equal-Tailed Interval</strong> (<strong>ETI</strong>) is the commonly used as an index of CI because of its computational simplicity</li>
-<li class="fragment">It is made by exclusing an <strong>equal amount data from each tail</strong> of the distribution. that typically exclude 2.5% from each tail of the distribution and always include</li>
+<li class="fragment">It is made by exclusing an <strong>equal amount data from each tail</strong> of the distribution.</li>
+<li class="fragment">Typically, we do a 95% CI, which excludes 2.5% from each tail of the distribution.</li>
 <li class="fragment">It is the range of values that contains 95% of the distribution (i.e., the 2.5% and 97.5% quantiles)</li>
 <li class="fragment">It can be computed using the <code>bayestestR::eti()</code> function</li>
 </ul>
@@ -998,10 +999,8 @@ x         | [0.02, 0.53]</code></pre>
 <section id="credible-interval---eti-1" class="slide level2">
 <h2>Credible Interval - ETI</h2>
 <ul>
-<li class="fragment">It works well for symmetric distributions, but can be problematic for skewed distributions
-<ul>
-<li class="fragment">It can exclude “high probability” regions of the distribution, which is counter-intuitive</li>
-</ul></li>
+<li class="fragment">It works well for symmetric distributions, but can be problematic for skewed distributions</li>
+<li class="fragment">For example, it can exclude “high probability” regions of the distribution, which is counter-intuitive</li>
 </ul>
 <div class="fragment">
 <div class="cell">
@@ -1202,7 +1201,7 @@ x         | [0.02, 0.27]</code></pre>
 <section id="probability-of-null-effect" class="slide level2">
 <h2>Probability of null effect?</h2>
 <ul>
-<li class="fragment">The <em>pd</em> tells us if the probability of a distribution (of an effect) is positive (&gt; 0) or negative (&lt; 0)</li>
+<li class="fragment">The <em>pd</em> tells us the probability that a distribution (of an effect) is positive (&gt; 0) or negative (&lt; 0)</li>
 <li class="fragment">Can we know if the effect is larger or smaller than <strong>zero</strong>?</li>
 <li class="fragment">In other words, can we know the probability of the effect being different from 0?
 <ul>

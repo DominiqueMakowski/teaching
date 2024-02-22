@@ -660,7 +660,7 @@ mad(r_values)
 
 - The **Equal-Tailed Interval** (**ETI**) is the commonly used as an index of CI because of its computational simplicity
 - It is made by exclusing an **equal amount data from each tail** of the distribution.
-that typically exclude 2.5% from each tail of the distribution and always include
+- Typically, we do a 95% CI, which excludes 2.5% from each tail of the distribution.
 - It is the range of values that contains 95% of the distribution (i.e., the 2.5% and 97.5% quantiles)
 - It can be computed using the `bayestestR::eti()` function
 
@@ -677,7 +677,7 @@ bayestestR::eti(data, ci = 0.95)
 ## Credible Interval - ETI 
 
 - It works well for symmetric distributions, but can be problematic for skewed distributions
-  - It can exclude "high probability" regions of the distribution, which is counter-intuitive
+- For example, it can exclude "high probability" regions of the distribution, which is counter-intuitive
 
 ::: {.fragment}
 
@@ -853,7 +853,7 @@ bayestestR::pd_to_p(c(0.90, 0.95), direction = "two-sided")
 
 ## Probability of null effect?
 
-- The *pd* tells us if the probability of a distribution (of an effect) is positive (> 0) or negative (< 0)
+- The *pd* tells us the probability that a distribution (of an effect) is positive (> 0) or negative (< 0)
 - Can we know if the effect is larger or smaller than **zero**?
 - In other words, can we know the probability of the effect being different from 0? 
   - Which is the goal of **Null Hypothesis Significance Testing (NHST)**
