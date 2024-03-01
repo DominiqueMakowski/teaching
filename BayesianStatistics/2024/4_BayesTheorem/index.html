@@ -743,7 +743,7 @@
 <section id="exercice-1" class="slide level2">
 <h2>Exercice 1</h2>
 <ul>
-<li class="fragment">Third toss and fourth tosses, it’s head sagain!</li>
+<li class="fragment">Third toss, it’s head sagain!</li>
 <li class="fragment">Compute the new posterior probabilities</li>
 <li class="fragment">What can we conclude?</li>
 </ul>
@@ -786,7 +786,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a>likelihood_tails <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.6</span>, <span class="fl">0.5</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span>)</span>
 <span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">10</span>) {</span>
-<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a>  posterior <span class="ot">&lt;-</span> prior <span class="sc">*</span> likelihood_tails</span>
+<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a>  posterior <span class="ot">&lt;-</span> posterior <span class="sc">*</span> likelihood_tails</span>
 <span id="cb9-4"><a href="" aria-hidden="true" tabindex="-1"></a>  posterior <span class="ot">&lt;-</span> posterior <span class="sc">/</span> <span class="fu">sum</span>(posterior)</span>
 <span id="cb9-5"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -889,7 +889,8 @@
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(n <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
 <span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a>  posterior <span class="ot">&lt;-</span> prior <span class="sc">*</span> likelihood_heads</span>
 <span id="cb12-3"><a href="" aria-hidden="true" tabindex="-1"></a>  posterior <span class="ot">&lt;-</span> posterior <span class="sc">/</span> <span class="fu">sum</span>(posterior)</span>
-<span id="cb12-4"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-4"><a href="" aria-hidden="true" tabindex="-1"></a>  prior <span class="ot">&lt;-</span> posterior</span>
+<span id="cb12-5"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
@@ -905,7 +906,7 @@
 </div>
 <ul>
 <li class="fragment">We can see that the posterior is different from the previous case</li>
-<li class="fragment">We conclude that the coin is most likely the Biased (0.7, 0.6, or 0.3)</li>
+<li class="fragment">We conclude that the coin is most likely the Biased (0.)</li>
 <li class="fragment">In any case, we put the sketchy guy in jail. Thanks, maths!</li>
 </ul>
 </section>

@@ -340,7 +340,6 @@ data |>
 ```{r}
 #| echo: true
 
-
 prior <- posterior
 
 # Update
@@ -370,7 +369,7 @@ data[data$n==2, ] |>
   scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
   scale_x_continuous(breaks=cointypes, 
                      labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
-  labs(x="Coin type", y="Probability", title="After 2 coin toss") +
+  labs(x="Coin type", y="Probability", title="After 2 coin tosses") +
   theme_bw()
 ```
 :::
@@ -378,7 +377,7 @@ data[data$n==2, ] |>
 
 ## Exercice 1
 
-- Third toss and fourth tosses, it's head sagain!
+- Third toss, it's head sagain!
 - Compute the new posterior probabilities
 - What can we conclude?
 
@@ -416,7 +415,7 @@ data[data$n==3, ] |>
   scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
   scale_x_continuous(breaks=cointypes, 
                      labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
-  labs(x="Coin type", y="Probability", title="After 3 coin toss") +
+  labs(x="Coin type", y="Probability", title="After 3 coin tosses") +
   theme_bw()
 ```
 :::
@@ -440,7 +439,7 @@ data[data$n==3, ] |>
 
 likelihood_tails <- c(0.7, 0.6, 0.5, 0.4, 0.3)
 for(n in 4:10) {
-  posterior <- prior * likelihood_tails
+  posterior <- posterior * likelihood_tails
   posterior <- posterior / sum(posterior)
 }
 ```
@@ -475,7 +474,7 @@ data[data$n >= 4, ] |>
   # scale_alpha_continuous(breaks = 1:max(data$n), range = c(0.1, 1)) +
   scale_x_continuous(breaks=cointypes, 
                      labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
-  labs(x="Coin type", y="Probability", title="After 20 coin toss") +
+  labs(x="Coin type", y="Probability", title="After 20 coin tosses") +
   theme_bw()
 ```
 :::
@@ -502,7 +501,7 @@ data[data$n==3, ] |>
   scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
   scale_x_continuous(breaks=cointypes, 
                      labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
-  labs(x="Coin type", y="Probability", title="After 4 coin toss") +
+  labs(x="Coin type", y="Probability", title="After 3 coin tosses") +
   theme_bw()
 ```
 :::
@@ -581,6 +580,7 @@ d |>
 for(n in 1:3) {
   posterior <- prior * likelihood_heads
   posterior <- posterior / sum(posterior)
+  prior <- posterior
 }
 ```
 
@@ -606,7 +606,7 @@ data.frame(cointypes=cointypes, posterior=posterior) |>
 :::
 
 - We can see that the posterior is different from the previous case
-- We conclude that the coin is most likely the Biased (0.7, 0.6, or 0.3)
+- We conclude that the coin is most likely the Biased (0.)
 - In any case, we put the sketchy guy in jail. Thanks, maths!
 
 ## What? I can tweak my results by tweaking the prior? It feels *illegal*
