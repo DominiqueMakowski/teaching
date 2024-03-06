@@ -354,7 +354,7 @@ bayestestR::bayesfactor_models(model0, denominator=model1)
 
 :::: {.fragment}
 
-| Bayes Factor ($BG_{10}$)       | Interpretation        |
+| Bayes Factor ($BF_{10}$)       | Interpretation        |
 |--------------------|-----------------------------------|
 | > 100              | Extreme evidence for H1           |
 | 30 – 100           | Very strong evidence for H1       |
@@ -374,7 +374,7 @@ bayestestR::bayesfactor_models(model0, denominator=model1)
 
 ## Bayes Factor Interpretation
 
-- The `effectsize` package provides many automated interpetation functions
+- The `effectsize` package provides many automated interpretation functions
 
 ::: {.fragment}
 
@@ -477,6 +477,20 @@ effectsize::interpret_bf(0.290)
 ```
 
 :::
+
+
+## Exercice 2 {background-color="#FFAB91"}
+
+- "I try to analyze the linear relationship between the sepal length and the sepal width of the iris flowers (`iris` built in dataset). Should I control for *Species*?"
+
+```{r}
+#| include: false
+
+m1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+m2 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
+
+bayestestR::bayesfactor_models(m1, denominator=m2)
+```
 
 - Pizzas can help us get a intuitive feeling for BFs
 
