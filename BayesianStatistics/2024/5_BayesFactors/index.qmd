@@ -576,8 +576,8 @@ BayesFactor::ttestBF(formula=mpg ~ am, data=mtcars)
 - $BF_{10}$ = 86.59
 - Very strong evidence in favour of the hypothesis that there is a non-null difference between the two groups
 - What about priors?
-  - In this particular case, let's just say that they are good enough "default" priors (there is a lot of literature justifying it). Can be used "as-is" without worry\*
-  - \*Some people will strongly disagree with this
+  - In this particular case, let's just say that they are good enough "default" priors (there is a lot of literature justifying it). Can be used "as-is" without too much worry\*
+  - \*Some people will might lose it if they see this
 
 ::::
 

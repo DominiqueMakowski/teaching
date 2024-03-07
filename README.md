@@ -8,3 +8,4 @@
 - [Lecture 3](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/3_Bootstrapping)
 - [Lecture 4](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/4_BayesTheorem)
 - [Lecture 5](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/5_BayesFactors)
+- [Lecture 6](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/6_Posteriors)

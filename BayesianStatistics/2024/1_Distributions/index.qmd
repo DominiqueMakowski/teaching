@@ -243,6 +243,8 @@ class(x)
 ::::
 :::::
 
+<!-- TODO: difference between "=" and "==" -->
+
 ## Vectors vs. Lists (1)
 
 - A **vector** is a "list" of elements of the **same class**, indexed by their **position**
