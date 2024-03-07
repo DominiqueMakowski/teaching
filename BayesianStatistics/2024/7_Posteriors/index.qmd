@@ -1,6 +1,6 @@
 ---
 title: "Bayesian Statistics"
-subtitle: "**6. Posteriors**"
+subtitle: "**7. Posteriors**"
 author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
 # institute: "University of Sussex"
 title-slide-attributes:
