@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Title shown in tab -->
+        <title>Bayesian Stats - Evaluation</title>
+
+        <!-- Load JsPsych -->
+        <script src="https://unpkg.com/jspsych"></script>
+        <link href="https://unpkg.com/jspsych/css/jspsych.css" rel="stylesheet" type="text/css" />
+        <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
+
+        <style>
+            .narrow-text {
+                max-width: 50%;
+            }
+        </style>
+    </head>
+
+    <body></body>
+
+    <script>
+        // Initialize experiment =================================================
+        var timeline = []
+
+        var jsPsych = initJsPsych({
+            on_finish: function () {
+                // window.location = "https://realitybending.github.io/research/"
+                jsPsych.data.displayData("json") // Display data in browser
+            },
+        })
+
+        // Free text -------------------------------------------------------------------
+        timeline.push({
+            type: jsPsychSurveyText,
+            css_classes: ["narrow-text"],
+            preamble:
+                "<p align='left'><b>Thanks so much for taking a bit of time to provide feedback on the Bayesian statistics module</b> (~3min).<br><br>Your responses are very important for improving the module as well as for the lecturer. Don't hesitate to mention what didn't work, <b>but also what was positive</b>. Your responses are completely anonymous and will not impact your mark in any way.</p>",
+            questions: [
+                { prompt: "What did you like best about this module?", name: "WhatDidYouLike" },
+                { prompt: "What would you change about this module?", name: "WhatWouldYouChange" },
+            ],
+            data: {
+                screen: "freetext",
+            },
+        })
+
+        var likert_scale = ["Not at all", "Not enough", "The right amount", "Too much"]
+
+        timeline.push({
+            type: jsPsychSurveyLikert,
+            preamble: "2/3<br><br><b>Dom's teaching sessions were...</b>",
+            scale_width: 700,
+            questions: [
+                {
+                    prompt: "<b align='left'>...interactive</b> (e.g., tasks, discussions)",
+                    name: "Interactive",
+                    labels: likert_scale,
+                },
+                {
+                    prompt: "<b align='left'>... clearly presented</b> (e.g., clear delivery, easy-to-follow session structure)",
+                    name: "Clear",
+                    labels: likert_scale,
+                },
+                {
+                    prompt: "<b align='left'>... engaging</b> (e.g., captivating delivery, engaging slides)",
+                    name: "Engaging",
+                    labels: likert_scale,
+                },
+                {
+                    prompt: "<b align='left'>... interesting</b> (e.g., the topic was relevant/important)",
+                    name: "Interesting",
+                    labels: likert_scale,
+                },
+            ],
+            randomize_question_order: true,
+            data: {
+                screen: "likert1",
+            },
+        })
+
+        var likert_scale2 = ["Not at all", "Slighly", "Moderately", "Very much", "Absolutely"]
+
+        timeline.push({
+            type: jsPsychSurveyLikert,
+            preamble: "3/3<br><br><b>I think this module...</b>",
+            scale_width: 700,
+            questions: [
+                {
+                    prompt: "... was relevant to my future career",
+                    name: "Career",
+                    labels: likert_scale2,
+                },
+                {
+                    prompt: "... improved my understanding of statistics in general",
+                    name: "Understanding",
+                    labels: likert_scale2,
+                },
+                {
+                    prompt: "... allowed me to confidently apply Bayesian statistics",
+                    name: "Application",
+                    labels: likert_scale2,
+                },
+
+                {
+                    prompt: "In general, I enjoyed this module",
+                    name: "Enjoyed",
+                    labels: likert_scale2,
+                },
+            ],
+            randomize_question_order: false,
+            data: {
+                screen: "likert2",
+            },
+        })
+
+        timeline.push({
+            type: jsPsychSurveyText,
+            css_classes: ["narrow-text"],
+            questions: [
+                {
+                    prompt: "Please share any other comments, thoughts or feedback that you might have",
+                    name: "Feedback",
+                },
+            ],
+            data: {
+                screen: "feedback",
+            },
+        })
+
+        // Save Data
+        timeline.push({
+            type: jsPsychHtmlButtonResponse,
+            stimulus:
+                "<p>Done! now click on 'Continue' and <b>wait until your responses have been successfully saved</b> before closing the tab.</p> ",
+            choices: ["Continue"],
+            data: { screen: "waitdatasaving" },
+        })
+
+        // Save data via DataPipe
+        timeline.push({
+            type: jsPsychPipe,
+            action: "save",
+            experiment_id: "CwHDReojAFY7", // This in generated in the DataPipe interface
+            filename: `${jsPsych.randomization.randomID(10)}.csv`,
+            data_string: () => jsPsych.data.get().csv(),
+        })
+
+        timeline.push({
+            type: jsPsychHtmlButtonResponse,
+            css_classes: ["narrow-text"],
+            stimulus: "<h1>Thank you for participating</h1>" + "<p>You can now close the tab.</p>",
+            choices: ["End"],
+            data: { screen: "endscreen" },
+        })
+
+        //  Run the timeline =====================================================
+        jsPsych.run(timeline)
+    </script>
+</html>

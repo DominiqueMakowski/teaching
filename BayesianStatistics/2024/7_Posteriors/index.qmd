@@ -45,9 +45,9 @@ set.seed(333)
 :::: {.column width="50%"}
 
 - We understood how Bayes' Theorem can be used to update beliefs in light of new evidence
-- How it can be used to compare models using Bayes Factors (BF)
-- That we can set priors over parameters of interest (e.g., correlation coefficients) using distributions
-- This theory has wide applications beyond statistics (e.g., in neuroscience)
+- How it can be used to compare models using Bayes Factors (BF) and use it in basic hypothesis tests (e.g., correlation)
+- How we can set priors over parameters of interest (e.g., correlation coefficients) using distributions
+- Started to understand why Bayes theory has wide applications beyond statistics (e.g., in neuroscience)
 
 
 ::::
@@ -102,7 +102,7 @@ set.seed(333)
 - Instead, it relies on **Bayes' theorem** to compute the **posterior distribution** of the parameters of interest
 - Frequentist estimation: Data * Model * Optimization Algorithm -> result (best fitting parameters) -> inference relies on further assumptions
 - Bayesian estimation does not rely on assumptions, but instead, starts with initial "results" (priors), and then updates these results based on the data
-- prior distribution over parameters are the starting point
+- Every statistical parameter that we want to estimate has to start with a prior distribution
 
 ## History of Statistics
 
@@ -224,13 +224,15 @@ head(posterior)
 - But sampling takes time: **often a tradeoff between accuracy and speed**
 
 
-## Recap {background-color="#003B49"}
+## Quizz {background-color="#FFAB91"}
 
 - Doing Bayesian Statistics often involves describing the posterior distribution (the updated beliefs about some statistical parameters, e.g., the correlation value)
+- Computing the posterior distribution is easy and can be done with formulas
 - In real-world problems, the exact posterior distribution is *intractable* (i.e., we can't compute it analytically using formulas)
-- However, we can still draw random samples from this distribution
-- By drawing many samples, we get an empirical approximation of the posterior distribution
-- This process of random sampling is called **Markov Chain Monte Carlo (MCMC)**
+- Not being able to compute the posterior analytically means that we cannot draw random samples from this distribution
+- Drawing many samples from the posterior allows us to get an empirical approximation of the posterior distribution
+- The process of random sampling is called **York Chain Monte Altro (YMCA)**
+- The process of random sampling is called **Markov Chain Monte Carlo (MCMC)**
 
 
 
