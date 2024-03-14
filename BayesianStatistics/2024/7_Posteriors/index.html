@@ -412,9 +412,9 @@
 <div class="column" style="width:50%;">
 <ul>
 <li class="fragment">We understood how Bayes’ Theorem can be used to update beliefs in light of new evidence</li>
-<li class="fragment">How it can be used to compare models using Bayes Factors (BF)</li>
-<li class="fragment">That we can set priors over parameters of interest (e.g., correlation coefficients) using distributions</li>
-<li class="fragment">This theory has wide applications beyond statistics (e.g., in neuroscience)</li>
+<li class="fragment">How it can be used to compare models using Bayes Factors (BF) and use it in basic hypothesis tests (e.g., correlation)</li>
+<li class="fragment">How we can set priors over parameters of interest (e.g., correlation coefficients) using distributions</li>
+<li class="fragment">Started to understand why Bayes theory has wide applications beyond statistics (e.g., in neuroscience)</li>
 </ul>
 </div><div class="column">
 <div class="fragment">
@@ -458,7 +458,7 @@
 <li class="fragment">Instead, it relies on <strong>Bayes’ theorem</strong> to compute the <strong>posterior distribution</strong> of the parameters of interest</li>
 <li class="fragment">Frequentist estimation: Data * Model * Optimization Algorithm -&gt; result (best fitting parameters) -&gt; inference relies on further assumptions</li>
 <li class="fragment">Bayesian estimation does not rely on assumptions, but instead, starts with initial “results” (priors), and then updates these results based on the data</li>
-<li class="fragment">prior distribution over parameters are the starting point</li>
+<li class="fragment">Every statistical parameter that we want to estimate has to start with a prior distribution</li>
 </ul>
 </section>
 <section id="history-of-statistics" class="slide level2">
@@ -606,14 +606,16 @@ Thinning interval = 1
 <li class="fragment">But sampling takes time: <strong>often a tradeoff between accuracy and speed</strong></li>
 </ul>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>https://chi-feng.github.io/mcmc-demo/app.html?algorithm=RandomWalkMH&amp;target=banana</p></li></ol></aside></section>
-<section id="recap-1" class="slide level2" data-background-color="#003B49">
-<h2>Recap</h2>
+<section id="quizz" class="slide level2" data-background-color="#FFAB91">
+<h2>Quizz</h2>
 <ul>
 <li class="fragment">Doing Bayesian Statistics often involves describing the posterior distribution (the updated beliefs about some statistical parameters, e.g., the correlation value)</li>
+<li class="fragment">Computing the posterior distribution is easy and can be done with formulas</li>
 <li class="fragment">In real-world problems, the exact posterior distribution is <em>intractable</em> (i.e., we can’t compute it analytically using formulas)</li>
-<li class="fragment">However, we can still draw random samples from this distribution</li>
-<li class="fragment">By drawing many samples, we get an empirical approximation of the posterior distribution</li>
-<li class="fragment">This process of random sampling is called <strong>Markov Chain Monte Carlo (MCMC)</strong></li>
+<li class="fragment">Not being able to compute the posterior analytically means that we cannot draw random samples from this distribution</li>
+<li class="fragment">Drawing many samples from the posterior allows us to get an empirical approximation of the posterior distribution</li>
+<li class="fragment">The process of random sampling is called <strong>York Chain Monte Altro (YMCA)</strong></li>
+<li class="fragment">The process of random sampling is called <strong>Markov Chain Monte Carlo (MCMC)</strong></li>
 </ul>
 </section>
 <section id="mcmc-chains-inspection" class="slide level2">
