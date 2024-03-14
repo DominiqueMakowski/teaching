@@ -26,6 +26,8 @@ editor_options:
 execute:
   cache: true
 fig-dpi: 300
+params:
+  show_answers: "false"
 ---
 
 ```{r}
@@ -1203,7 +1205,10 @@ cor.test(xrank, yrank, method="pearson")
 
 ## Exercice {background-color="#FFAB91"}
 
+::: {.nonincremental}
+
 - In the `iris` in-built dataset, report the Spearman correlation between `Petal.Length` and `Petal.Width` for the `setosa` species only
+- Desired output^[Note that your exact values might slightly differ due to the *stochastic* (i.e., random) nature of the MCMC algorithm]:
 
 ```{r}
 #| echo: false
@@ -1215,7 +1220,7 @@ bayestestR::describe_posterior(rez)
 ```
 
 
-<!-- TODO: MCMC: https://www.youtube.com/watch?v=rZk2FqX2XnY&t=788s&ab_channel=RichardMcElreath -->
+:::
 
 ## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
 
