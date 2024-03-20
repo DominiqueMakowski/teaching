@@ -1,0 +1,134 @@
+---
+title: "Teaching Evaluation"
+editor: source
+editor_options: 
+  chunk_output_type: console
+format:
+  html:
+    code-fold: true
+    self-contained: true
+    toc: true
+---
+
+## Data Preparation
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(easystats)
+library(patchwork)
+library(ggside)
+```
+
+
+
+```{r}
+df <- read.csv("../data/data.csv") |> 
+  arrange(Occupation) |> 
+  mutate_at(vars(c("Understanding", "Application", "Career", "Enjoyed")), \(x) {
+    case_when(
+      x == 0 ~ "Not at all",
+      x == 1 ~ "Slighly",
+      x == 2 ~ "Moderately",
+      x == 3 ~ "Very much",
+      .default = "Absolutely"
+    ) |> 
+    factor(levels=c("Not at all", "Slighly", "Moderately", "Very much", "Absolutely"))
+    }) |> 
+  mutate_at(vars("Engaging", "Interesting", "Clear", "Interactive"), \(x) {
+    case_when(
+    x == 0 ~ "Not at all",
+    x == 1 ~ "Not enough",
+    x == 2 ~ "The right amount",
+    .default = "Too much"
+  ) |> 
+    factor(levels=c("Not at all", "Not enough", "The right amount", "Too much"))
+  })
+```
+
+
+## Comments
+
+```{r}
+make_table <- function(df, what="Feedback") {
+  df |> 
+    select(all_of(c("Occupation", what))) |>
+    data_rename(what, "Feedback") |> 
+    filter(Feedback != "") |> 
+    gt::gt() |> 
+    gt::cols_width(
+      Occupation ~ pct(30),
+      ) |>  
+    gt::opt_stylize() |> 
+    gt::opt_interactive(use_compact_mode=TRUE) 
+}
+
+make_table(df, "Feedback") |> 
+    gt::tab_header("General Comments")
+make_table(df, "WhatDidYouLike") |> 
+    gt::tab_header("What did you like?")
+make_table(df, "WhatWouldYouChange") |> 
+    gt::tab_header("What would you change?")
+```
+
+## Scores
+
+
+```{r}
+#| fig-width: 14
+#| fig-height: 10
+
+make_plot1 <- function(df, what="Understanding", title="title") {
+  df |> 
+    summarize(N = n() / nrow(df), .by=all_of(c("Occupation", what))) |> 
+    datawizard::data_rename(what, "what") |>
+    complete(Occupation, what, fill=list(N=0)) |> 
+    ggplot(aes(x=what, y=N, fill=Occupation)) +
+    geom_bar(stat="identity", position="stack") +
+    scale_y_continuous(labels=scales::percent) +
+    scale_fill_material_d("rainbow") +
+    labs(title = title, x = NULL, y=NULL) +
+    theme_minimal() +
+    theme(plot.title = element_text(hjust = 0.5, face="bold"))
+}
+
+p1 <- make_plot1(df, "Engaging", title = "Engaging")
+p2 <- make_plot1(df, "Interesting", title = "Interesting")
+p3 <- make_plot1(df, "Clear", title = "Clearly presented")
+p4 <- make_plot1(df, "Interactive", title = "Interactive")
+
+(p1 + p2) /
+(p3 + p4) +
+  plot_layout(guides = "collect") +
+  plot_annotation(title = "Dom's teaching sessions were...")
+```
+
+```{r}
+#| fig-width: 14
+#| fig-height: 10
+
+make_plot2 <- function(df, what="Engaging", title="title") {
+  df |> 
+    summarize(N = n() / nrow(df), .by=all_of(c("Occupation", what))) |> 
+    datawizard::data_rename(what, "what") |>
+    complete(Occupation, what, fill=list(N=0)) |> 
+    ggplot(aes(x=what, y=N, fill=Occupation)) +
+    geom_bar(stat="identity", position="stack") +
+    scale_y_continuous(labels=scales::percent) +
+    scale_fill_material_d("rainbow") +
+    labs(x = NULL, title=title, y=NULL) +
+    theme_minimal() 
+}
+
+p1 <- make_plot2(df, "Understanding", title = "This module improved my understanding of statistics in general")
+p2 <- make_plot2(df, "Application", title = "This module allowed me to confidently apply Bayesian statistics")
+p3 <- make_plot2(df, "Career", title = "This module was relevant to my future career")
+p4 <- make_plot2(df, "Enjoyed", title = "In general, I enjoyed this module")
+
+(p1 + p2) /
+(p3 + p4) +
+  plot_layout(guides = "collect")
+```
+

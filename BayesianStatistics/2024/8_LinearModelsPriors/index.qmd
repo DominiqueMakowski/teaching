@@ -1,0 +1,1135 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**8. Linear Models (Priors)**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # theme: blood
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+params:
+  show_answers: false
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+
+set.seed(333)
+```
+
+## Recap {background-color="#003B49"}
+
+- You know how to:
+  - Use of Bayes Factors in simple tests (e.g., *t*-tests and correlations)
+  - Run Bayesian Correlations
+  - Sample from the posterior using MCMC
+  - Describe and report the posterior distribution
+
+## Goal {background-color="#1A237E"}
+
+::: {.columns}
+
+::: {.column width="50%"}
+
+- Last week, we were interested in the correlation between `mpg` and `qsec` in the `mtcars` dataset
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+BayesFactor::correlationBF(mtcars$mpg, mtcars$qsec)
+
+ggplot(mtcars, aes(x = mpg, y = qsec)) +
+  geom_point(size=3) +
+  stat_ellipse(color="blue", linewidth=1)
+```
+
+:::::
+
+::::
+
+:::: {.column}
+
+- This week, we are interested in the **actual relationship** (i.e., not just the strength of association, but the actual characteristics of the regression line) between these 2 variables
+
+::::: {.fragment}
+
+```{r}
+#| echo: false
+
+ggplot(mtcars, aes(x = mpg, y = qsec)) +
+  geom_point(size=3) +
+  geom_smooth(method="lm", color="red", se=FALSE, linewidth=2, linetype="dashed")
+```
+
+:::::
+
+::::
+
+:::
+
+## 1. Visualizing Model Predictions {.center background-color="#003B49"}
+
+
+## Exercice {background-color="#FFAB91"}
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Fit a Frequentist linear model to predict `qsec` from `mpg`. Write down its parameters.
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+#| include: !expr params$show_answers
+
+
+model <- lm(qsec ~ mpg, data = mtcars) 
+summary(model)
+```
+
+:::::
+
+::::
+
+:::: {.column}
+
+- Visualize the relationship
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+#| include: !expr params$show_answers
+
+ggplot(mtcars, aes(x = mpg, y = qsec)) +
+  geom_point(size=3) +
+  geom_smooth(method="lm", color="red")
+```
+
+:::::
+
+::::
+
+:::
+
+## Slope and Intercept
+
+- Using `geom_smooth(method="lm")` is convenient, but we don't know what's happening under the hood
+- What is happening under the hood?^[This is not exactly how `geom_smooth()` actually works]
+  - A linear model is computed between *x* and *y* ($y = ax + b$)
+  - The slope *a* (aka $\beta$) and the intercept *b* (aka $\beta_{0}$ or the *Intercept*) are extracted
+  - We draw a segment of this line between the minimum and the maximum of *x*
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+ggplot(mtcars, aes(x = mpg, y = qsec)) +
+  geom_point(size=3) +
+  geom_abline(intercept = 15, slope = 0.12, color="red")
+```
+
+:::
+  
+## How to Visualize a Model
+
+- There is another way to get this regression line
+- A model (i.e., an equation with a set of parameters, e.g., intercept and slope) is a *"function"*
+  - $y = 2 + 3x$
+  - It expresses *y* "as a function" of *x*
+  - For any value of *x*, we can **predict** a value of *y*
+- A statistical model can be used to generate **predictions**
+
+## Making Predictions
+
+- One get get predictions from almost any models (using the `predict()` or the `insight::get_predicted()` function - the latter being slightly being more user-friendly and comprehensive)
+
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred <- insight::get_predicted(model, data=mtcars) 
+length(pred)
+```
+
+:::
+
+- What is `pred`? And why is its length 32?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+data <- mtcars  # Copy dataframe (not good to modify builtin datasets)
+data$Predicted <- pred
+```
+
+:::
+
+- Let's add it to the dataframe and visualize it
+
+## Visualizing Predicted Distribution
+
+- We can compare the actual distribution of the outcome variable `qsec` with that of the predicted outcome
+- A good model where predictions are close to the actual values should reproduce the same distribution of the outcome variable
+- However, in general, a linear model is geared at predicting the "mean" of the outcome variable (by definition)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+ggplot(data) +
+  geom_density(aes(x=qsec), fill="green", alpha=0.5) +
+  geom_density(aes(x=Predicted), fill="red", alpha=0.5)
+```
+
+:::
+
+
+## Visualizing Predicted Relationship (1)
+
+- But we can also visualize the relationship between the predictor and the outcome using the predictions
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+ggplot(data, aes(x = mpg, y = qsec)) +
+  geom_point(size=3) +
+  geom_point(aes(y=Predicted), size=3, color="red", alpha=0.5) 
+```
+
+:::
+
+## Visualizing Predicted Relationship (2)
+
+- Interesting pattern... what if we connect the points with a line?
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+
+ggplot(data, aes(x = mpg, y = qsec)) +
+  geom_point(size=3) +
+  geom_line(aes(y=Predicted), color="red") +
+  geom_point(aes(y=Predicted), size=3, color="red", alpha=0.5)
+  
+```
+
+:::
+
+- It looks like the line we got using the equation
+
+## Datagrids
+
+- The relationship estimated by models can be visualized using **predictions** (rather than using directly the parameters), which is convenient
+- We can make predictions on non-existing values, example, equally spaced values simply to visualize the relationship
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+newdata <- data.frame(mpg = c(10, 20, 30, 40))
+```
+
+:::
+
+- This is called a "datagrid" (a grid of new data points used for model predictions and visualizations)
+- We can also predict the confidence interval around the predictions
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred <- insight::get_predicted(model, data=newdata, ci=0.95) |> 
+  as.data.frame() |> 
+  cbind(newdata)
+head(pred)
+```
+
+:::
+
+## Visualize Predictions with Confidence Intervals
+
+- Plot everything
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mtcars |> 
+  ggplot(aes(x = mpg)) +
+  geom_point(aes(y = qsec), size=3) +
+  geom_ribbon(data=pred, aes(ymin=CI_low, ymax=CI_high), fill="red", alpha=0.2) +
+  geom_line(data=pred, aes(y=Predicted), color="red") 
+```
+
+:::
+
+## 2. Bayesian Models: Quick n' Dirty {.center background-color="#003B49"}
+
+## Installing `brms`
+
+- From now on until the rest of the module, we will use the `brms` package to fit Bayesian models
+- We took some time to do the installation in the 2nd module, but if you missed it, let me know during the break
+- It is a package that is complicated to install. Why?
+- Because it needs to install another programming language...
+
+
+## Stan, JAGS, and BUGS
+
+- As mentioned, performing Bayesian inference is complex
+- Modern Bayesian full inference (using MCMC), known to be resource-intensive and slow, is currently best performed (most fast and flexibly) by **dedicated languages**, aka **probabilistic programming languages**
+  - **Stan** (the most popular one): Named in honour of Stanislaw Ulam, pioneer of the *Monte Carlo* method
+  - **JAGS**: "Just Another Gibbs Sampler"
+  - **BUGS**: "Bayesian Inference Using Gibbs Sampling"
+  - **PyMC** (Python)
+  - **Turing** (Julia)
+- These languages are designed to perform Bayesian inference, and are optimized for that purpose
+- They are not general-purpose programming languages
+- **What a hassle to learn a new language just to do Bayesian inference!**
+
+## About `brms`
+
+- There are "wrappers" around these languages that allow us to use them from other general purpose languages like R or Python
+- In R:
+  - **brms** = **B**ayesian **R**egression **M**odels using '**S**tan'
+  - **rstanarm** = **R** interface to **Stan** for **A**pplied **R**egression **M**odeling
+- **rstanarm**
+  - Has different functions for different models (e.g., `stan_lm()`, `stan_glm()`, `stan_lmer()`, `stan_glmer()`, `stan_gamm4()` etc.)
+  - Each models are implemented with precompiled Stan code
+  - It is slightly easier to install, but less flexible
+- **brms**
+  - Became the most popular
+  - Main difference is that **brms** has only one main function, `brm()`, which can fit almost any model
+  - These models are translated into Stan code, and then compiled
+  - Overhead time when fitting new models, but it is more flexible
+  
+## Doing a Bayesian Regression
+
+- Frequentist model
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- lm(qsec ~ mpg, data = mtcars) 
+parameters::parameters(model)
+```
+
+:::
+
+- Bayesian model
+
+:::
+
+```{r}
+#| echo: false
+
+model <- brms::brm(qsec ~ mpg, data = mtcars) 
+parameters::parameters(model)
+```
+```{r}
+#| echo: true
+
+model <- brms::brm(qsec ~ mpg, data = mtcars, refresh=0) 
+parameters::parameters(model)
+```
+
+:::
+
+- R-hat: Convergence diagnostic index. Should be less than < 1.05.
+- ESS: Effective Sample Size: how many "good iterations" (truly independent draws) we have. Should be > 400 (the maximum being the number of iterations that we darw).  
+## Voilà!
+
+- You've fitted and reported a Bayesian model.
+- The results are very coherent with the Frequentist version. 
+- This is a valid Bayesian analysis...
+- But because we are on our way to become **Bayesian Masters**, we can actually spend more time and thought about aspects related to this model.
+
+
+## 3. Bayesian Models: Priors {.center background-color="#003B49"}
+
+
+
+## `brms` formula
+
+- the `brm()` function's first argument is a formula, like in `lm()`
+- Because formula can become complex, it is useful to specify the formula in a separate variable
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+f <- brms::brmsformula(qsec ~ mpg)
+```
+
+:::
+
+- We could then run `brms::brm(f, data=mtcars)` to fit the Bayesian linear model
+
+## Regression formulas: the intercept
+
+- In most model functions in R, the intercept is included by default:
+  - `lm(qsec ~ mpg)` is equivalent to `lm(qsec ~ 1 + mpg)`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+coef(lm(qsec ~ mpg, data=mtcars))
+coef(lm(qsec ~ 1 + mpg, data=mtcars))
+```
+
+:::
+
+- One can remove the intercept by using `lm(qsec ~ 0 + mpg)`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+coef(lm(qsec ~ 0 + mpg, data=mtcars))
+```
+
+:::
+
+## Exercice {background-color="#FFAB91"}
+
+- Visualize the relationship predicted by the No Intercept model
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| include: !expr params$show_answers
+
+newdata <- data.frame(mpg = seq(-5, 35, 5))
+
+lm(qsec ~ 0 + mpg, data=mtcars) |> 
+  insight::get_predicted(data=newdata, ci=0.95) |> 
+  as.data.frame() |> 
+  cbind(newdata) |> 
+  ggplot(aes(x = mpg, y = Predicted)) +
+  geom_ribbon(aes(ymin=CI_low, ymax=CI_high), fill="red", alpha=0.2) +
+  geom_line(color="red") +
+  geom_point(data=mtcars, aes(x = mpg, y = qsec), size=3) 
+```
+
+:::
+
+- It forces the regression line to go through the origin (0, 0)
+
+## `brms` formula exception: the intercept
+
+- In `brms`, there is a twist. For reasons that we will clarify later, it is often good to explicitly include the intercept as a "variable"
+  - `y ~ 0 + Intercept` is equivalent to `y ~ 1`
+  - This makes the intercept as a normal coefficient rather than a special thing, which makes it easier for priors specification
+- Instead of the previous formula, we will use:
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+f <- brms::brmsformula(qsec ~ 0 + Intercept + mpg)
+```
+
+:::
+
+- The 2 formulas would have resulted in the same model, but explicitly including the intercept makes it easier to...
+- **Specify priors**
+
+## Get Default Priors
+
+- Bayesian inference is the process of reallocating credibility over parameters, from **priors** to **posteriors**
+- In the correlation example, we had a prior over the correlation coefficient
+- In Bayesian regression models, we have priors over the coefficients (regression parameters)
+- How many parameters do we have in this linear model?
+- The `get_prior()` function returns the priors associated with a given model or a formula (i.e., the default priors made by `brms`)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+brms::get_prior(f, data = mtcars)
+```
+
+:::
+
+## Understanding Priors Parameters
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+brms::get_prior(f, data = mtcars)
+```
+
+:::
+
+- `brms` has set a default prior for each parameter
+- 2 types of parameters for linear models:
+  - Coefficients (`b`) and Distributional (`sigma`)
+- For coefficients `b`, `brms` uses "flat" priors for any coefficient
+  - The first row just indicates this "default", and then it shows that this default is applied to all the following coefficients (`vectorized`)
+  - Changing the priors in the first row would is a convenient way to apply the same prior for all coefficients
+  - We can ignore the first row because we want to be specific with our priors
+- We will ignore the last row `sigma` (for now) to focus on the coefficients
+
+## Flat priors
+
+- What are "flat" priors?
+  - Uniform priors
+- These are the "least informative": we consider that all possible values have the same probability: we consider that a slope of -1 million and +1 million are equally likely
+  - Using this prior gives result equivalent to Maximum Likelihood Estimation (because the prior has no influence, so only the likelihood matters)
+- It might seem like a good idea to use flat priors, but **it is not**
+  - Not realistic: we often don't expect the slope to be -1 million or +1 million
+  - Not good for the inference algorithm: we waste energy exploring regions of the parameter space that are not realistic
+  - Can lead to convergence issues
+- In general, **avoid flat priors**
+
+## Alternative to Flat Priors
+
+- Instead of flat priors, we can set **weakly informative priors**
+- Priors that are "weakly informative" give some information to the model, but not too much
+- For example, we can use a normal distribution with a very large standard deviation
+  - It helps the model to converge by avoiding unrealistic regions of the parameter space
+  - At the same time doesn't provide too much information to the model that would "bias" the estimation too much
+
+
+## What priors to use? Intercept (1)
+
+- The Intercept represents the predicted value of the dependent variable (`qsec`) when the independent variable (`mpg`) is 0
+- We can plot our data to visualize the unit and range of our data
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| fig-height: 3
+
+p <- ggplot(mtcars, aes(x = mpg, y = qsec)) +
+  geom_point(size=3) + 
+  geom_vline(xintercept = 0, linetype="dashed") +
+  geom_hline(yintercept = 0, linetype="dashed") +
+  coord_cartesian(xlim = c(-1, 35), ylim = c(-1, 30))
+p
+```
+
+:::
+
+- What would be a good range for the **Intercept**?
+
+
+## What priors to use? Intercept (2)
+
+- We can visualize regression lines with different intercepts (and a slope of 0)
+  - e.g., 10? 15? 17? 20? 25?
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| fig-height: 3
+
+p + geom_abline(intercept = c(10, 15, 17, 20, 25), slope = 0, 
+                color=c("purple", "red", "orange", "green", "blue"), linewidth=1)
+```
+
+:::
+
+- Which one feels the most probable? Which one the least?
+
+## What priors to use? Intercept (3)
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-height: 3
+
+library(patchwork)
+
+prior1 <- data.frame(y = seq(0, 30, length.out=100))
+prior1$x <- dnorm(prior1$y, mean=17.85, sd=4)
+
+p0 <- ggplot(prior1, aes(x = x, y = y)) + 
+  geom_area(orientation = "y", alpha=0.8, fill="orange") +
+  scale_x_reverse() +
+  labs(y="qsec", x="Density")
+
+p1 <- p + geom_abline(intercept = c(10, 15, 17, 20, 25), slope = 0, 
+                color=c("purple", "red", "orange", "green", "blue"), linewidth=1)
+
+p0 + p1 + patchwork::plot_layout(widths=c(1, 2))
+```
+
+:::
+
+- We could use a normal distribution for the intercept, centered as a "best guess"
+- The center could be set to the average `y` value
+  - Because if the slope = 0 (no effect), the intercept would be the average `y` value (cf. "constant" models)
+  - `mean(mtcars$qsec)` = 17.85
+- What precision? In the example above, we used $SD=4$
+
+
+## What priors to use? Intercept (4)
+
+- Such prior ($Normal(17.85, 4)$) is actually quite narrow (i.e., "strongly informative")
+  - The actual SD of the response variable is  `sd(mtcars$qsec)` = 1.79
+- You can express more or less strong beliefs by changing the precision
+- It is good to use informative priors, but it requires thought and understanding of the parameters and the data
+- However, since we want with weakly informative priors, we can use a wider distribution
+  - e.g., $Normal(17.85, 40)$ 
+  - Or $Normal(M_{qsec}, 10*SD_{qsec})$ = $Normal(17.85, 17.9)$
+- Can be convenient to express the prior intercept as a function of the outcome variable's mean and SD
+  - But the details don't actually have a huge impact (e.g., taking 10 SD vs. 12 SD)
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| message: false
+#| fig-height: 4
+
+prior2 <- data.frame(y = seq(-150, 150, length.out=100))
+prior2$x <- dnorm(prior2$y, mean=17.85, sd=17.9)
+
+p0b <- ggplot(prior2, aes(x = x, y = y)) + 
+  geom_area(orientation = "y", alpha=0.8, fill="orange") +
+  scale_x_reverse() +
+  labs(y="qsec", x="Density") + 
+  coord_cartesian(ylim=c(-100, 100))
+
+p0b + (p1 + coord_cartesian(ylim=c(-100, 100))) + patchwork::plot_layout(widths=c(1, 2))
+```
+
+:::
+
+
+
+## Priors for Coefficients (1)
+
+
+- In psychology, we are often interested in **testing effects**
+  - Coefficients (slopes) often represent some **effects** of interest
+  - We are often interested in assessing whether a coefficient is different from 0
+- Thus, in order to avoid "biasing" the effects in one or the other direction, we often use a **symmetric distribution centered at 0**
+  - This means that we are not assuming that the effect is positive or negative
+  - In other words, this prior is **agnostic** (doesn't provide information) about the **direction** of the effect, only its absolute size, penalizing very large effects
+  - We consider that the most likely value is 0, but we equally allow for the possibility of positive or negative effects
+  - This kind of prior centered at 0 is conservative (more or less, depending on its width): it pushes the effects towards 0
+- That's one of the reason why the idea that we can "cheat" with priors to make things significant is not true
+  - Using wide symmetric priors centered at 0 is a common default choice and, if anything, is more conservative than Frequentist estimation
+  
+## Priors for Coefficients (2)
+
+- Assuming the intercept is the mean of `qsec` (17.85), how do various slopes look like
+  - e.g., -1, -0.5, 0, 0.5, 1
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-height: 4
+
+p + 
+  geom_abline(intercept = 17.85, slope = c(-1, -0.5, 0, 0.5, 1), 
+              color=c("purple", "red", "orange", "green", "blue"), linewidth=1)
+```
+
+:::
+
+- Values of $|1|$ are quite extreme
+- We can pick a distribution that does not give very high plausibility to values $> |1|$
+
+## Priors for Coefficients (3)
+
+- E.g., $Normal(0, 0.5)$
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-height: 5
+
+prior3 <- data.frame(x = seq(-2, 2, length.out=100))
+prior3$y<- dnorm(prior3$x, mean=0, sd=0.5)
+
+ggplot(prior3, aes(x = x, y = y)) + 
+  geom_area(alpha=0.8, fill="red") +
+  labs(y="Density", x="Slope")
+```
+
+:::
+
+
+## Priors for Coefficients (4)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Because we want to be even weaker in the information, we are going to pick $Normal(0, 5)$
+- What does this prior say? 
+  - Any slope between -3 SD and + 3 SD (i.e., a slope of -15 and +15) is possible
+  - A slope of 1,000,000 is very unlikely
+- Note that other priors could have been suited
+- For instance, if the data was particularly noisy, or prone to outliers (extreme values), that could make the slope "wobbly", we could use a *t*-distribution
+  - Red: $Normal(\mu=0, \sigma=0.5)$
+  - Purple: $Normal(\mu=0, \sigma=5)$
+  - Blue: $t(df=2, \mu=0, \sigma=5)$
+
+::::
+
+:::: {.column width="50%"}
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: false
+#| fig-height: 5
+
+prior4 <- data.frame(x = seq(-25, 25, length.out=100))
+prior4$y <- dnorm(prior4$x, mean=0, sd=5) * 8
+
+prior5 <- data.frame(x = seq(-25, 25, length.out=100))
+prior5$y <- brms::dstudent_t(prior5$x, df=2, mu=0, sigma=5) * 8
+
+ggplot(prior4, aes(x = x, y = y)) + 
+  geom_area(data=prior3, alpha=0.8, fill="red") +
+  geom_line(data=prior5, color="blue", linewidth=2) +
+  geom_line(color="purple", linewidth=2) +
+  labs(y="Density", x="Slope")
+```
+
+:::::
+
+::::
+
+:::
+
+
+## Chill out, it's just a prior
+
+- The choice of priors might seem like a big deal, tedious, daunting and scary
+- But it's not:
+  - If you understand your model, you can easily and quickly make reasonable choices
+  - It's forgiving, even if you put a "bad" prior (e.g., too informative), if the effect is there the data will overwhelm the prior (unless it's *mis-specified*, example putting a $Beta$ prior on a negative relationship)
+  - In many cases, the priors don't matter as much
+  - *In many cases, even using "flat" priors is fine and won't make any difference*
+- But it is useful to think about priors 
+  - Especially when you can have strong prior knowledge
+  - If you want to be particularly conservative ("error control")
+  - If you have noisy or little data
+  - If you care about efficiency (slow models that have trouble converging)
+
+
+
+
+## Set Priors in `brms`
+
+- Now that we know what priors we want to set:
+  - Intercept: $Normal(17.85, 17.9)$
+  - Slope: $Normal(0, 5)$
+- How to we actually set them
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+brms::get_prior(f, data=mtcars)
+```
+
+:::
+
+- These are the default priors
+
+
+## Using `set_prior()`
+
+- We create new priors using `set_prior()`, but we need to identify them using `class` and `coef`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+brms::set_prior("normal(17.85, 17.9)", class = "b", coef = "Intercept")
+```
+
+:::
+
+## Validate Priors in `brms`
+
+- A collection of priors is created using the `c()` function
+- This collection of priors is then "validated" using `validate_prior()`
+  - Check whether all the specified priors exist in the list of priors
+  - Whether the replacement of default priors is successful
+  - Create a new list of priors (default + replaced ones) that we can provide to the model
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+priors <- c(
+  brms::set_prior("normal(17.85, 17.9)", class = "b", coef = "Intercept"),
+  brms::set_prior("normal(0, 5)", class = "b", coef = "mpg")
+) |> 
+  brms::validate_prior(f, data=mtcars)
+
+priors
+```
+
+:::
+
+- Our new object named `priors` is a collection of priors that we can provide to the model
+
+## Check Priors
+
+- Are these priors reasonable? i.e., not too narrow, not too wide?
+- In the case of a simple linear model, where we have a good idea of the range of the coefficients, we can gauge that just from the prior parameters themselves
+- In more complex models, it can become complicated
+  - Because parameters don't have an intuitive sense or are not directly interpretable
+  - Because parameters interact with one-another
+- One way to check if priors are appropriate is to do a **"Prior Predictive Check"**
+  - This means that we will generate **model predictions** using the priors only
+  - We can then see if these predictions are reasonable
+  
+## Make a model with priors only
+  
+- We can fit a model in `brms` using the `brm` function
+  - Enter the formula, the data, and priors
+  - If the `prior` argument is not specified, it will use the default that we got from `get_prior()`
+- Here we want to only use the priors (as if we didn't see the data)
+  - Using the argument: `sample_prior="only"`
+- The model is first **compiled** (into Stan and C++ code), then **sampled** from
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model_priors <- brms::brm(
+  formula=f,
+  data = mtcars,
+  prior = priors,
+  sample_prior="only"
+)
+```
+
+:::
+
+## Generate predictions
+
+- We want to see what this "prior-only" model predicts
+- We want to make predictions on a *datagrid* (to visualize the regression lines that it predicts)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+newdata <- data.frame(mpg = seq(10, 35, length.out=6))
+newdata
+```
+
+:::
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred <- get_predicted(model_priors, data=newdata, iterations=250) |> 
+  as.data.frame() |> 
+  cbind(newdata)
+nrow(pred)
+ncol(pred)
+```
+
+:::
+  
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+names(pred)
+```
+
+:::
+  
+## Iterations
+
+- Bayesian sampling is done in **iterations**
+- Each iteration represents one possibility of model parameters
+- More plausible possibilities will appear more frequently
+- In our case, this means that we have one line (Intercept + Slope) for each iteration
+- We can visualize these various lines, that corresponds to possibilities emerging from our prior parameters (i.e;, before seeing the data)
+
+## Prior Predictive Check - Relationship
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+p <- ggplot(mtcars, aes(x=mpg, y=qsec)) +
+  geom_point(size=3) 
+p
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+p + geom_line(data=pred, aes(y=iter_1))
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+p + 
+  geom_line(data=pred, aes(y=iter_1)) + 
+  geom_line(data=pred, aes(y=iter_2)) +
+  geom_line(data=pred, aes(y=iter_3)) +
+  geom_line(data=pred, aes(y=iter_4)) +
+  geom_line(data=pred, aes(y=iter_5)) 
+```
+
+:::
+
+## Reshaping iterations
+
+- We can reshape the dataframe (pivot longer) to have one column for all iterations and another to identify the iteration number
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred <- reshape_iterations(pred)
+head(pred)
+```
+
+:::
+
+## Visualizing iterations
+
+- We can visualize the relationship between `mpg` and `qsec` for each iteration
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| fig-height: 5
+
+p + 
+  geom_line(data=pred, aes(y=iter_value, group=iter_group), alpha=0.2) +
+  coord_cartesian(ylim=c(-400, 400))
+```
+
+:::
+
+- What can we say?
+- This is rather good
+  - As we can see, the priors don't predict the exact relationship (the priors don't have knowledge about what we want to conclude)
+  - They don't predict crazy numbers either (e.g., a billion)
+
+## Prior Predictive Check - Distribution
+
+- We can also visualize the distribution of the predictions to see whether it predicts the outcome in a reasonable range of values
+
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred <- get_predicted(model_priors, data=mtcars, iterations=250) |> 
+  as.data.frame() |> 
+  reshape_iterations()
+
+head(pred)
+```
+
+:::
+  
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+ggplot(mtcars, aes(x=qsec)) +
+  geom_density(fill="skyblue") +
+  geom_density(data=pred, aes(x=iter_value, group=iter_group), color="orange", alpha=0.5) +
+  coord_cartesian(xlim=c(-100, 100), ylim=c(0, 0.3))
+```
+
+:::
+  
+## Exercice {background-color="#FFAB91"}
+
+- Set very narrow priors for the `Intercept` and `mpg` parameters that are centered around the values that we know from the Frequentist model
+- Run posterior predictive checks. Try to obtain a plot that looks like this:
+
+
+```{r}
+#| echo: false
+
+priors <- c(
+  brms::set_prior("normal(15.35, 0.15)", class = "b", coef = "Intercept"),
+  brms::set_prior("normal(0.12, 0.03)", class = "b", coef = "mpg")
+) |> 
+  brms::validate_prior(f, data=mtcars)
+
+model_priors2 <- update(model_priors, prior=priors, refresh=0)
+
+get_predicted(model_priors2, data=newdata, iterations=250) |> 
+  as.data.frame() |> 
+  reshape_iterations() |> 
+  cbind(newdata) |> 
+  ggplot(aes(x=mpg)) +
+  geom_point(data=mtcars, aes(y=qsec), size=3) +
+  geom_line(aes(y=iter_value, group=iter_group), alpha=0.1)
+```
+
+
+```{r}
+#| echo: !expr params$show_answers
+#| include: false
+
+priors <- c(
+  brms::set_prior("normal(15.35, 0.15)", class = "b", coef = "Intercept"),
+  brms::set_prior("normal(0.12, 0.03)", class = "b", coef = "mpg")
+) |> 
+  brms::validate_prior(f, data=mtcars)
+
+model_priors2 <- update(model_priors, prior=priors, refresh=0)
+
+get_predicted(model_priors2, data=newdata, iterations=250) |> 
+  as.data.frame() |> 
+  reshape_iterations() |> 
+  cbind(newdata) |> 
+  ggplot(aes(x=mpg)) +
+  geom_point(data=mtcars, aes(y=qsec), size=3) +
+  geom_line(aes(y=iter_value, group=iter_group), alpha=0.1)
+```
+
+
+## The Art of Priors
+
+Prior choice can depend on:
+
+- Mathematical constraints
+  - "sigma is strictly positive"
+  - "correlations are between -1 and 1"
+- Theoretical knowledge
+  - Expert knowledge ("this is a plausible range")
+  - Model knowledge (e.g., Intercept to the mean of the outcome)
+- Empirical knowledge
+  - From previous studies
+  - From descriptive stats
+- Types of Priors *(different terms, no established taxonomy)*
+  - Weakly informative, mildly informative, strongly informative
+  - Uninformative, regularizing, principled, informative^[See https://vasishth.github.io/bayescogsci/book/ch-compbda.html#sec-sensitivity]
+  - Skeptical, agnostic, believer^[See https://github.com/easystats/bayestestR/discussions/238]
+
+## The Practical Side
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- In general, don't panic and follow the rule of "good enough"
+  - If you have reasons to care about priors (e.g., complex models, convergence issues, having ideas about priors), then it's worth spending time to think about them 
+  - If not, go with the default / flat / very weakly informative priors. 
+  - But don't forget to assess the convergence of the model (e.g., MCMC sampling process) to make sure the posterior has been well explored...
+
+::::
+
+:::: {.column width="50%"}
+
+![](img/priors_meme.png){width=55%}
+
+::::
+
+:::
+
+## Homework
+
+- Watch McElreath's lecture on MCMC
+  - https://www.youtube.com/watch?v=rZk2FqX2XnY&t=788s&ab_channel=RichardMcElreath
+
+
+<!-- - MCMC -->
+<!--   - Metropolis -->
+<!-- - Predictive posterior checks -->
+<!-- - Variational inference -->
+<!-- - Derivatives -->
+
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+
+

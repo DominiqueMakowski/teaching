@@ -26,8 +26,6 @@ editor_options:
 execute:
   cache: true
 fig-dpi: 300
-params:
-  show_answers: "false"
 ---
 
 ```{r}

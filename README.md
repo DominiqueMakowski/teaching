@@ -9,3 +9,4 @@
 - [Lecture 4](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/4_BayesTheorem)
 - [Lecture 5 & 6](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/5_BayesFactors)
 - [Lecture 7](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/7_Posteriors)
+- [Lecture 8](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/8_LinearModelsPriors)
