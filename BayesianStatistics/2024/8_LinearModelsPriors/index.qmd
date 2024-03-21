@@ -27,7 +27,7 @@ execute:
   cache: true
 fig-dpi: 300
 params:
-  show_answers: false
+  show_answers: true
 ---
 
 ```{r}
@@ -359,14 +359,8 @@ parameters::parameters(model)
 
 - Bayesian model
 
-:::
+::: {.fragment}
 
-```{r}
-#| echo: false
-
-model <- brms::brm(qsec ~ mpg, data = mtcars) 
-parameters::parameters(model)
-```
 ```{r}
 #| echo: true
 
@@ -376,8 +370,10 @@ parameters::parameters(model)
 
 :::
 
+- `refresh=0` silences the printing of the sampling <sub>(to avoid cluttering this slide)</sub> 
 - R-hat: Convergence diagnostic index. Should be less than < 1.05.
-- ESS: Effective Sample Size: how many "good iterations" (truly independent draws) we have. Should be > 400 (the maximum being the number of iterations that we darw).  
+- ESS: Effective Sample Size: how many "good iterations" (truly independent draws) we have. Should be > 400 (the maximum being the number of iterations that we draw).  
+
 ## Voilà!
 
 - You've fitted and reported a Bayesian model.

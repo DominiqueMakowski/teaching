@@ -479,14 +479,48 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <li class="fragment">Fit a Frequentist linear model to predict <code>qsec</code> from <code>mpg</code>. Write down its parameters.</li>
 </ul>
 <div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars) </span>
+<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = qsec ~ mpg, data = mtcars)
 
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.8161 -1.0287  0.0954  0.8623  4.7149 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 15.35477    1.02978  14.911 2.05e-15 ***
+mpg          0.12414    0.04916   2.525   0.0171 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.65 on 30 degrees of freedom
+Multiple R-squared:  0.1753,    Adjusted R-squared:  0.1478 
+F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
+</div>
+</div>
 </div>
 </div><div class="column">
 <ul>
 <li class="fragment">Visualize the relationship</li>
 </ul>
 <div class="fragment">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">color=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -504,9 +538,9 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec)) <span class="sc">+</span></span>
-<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">15</span>, <span class="at">slope =</span> <span class="fl">0.12</span>, <span class="at">color=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">15</span>, <span class="at">slope =</span> <span class="fl">0.12</span>, <span class="at">color=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -537,8 +571,8 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> insight<span class="sc">::</span><span class="fu">get_predicted</span>(model, <span class="at">data=</span>mtcars) </span>
-<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> insight<span class="sc">::</span><span class="fu">get_predicted</span>(model, <span class="at">data=</span>mtcars) </span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 32</code></pre>
 </div>
@@ -549,8 +583,8 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> mtcars  <span class="co"># Copy dataframe (not good to modify builtin datasets)</span></span>
-<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Predicted <span class="ot">&lt;-</span> pred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> mtcars  <span class="co"># Copy dataframe (not good to modify builtin datasets)</span></span>
+<span id="cb10-2"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Predicted <span class="ot">&lt;-</span> pred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <ul>
@@ -566,9 +600,9 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x=</span>qsec), <span class="at">fill=</span><span class="st">"green"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x=</span>Predicted), <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x=</span>qsec), <span class="at">fill=</span><span class="st">"green"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x=</span>Predicted), <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -586,9 +620,9 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y=</span>Predicted), <span class="at">size=</span><span class="dv">3</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y=</span>Predicted), <span class="at">size=</span><span class="dv">3</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -627,7 +661,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <ul>
@@ -636,10 +670,10 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> insight<span class="sc">::</span><span class="fu">get_predicted</span>(model, <span class="at">data=</span>newdata, <span class="at">ci=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(newdata)</span>
-<span id="cb11-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> insight<span class="sc">::</span><span class="fu">get_predicted</span>(model, <span class="at">data=</span>newdata, <span class="at">ci=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb14-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(newdata)</span>
+<span id="cb14-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted        SE   CI_low  CI_high mpg
 1  16.59613 0.5754098 15.42099 17.77128  10
@@ -657,11 +691,11 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb13-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mpg)) <span class="sc">+</span></span>
-<span id="cb13-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> qsec), <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">ymin=</span>CI_low, <span class="at">ymax=</span>CI_high), <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>Predicted), <span class="at">color=</span><span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> qsec), <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">ymin=</span>CI_low, <span class="at">ymax=</span>CI_high), <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>Predicted), <span class="at">color=</span><span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -732,8 +766,8 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars) </span>
-<span id="cb14-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars) </span>
+<span id="cb17-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Parameter   | Coefficient |   SE |         95% CI | t(30) |      p
 ------------------------------------------------------------------
@@ -745,110 +779,10 @@ mpg         |        0.12 | 0.05 | [ 0.02,  0.22] |  2.53 | 0.017 </code></pre>
 <ul>
 <li class="fragment">Bayesian model</li>
 </ul>
-<p>:::</p>
+<div class="fragment">
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
-Chain 1: 
-Chain 1: Gradient evaluation took 3.5e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.35 seconds.
-Chain 1: Adjust your expectations accordingly!
-Chain 1: 
-Chain 1: 
-Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 1: 
-Chain 1:  Elapsed Time: 0.015 seconds (Warm-up)
-Chain 1:                0.012 seconds (Sampling)
-Chain 1:                0.027 seconds (Total)
-Chain 1: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
-Chain 2: 
-Chain 2: Gradient evaluation took 2e-06 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
-Chain 2: Adjust your expectations accordingly!
-Chain 2: 
-Chain 2: 
-Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 2: 
-Chain 2:  Elapsed Time: 0.014 seconds (Warm-up)
-Chain 2:                0.011 seconds (Sampling)
-Chain 2:                0.025 seconds (Total)
-Chain 2: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
-Chain 3: 
-Chain 3: Gradient evaluation took 3e-06 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
-Chain 3: Adjust your expectations accordingly!
-Chain 3: 
-Chain 3: 
-Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 3: 
-Chain 3:  Elapsed Time: 0.015 seconds (Warm-up)
-Chain 3:                0.014 seconds (Sampling)
-Chain 3:                0.029 seconds (Total)
-Chain 3: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
-Chain 4: 
-Chain 4: Gradient evaluation took 3e-06 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
-Chain 4: Adjust your expectations accordingly!
-Chain 4: 
-Chain 4: 
-Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 4: 
-Chain 4:  Elapsed Time: 0.014 seconds (Warm-up)
-Chain 4:                0.012 seconds (Sampling)
-Chain 4:                0.026 seconds (Total)
-Chain 4: </code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars, <span class="at">refresh=</span><span class="dv">0</span>) </span>
+<span id="cb19-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Fixed Effects
 
@@ -864,33 +798,20 @@ Parameter | Median |       95% CI |   pd |  Rhat |     ESS
 sigma     |   1.68 | [1.33, 2.21] | 100% | 1.001 | 2972.00</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars, <span class="at">refresh=</span><span class="dv">0</span>) </span>
-<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># Fixed Effects
-
-Parameter   | Median |         95% CI |     pd |  Rhat |     ESS
-----------------------------------------------------------------
-(Intercept) |  15.38 | [13.33, 17.44] |   100% | 1.002 | 3425.00
-mpg         |   0.12 | [ 0.03,  0.22] | 99.30% | 1.002 | 3576.00
-
-# Sigma
-
-Parameter | Median |       95% CI |   pd |  Rhat |     ESS
-----------------------------------------------------------
-sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </div>
-</div>
-<p>:::</p>
 <ul>
-<li class="fragment"><p>R-hat: Convergence diagnostic index. Should be less than &lt; 1.05.</p></li>
-<li class="fragment"><p>ESS: Effective Sample Size: how many “good iterations” (truly independent draws) we have. Should be &gt; 400 (the maximum being the number of iterations that we darw).<br>
-## Voilà!</p></li>
-<li class="fragment"><p>You’ve fitted and reported a Bayesian model.</p></li>
-<li class="fragment"><p>The results are very coherent with the Frequentist version.</p></li>
-<li class="fragment"><p>This is a valid Bayesian analysis…</p></li>
-<li class="fragment"><p>But because we are on our way to become <strong>Bayesian Masters</strong>, we can actually spend more time and thought about aspects related to this model.</p></li>
+<li class="fragment"><code>refresh=0</code> silences the printing of the sampling <sub>(to avoid cluttering this slide)</sub></li>
+<li class="fragment">R-hat: Convergence diagnostic index. Should be less than &lt; 1.05.</li>
+<li class="fragment">ESS: Effective Sample Size: how many “good iterations” (truly independent draws) we have. Should be &gt; 400 (the maximum being the number of iterations that we draw).</li>
+</ul>
+</section>
+<section id="voilà" class="slide level2">
+<h2>Voilà!</h2>
+<ul>
+<li class="fragment">You’ve fitted and reported a Bayesian model.</li>
+<li class="fragment">The results are very coherent with the Frequentist version.</li>
+<li class="fragment">This is a valid Bayesian analysis…</li>
+<li class="fragment">But because we are on our way to become <strong>Bayesian Masters</strong>, we can actually spend more time and thought about aspects related to this model.</li>
 </ul>
 </section>
 <section id="bayesian-models-priors" class="slide level2 center" data-background-color="#003B49">
@@ -904,7 +825,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brmsformula</span>(qsec <span class="sc">~</span> mpg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brmsformula</span>(qsec <span class="sc">~</span> mpg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <ul>
@@ -921,12 +842,12 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data=</span>mtcars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data=</span>mtcars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)         mpg 
  15.3547689   0.1241366 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(qsec <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> mpg, <span class="at">data=</span>mtcars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(qsec <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> mpg, <span class="at">data=</span>mtcars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)         mpg 
  15.3547689   0.1241366 </code></pre>
@@ -938,7 +859,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(qsec <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> mpg, <span class="at">data=</span>mtcars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(qsec <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> mpg, <span class="at">data=</span>mtcars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     mpg 
 0.827125 </code></pre>
@@ -952,7 +873,25 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 <li class="fragment">Visualize the relationship predicted by the No Intercept model</li>
 </ul>
 <div class="fragment">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">35</span>, <span class="dv">5</span>))</span>
+<span id="cb28-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(qsec <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> mpg, <span class="at">data=</span>mtcars) <span class="sc">|&gt;</span> </span>
+<span id="cb28-4"><a href="" aria-hidden="true" tabindex="-1"></a>  insight<span class="sc">::</span><span class="fu">get_predicted</span>(<span class="at">data=</span>newdata, <span class="at">ci=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb28-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb28-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(newdata) <span class="sc">|&gt;</span> </span>
+<span id="cb28-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> Predicted)) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>CI_low, <span class="at">ymax=</span>CI_high), <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec), <span class="at">size=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-20-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <ul>
 <li class="fragment">It forces the regression line to go through the origin (0, 0)</li>
@@ -970,7 +909,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brmsformula</span>(qsec <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Intercept <span class="sc">+</span> mpg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brmsformula</span>(qsec <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> Intercept <span class="sc">+</span> mpg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <ul>
@@ -989,7 +928,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(f, <span class="at">data =</span> mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(f, <span class="at">data =</span> mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                prior class      coef group resp dpar nlpar lb ub       source
                (flat)     b                                            default
@@ -1004,7 +943,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 <h2>Understanding Priors Parameters</h2>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(f, <span class="at">data =</span> mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(f, <span class="at">data =</span> mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                prior class      coef group resp dpar nlpar lb ub       source
                (flat)     b                                            default
@@ -1069,16 +1008,16 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec)) <span class="sc">+</span></span>
-<span id="cb32-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span> </span>
-<span id="cb32-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb32-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb32-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">35</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">30</span>))</span>
-<span id="cb32-6"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> qsec)) <span class="sc">+</span></span>
+<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb34-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb34-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb34-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">35</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">30</span>))</span>
+<span id="cb34-6"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-25-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-24-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1098,12 +1037,12 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">17</span>, <span class="dv">20</span>, <span class="dv">25</span>), <span class="at">slope =</span> <span class="dv">0</span>, </span>
-<span id="cb33-2"><a href="" aria-hidden="true" tabindex="-1"></a>                <span class="at">color=</span><span class="fu">c</span>(<span class="st">"purple"</span>, <span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>), <span class="at">linewidth=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">17</span>, <span class="dv">20</span>, <span class="dv">25</span>), <span class="at">slope =</span> <span class="dv">0</span>, </span>
+<span id="cb35-2"><a href="" aria-hidden="true" tabindex="-1"></a>                <span class="at">color=</span><span class="fu">c</span>(<span class="st">"purple"</span>, <span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>), <span class="at">linewidth=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-26-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-25-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1120,7 +1059,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-27-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-26-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1160,7 +1099,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-28-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-27-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1201,7 +1140,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-29-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-28-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1222,7 +1161,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-30-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-29-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1254,7 +1193,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-31-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-30-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1295,7 +1234,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(f, <span class="at">data=</span>mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">get_prior</span>(f, <span class="at">data=</span>mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                prior class      coef group resp dpar nlpar lb ub       source
                (flat)     b                                            default
@@ -1316,7 +1255,7 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">set_prior</span>(<span class="st">"normal(17.85, 17.9)"</span>, <span class="at">class =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a>brms<span class="sc">::</span><span class="fu">set_prior</span>(<span class="st">"normal(17.85, 17.9)"</span>, <span class="at">class =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>b_Intercept ~ normal(17.85, 17.9)</code></pre>
 </div>
@@ -1336,13 +1275,13 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb38-2"><a href="" aria-hidden="true" tabindex="-1"></a>  brms<span class="sc">::</span><span class="fu">set_prior</span>(<span class="st">"normal(17.85, 17.9)"</span>, <span class="at">class =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span>),</span>
-<span id="cb38-3"><a href="" aria-hidden="true" tabindex="-1"></a>  brms<span class="sc">::</span><span class="fu">set_prior</span>(<span class="st">"normal(0, 5)"</span>, <span class="at">class =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"mpg"</span>)</span>
-<span id="cb38-4"><a href="" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
-<span id="cb38-5"><a href="" aria-hidden="true" tabindex="-1"></a>  brms<span class="sc">::</span><span class="fu">validate_prior</span>(f, <span class="at">data=</span>mtcars)</span>
-<span id="cb38-6"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="" aria-hidden="true" tabindex="-1"></a>priors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb40-2"><a href="" aria-hidden="true" tabindex="-1"></a>  brms<span class="sc">::</span><span class="fu">set_prior</span>(<span class="st">"normal(17.85, 17.9)"</span>, <span class="at">class =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"Intercept"</span>),</span>
+<span id="cb40-3"><a href="" aria-hidden="true" tabindex="-1"></a>  brms<span class="sc">::</span><span class="fu">set_prior</span>(<span class="st">"normal(0, 5)"</span>, <span class="at">class =</span> <span class="st">"b"</span>, <span class="at">coef =</span> <span class="st">"mpg"</span>)</span>
+<span id="cb40-4"><a href="" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb40-5"><a href="" aria-hidden="true" tabindex="-1"></a>  brms<span class="sc">::</span><span class="fu">validate_prior</span>(f, <span class="at">data=</span>mtcars)</span>
+<span id="cb40-6"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="" aria-hidden="true" tabindex="-1"></a>priors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                prior class      coef group resp dpar nlpar lb ub  source
                (flat)     b                                       default
@@ -1389,18 +1328,18 @@ sigma     |   1.67 | [1.33, 2.23] | 100% | 1.000 | 2910.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a>model_priors <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brm</span>(</span>
-<span id="cb40-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula=</span>f,</span>
-<span id="cb40-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars,</span>
-<span id="cb40-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> priors,</span>
-<span id="cb40-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_prior=</span><span class="st">"only"</span></span>
-<span id="cb40-6"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a>model_priors <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brm</span>(</span>
+<span id="cb42-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula=</span>f,</span>
+<span id="cb42-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mtcars,</span>
+<span id="cb42-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> priors,</span>
+<span id="cb42-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_prior=</span><span class="st">"only"</span></span>
+<span id="cb42-6"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 1.5e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.15 seconds.
+Chain 1: Gradient evaluation took 1.4e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -1417,9 +1356,9 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 0.022 seconds (Warm-up)
-Chain 1:                0.014 seconds (Sampling)
-Chain 1:                0.036 seconds (Total)
+Chain 1:  Elapsed Time: 0.014 seconds (Warm-up)
+Chain 1:                0.013 seconds (Sampling)
+Chain 1:                0.027 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -1442,15 +1381,15 @@ Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 2: 
-Chain 2:  Elapsed Time: 0.02 seconds (Warm-up)
-Chain 2:                0.013 seconds (Sampling)
-Chain 2:                0.033 seconds (Total)
+Chain 2:  Elapsed Time: 0.015 seconds (Warm-up)
+Chain 2:                0.011 seconds (Sampling)
+Chain 2:                0.026 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 Chain 3: 
-Chain 3: Gradient evaluation took 4e-06 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+Chain 3: Gradient evaluation took 2e-06 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
 Chain 3: Adjust your expectations accordingly!
 Chain 3: 
 Chain 3: 
@@ -1467,9 +1406,9 @@ Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 0.025 seconds (Warm-up)
-Chain 3:                0.015 seconds (Sampling)
-Chain 3:                0.04 seconds (Total)
+Chain 3:  Elapsed Time: 0.014 seconds (Warm-up)
+Chain 3:                0.012 seconds (Sampling)
+Chain 3:                0.026 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -1492,9 +1431,9 @@ Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 0.018 seconds (Warm-up)
-Chain 4:                0.01 seconds (Sampling)
-Chain 4:                0.028 seconds (Total)
+Chain 4:  Elapsed Time: 0.015 seconds (Warm-up)
+Chain 4:                0.016 seconds (Sampling)
+Chain 4:                0.031 seconds (Total)
 Chain 4: </code></pre>
 </div>
 </div>
@@ -1508,8 +1447,8 @@ Chain 4: </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">35</span>, <span class="at">length.out=</span><span class="dv">6</span>))</span>
-<span id="cb42-2"><a href="" aria-hidden="true" tabindex="-1"></a>newdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">35</span>, <span class="at">length.out=</span><span class="dv">6</span>))</span>
+<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a>newdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  mpg
 1  10
@@ -1523,14 +1462,14 @@ Chain 4: </code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">get_predicted</span>(model_priors, <span class="at">data=</span>newdata, <span class="at">iterations=</span><span class="dv">250</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb44-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(newdata)</span>
-<span id="cb44-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">get_predicted</span>(model_priors, <span class="at">data=</span>newdata, <span class="at">iterations=</span><span class="dv">250</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb46-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb46-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(newdata)</span>
+<span id="cb46-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 252</code></pre>
 </div>
@@ -1538,7 +1477,7 @@ Chain 4: </code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] "Predicted" "iter_1"    "iter_2"    "iter_3"    "iter_4"    "iter_5"   
   [7] "iter_6"    "iter_7"    "iter_8"    "iter_9"    "iter_10"   "iter_11"  
@@ -1600,9 +1539,21 @@ Chain 4: </code></pre>
 <h2>Prior Predictive Check - Relationship</h2>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>qsec)) <span class="sc">+</span></span>
-<span id="cb50-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) </span>
-<span id="cb50-3"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>qsec)) <span class="sc">+</span></span>
+<span id="cb52-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">3</span>) </span>
+<span id="cb52-3"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-38-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1614,28 +1565,16 @@ Chain 4: </code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
+<span id="cb54-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_1)) <span class="sc">+</span> </span>
+<span id="cb54-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_2)) <span class="sc">+</span></span>
+<span id="cb54-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_3)) <span class="sc">+</span></span>
+<span id="cb54-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_4)) <span class="sc">+</span></span>
+<span id="cb54-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_5)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-40-1.png" width="3000"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
-<span id="cb52-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_1)) <span class="sc">+</span> </span>
-<span id="cb52-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_2)) <span class="sc">+</span></span>
-<span id="cb52-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_3)) <span class="sc">+</span></span>
-<span id="cb52-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_4)) <span class="sc">+</span></span>
-<span id="cb52-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_5)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-41-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1649,16 +1588,16 @@ Chain 4: </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">reshape_iterations</span>(pred)</span>
-<span id="cb53-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">reshape_iterations</span>(pred)</span>
+<span id="cb55-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted mpg iter_index iter_group iter_value
-1  21.22734  10          1          1   77.87639
-2  21.34979  15          2          1   89.27184
-3  21.47225  20          3          1  100.66730
-4  21.59471  25          4          1  112.06276
-5  21.71717  30          5          1  123.45821
-6  21.83963  35          6          1  134.85367</code></pre>
+1  17.04352  10          1          1  16.899598
+2  17.49789  15          2          1  12.207235
+3  17.95225  20          3          1   7.514872
+4  18.40661  25          4          1   2.822509
+5  18.86098  30          5          1  -1.869854
+6  19.31534  35          6          1  -6.562217</code></pre>
 </div>
 </div>
 </div>
@@ -1670,13 +1609,13 @@ Chain 4: </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
-<span id="cb55-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_value, <span class="at">group=</span>iter_group), <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb55-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">400</span>, <span class="dv">400</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
+<span id="cb57-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">y=</span>iter_value, <span class="at">group=</span>iter_group), <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb57-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">400</span>, <span class="dv">400</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-43-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-42-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1698,32 +1637,32 @@ Chain 4: </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">get_predicted</span>(model_priors, <span class="at">data=</span>mtcars, <span class="at">iterations=</span><span class="dv">250</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb56-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb56-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reshape_iterations</span>()</span>
-<span id="cb56-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">get_predicted</span>(model_priors, <span class="at">data=</span>mtcars, <span class="at">iterations=</span><span class="dv">250</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb58-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb58-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reshape_iterations</span>()</span>
+<span id="cb58-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted iter_index iter_group iter_value
-1  21.76496          1          1   91.94706
-2  21.76496          2          1   91.94706
-3  21.82965          3          1  100.77043
-4  21.77933          4          1   93.90781
-5  21.68229          5          1   80.67274
-6  21.66073          6          1   77.73162</code></pre>
+1 10.027735          1          1  -89.22534
+2 10.027735          2          1  -89.22534
+3  9.667275          3          1  -98.66967
+4  9.947633          4          1  -91.32408
+5 10.488324          5          1  -77.15758
+6 10.608477          6          1  -74.00947</code></pre>
 </div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>qsec)) <span class="sc">+</span></span>
-<span id="cb58-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill=</span><span class="st">"skyblue"</span>) <span class="sc">+</span></span>
-<span id="cb58-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">x=</span>iter_value, <span class="at">group=</span>iter_group), <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb58-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span>qsec)) <span class="sc">+</span></span>
+<span id="cb60-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill=</span><span class="st">"skyblue"</span>) <span class="sc">+</span></span>
+<span id="cb60-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span>pred, <span class="fu">aes</span>(<span class="at">x=</span>iter_value, <span class="at">group=</span>iter_group), <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb60-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-45-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-44-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1737,7 +1676,7 @@ Chain 4: </code></pre>
 <li class="fragment">Run posterior predictive checks. Try to obtain a plot that looks like this:</li>
 </ul>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-46-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-45-1.png" width="3000" class="r-stretch"></section>
 <section id="the-art-of-priors" class="slide level2 scrollable">
 <h2>The Art of Priors</h2>
 <p>Prior choice can depend on:</p>
