@@ -1,0 +1,5 @@
+"rt","stimulus","response","condition","trial_index","time_elapsed","answer"
+"null","stimuli/neutral1.jpg","null","Neutral","3","1222","79"
+"null","stimuli/female1.jpg","null","Female","6","3179","15"
+"null","stimuli/neutral2.jpg","null","Neutral","9","4510","48"
+"null","stimuli/female2.jpg","null","Female","12","5875","70"

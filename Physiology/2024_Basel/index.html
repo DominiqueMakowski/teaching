@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dominique Makowski</title>
+        <style>
+            body {
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+            }
+            #header {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            #logo-title-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 20px;
+            }
+            #logo {
+                max-width: 100px; /* Adjusted for better fit next to title */
+            }
+            #page-title {
+                font-size: 24px;
+                margin-left: 20px;
+            }
+            iframe {
+                width: 100%;
+                height: 70vh; /* Adjust the height as needed */
+                border: none;
+            }
+            .button {
+                padding: 10px 20px;
+                margin: 10px;
+                cursor: pointer;
+            }
+            #copyright {
+                margin-top: 20px;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo-title-container">
+                <img
+                    id="logo"
+                    src="https://realitybending.github.io/media/ReBeL_LogoOnly_hu43f9474a7b47cfb59c41895962a4d3bc_15500_1200x0_resize_lanczos_3.png"
+                    alt="Logo"
+                />
+                <div id="page-title">Dominique Makowski's slides</div>
+            </div>
+            <h2 id="subtitle">1. Interoception</h2>
+        </div>
+        <iframe
+            id="documentFrame"
+            src="https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/1_Interoception.pptx"
+            frameborder="0"
+        >
+        </iframe>
+        <div>
+            <button class="button" onclick="previousDocument()">Previous</button>
+            <button class="button" onclick="nextDocument()">Next</button>
+        </div>
+        <script>
+            var documents = [
+                {
+                    src: "https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/1_Interoception.pptx",
+                    subtitle: "1. Interoception",
+                },
+                {
+                    src: "Yhttps://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/2_Physiology.pptx",
+                    subtitle: "2. Physiology",
+                },
+                {
+                    src: "https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/3_Cardiac.pptx",
+                    subtitle: "3. Cardiac",
+                },
+            ]
+            var currentIndex = 0
+
+            function updateFrame() {
+                document.getElementById("documentFrame").src = documents[currentIndex].src
+                document.getElementById("subtitle").innerText = documents[currentIndex].subtitle
+            }
+
+            function nextDocument() {
+                currentIndex = (currentIndex + 1) % documents.length
+                updateFrame()
+            }
+
+            function previousDocument() {
+                currentIndex = (currentIndex - 1 + documents.length) % documents.length
+                updateFrame()
+            }
+
+            // Initialize the first document view
+            updateFrame()
+        </script>
+        <div id="copyright">&copy; 2024 Dominique Makowski. All rights reserved.</div>
+    </body>
+</html>
