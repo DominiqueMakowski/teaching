@@ -73,7 +73,7 @@
                     subtitle: "1. Interoception",
                 },
                 {
-                    src: "Yhttps://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/2_Physiology.pptx",
+                    src: "https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/2_Physiology.pptx",
                     subtitle: "2. Physiology",
                 },
                 {
@@ -83,9 +83,25 @@
             ]
             var currentIndex = 0
 
+            window.addEventListener("load", function () {
+                updateFrameFromHash()
+
+                window.addEventListener("hashchange", updateFrameFromHash, false)
+            })
+
+            function updateFrameFromHash() {
+                var hash = window.location.hash.replace("#", "")
+                var index = parseInt(hash)
+                if (!isNaN(index) && index < documents.length) {
+                    currentIndex = index
+                    updateFrame()
+                }
+            }
+
             function updateFrame() {
                 document.getElementById("documentFrame").src = documents[currentIndex].src
                 document.getElementById("subtitle").innerText = documents[currentIndex].subtitle
+                window.location.hash = currentIndex // Update the URL hash
             }
 
             function nextDocument() {
@@ -97,9 +113,6 @@
                 currentIndex = (currentIndex - 1 + documents.length) % documents.length
                 updateFrame()
             }
-
-            // Initialize the first document view
-            updateFrame()
         </script>
         <div id="copyright">&copy; 2024 Dominique Makowski. All rights reserved.</div>
     </body>
