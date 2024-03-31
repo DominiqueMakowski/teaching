@@ -1,0 +1,277 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**9. Linear Models (Posterior)**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # theme: blood
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+params:
+  show_answers: true
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+
+set.seed(333)
+```
+
+## Recap
+
+1. Formula specification
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+library(brms)
+
+f <- brms::brmsformula(qsec ~ 0 + Intercept + mpg)
+```
+
+:::
+
+2. Prior specification
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+priors <- c(
+  brms::set_prior("normal(17.85, 17.9)", class = "b", coef = "Intercept"),
+  brms::set_prior("normal(0, 5)", class = "b", coef = "mpg")
+) |> 
+  brms::validate_prior(f, data=mtcars)
+
+priors
+```
+
+:::
+
+
+## Fitting the model
+
+- Pass the formula, the data, and the priors (optional) to `brms::brm()` ("Bayesian Regression Model")
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+model <- brms::brm(f, 
+                   data = mtcars, 
+                   prior = priors)
+```
+
+:::
+
+- Options pertaining to the **sampling algorithù** can be specified^[See the function documentation for the massive list of options]
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- brms::brm(f, 
+                   data = mtcars, 
+                   prior = priors,
+                   chains = 4, # Number of independent sampling processes 
+                   iter = 1000,  # Number of draws per chain
+                   refresh = 0)  # Print progress
+```
+
+:::
+
+## MCMC
+
+- By default, `brms` uses MCMC
+  - In particular, the **No-U-Turn Sampler (NUTS)** algorithm, which is a variant of **Hamiltonian Monte Carlo (HMC)**
+- Stan (the language used by `brms` in the background) also implements **variational inference** algorithms that sample from an approximation of the posterior, which are faster but less accurate
+  - You can use them by specifying `algorithm = "meanfield"` or `algorithm = "fullrank"`
+  - Can be useful for "quick" checks and adjustments but should not necessarily be used for final results
+  - Interestingly, some neuroscientific theories suggest that variational inference approximation is what the process at stake in the brain
+- For this module we will focus on MCMC, which is slowest but the "true" Bayesian solution
+
+## MCMC parameters
+
+- MCMC can be tuned
+  - Number of chains, number of iterations
+  - **Warm-up**: the number of initial samples that are discarded (burn-in phase)
+  - **Thinning**: the number of samples that are kept (every n-th sample)
+  - **Adaptation**: the algorithm can adapt its parameters during the burn-in phase
+  - ...
+- In most cases, the default values are fine
+- It's only when there are problems that you should start considering tweaking these parameters
+
+
+## Sampling Diagnostics - Trace Plots **(HAIRY CATERPILLARS)**
+
+- The MCMC algorithm is supposed to draw **independent** samples from the posterior
+- There should be no autocorrelation between successive samples (i.e., no patterns in the trace plot)
+  - They should look like [**hairy caterpillars**]{.fragment}
+- We typically draw multiple independent **chains** (useful for parallel computing, e.g., one chain per core)
+
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+plot(model)
+```
+
+:::
+
+- The trace plots shows 1) the **posterior** distribution of the parameters and 2) the **trace** of the MCMC algorithm
+- One trace per chain: there should not be any pattern 
+  
+## Sampling Diagnostics - Effective Sample Size (ESS)
+
+```{r}
+#| echo: true
+
+model
+```
+
+
+- The **effective sample size** (ESS) is an estimation of the number of independent samples that we have
+  - ESS ("Bulk" ESS) is a measure of how well the **centre** of the posterior distribution is described
+  - The accuracy of the indices of centrality
+  - "Tail" ESS is a measure of how well the **tails** of the distribution are described
+  - The accuracy of the indices based on range
+- ESS should be at least 1000 (see `effectsize::interpret_ess()`)
+
+## Sampling Diagnostics - $\hat{R}$
+
+- The $\hat{R}$ ("R-hat") is a measure of **convergence**
+- It compares the **variance** within chains to the **variance** between chains
+- If the chains have not converged to a common distribution, the $\hat{R}$ statistic will be greater than one
+- Should be lower than 1.01 (see `effectsize::interpret_rhat()`)
+
+## Posterior Description
+
+
+```{r}
+#| echo: true
+
+parameters::parameters(model)
+```
+
+- Indices of centrality, uncertainty, existence, significance
+- Customize the parameters shown
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+parameters::parameters(model,
+                       centrality="mean", 
+                       dipsersion=TRUE,
+                       ci=0.89)
+```
+
+:::
+
+- Easiest is to use *pd* or decision threshold based on CI overlapping 0 (similar to Frequentist NHST)
+- ROPE? But what ROPE bounds to use?
+  - Not straightforward to define
+  - Easier to use when data is standardized (and parameters are expressed in terms of SD)
+- BF? 
+  - Complicated to compute for model parameters
+  
+  
+## Model Performance
+
+- Once that sampling quality has been assessed, and that the posteriors have been described, we can assess the model's performance
+- How well does the model fit/predict the data?
+- R-squared, the percentage of variance explained by the model (for linear models), can be computed
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+performance::r2(model)
+```
+
+:::
+
+- Other "relative" indices of fit exist to compare models between them (we will see that later)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+performance::performance(model)
+```
+
+:::
+
+## Posterior Predictive Check
+
+- **Posterior predictive checks** is a way to assess the model by comparing the **observed** data to the **predicted** data
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred <- get_predicted(model, data=mtcars, iterations=100) |> 
+  as.data.frame() |> 
+  reshape_iterations()
+
+ggplot(mtcars, aes(x=qsec)) +
+  geom_density(data=pred, aes(x=iter_value, group=iter_group), alpha=0.3) +
+  geom_density(fill="skyblue", alpha=0.5) +
+  theme_minimal()
+```
+
+:::
+
+## Visualizing the Effects
+
+
+## Comparing Models
+
+- LOO (Leave-One-Out) cross-validation
+
+
+<!-- - Derivatives -->
+<!-- Complex models -->
+
+## The End <sub><sup>(for good)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+
+
