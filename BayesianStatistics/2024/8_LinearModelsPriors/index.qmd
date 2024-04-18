@@ -773,7 +773,7 @@ ggplot(prior4, aes(x = x, y = y)) +
 - Now that we know what priors we want to set:
   - Intercept: $Normal(17.85, 17.9)$
   - Slope: $Normal(0, 5)$
-- How to we actually set them
+- How to actually set them?
 
 ::: {.fragment}
 
@@ -852,6 +852,7 @@ priors
 
 ```{r}
 #| echo: true
+#| eval: false
 
 model_priors <- brms::brm(
   formula=f,
@@ -862,6 +863,20 @@ model_priors <- brms::brm(
 ```
 
 :::
+
+
+```{r}
+#| echo: false
+
+model_priors <- brms::brm(
+  formula=f,
+  data = mtcars,
+  prior = priors,
+  sample_prior="only",
+  refresh=0
+)
+```
+
 
 ## Generate predictions
 
@@ -887,12 +902,20 @@ newdata
 pred <- get_predicted(model_priors, data=newdata, iterations=250) |> 
   as.data.frame() |> 
   cbind(newdata)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
 nrow(pred)
 ncol(pred)
 ```
 
 :::
-  
   
 ::: {.fragment}
 
@@ -910,7 +933,7 @@ names(pred)
 - Each iteration represents one possibility of model parameters
 - More plausible possibilities will appear more frequently
 - In our case, this means that we have one line (Intercept + Slope) for each iteration
-- We can visualize these various lines, that corresponds to possibilities emerging from our prior parameters (i.e;, before seeing the data)
+- We can visualize these various lines, that corresponds to possibilities emerging from our prior parameters (i.e., before seeing the data)
 
 ## Prior Predictive Check - Relationship
 
@@ -953,7 +976,7 @@ p +
 
 ## Reshaping iterations
 
-- We can reshape the dataframe (pivot longer) to have one column for all iterations and another to identify the iteration number
+- We can reshape the dataframe (pivot into longer format) to have one column for all iterations and another to identify the iteration number
 
 ::: {.fragment}
 
@@ -1096,7 +1119,7 @@ Prior choice can depend on:
 
 - In general, don't panic and follow the rule of "good enough"
   - If you have reasons to care about priors (e.g., complex models, convergence issues, having ideas about priors), then it's worth spending time to think about them 
-  - If not, go with the default / flat / very weakly informative priors. 
+  - If not, going with the default / flat / very weakly informative priors is fine
   - But don't forget to assess the convergence of the model (e.g., MCMC sampling process) to make sure the posterior has been well explored...
 
 ::::

@@ -1230,7 +1230,7 @@ sigma     |   1.68 | [1.33, 2.21] | 100% | 1.001 | 2972.00</code></pre>
 <li class="fragment">Intercept: <span class="math inline">\(Normal(17.85, 17.9)\)</span></li>
 <li class="fragment">Slope: <span class="math inline">\(Normal(0, 5)\)</span></li>
 </ul></li>
-<li class="fragment">How to we actually set them</li>
+<li class="fragment">How to actually set them?</li>
 </ul>
 <div class="fragment">
 <div class="cell">
@@ -1334,108 +1334,6 @@ sigma     |   1.68 | [1.33, 2.21] | 100% | 1.001 | 2972.00</code></pre>
 <span id="cb42-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> priors,</span>
 <span id="cb42-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_prior=</span><span class="st">"only"</span></span>
 <span id="cb42-6"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
-Chain 1: 
-Chain 1: Gradient evaluation took 1.4e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
-Chain 1: Adjust your expectations accordingly!
-Chain 1: 
-Chain 1: 
-Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 1: 
-Chain 1:  Elapsed Time: 0.014 seconds (Warm-up)
-Chain 1:                0.013 seconds (Sampling)
-Chain 1:                0.027 seconds (Total)
-Chain 1: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
-Chain 2: 
-Chain 2: Gradient evaluation took 3e-06 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
-Chain 2: Adjust your expectations accordingly!
-Chain 2: 
-Chain 2: 
-Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 2: 
-Chain 2:  Elapsed Time: 0.015 seconds (Warm-up)
-Chain 2:                0.011 seconds (Sampling)
-Chain 2:                0.026 seconds (Total)
-Chain 2: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
-Chain 3: 
-Chain 3: Gradient evaluation took 2e-06 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
-Chain 3: Adjust your expectations accordingly!
-Chain 3: 
-Chain 3: 
-Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 3: 
-Chain 3:  Elapsed Time: 0.014 seconds (Warm-up)
-Chain 3:                0.012 seconds (Sampling)
-Chain 3:                0.026 seconds (Total)
-Chain 3: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
-Chain 4: 
-Chain 4: Gradient evaluation took 3e-06 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
-Chain 4: Adjust your expectations accordingly!
-Chain 4: 
-Chain 4: 
-Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
-Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
-Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
-Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
-Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
-Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
-Chain 4: 
-Chain 4:  Elapsed Time: 0.015 seconds (Warm-up)
-Chain 4:                0.016 seconds (Sampling)
-Chain 4:                0.031 seconds (Total)
-Chain 4: </code></pre>
-</div>
 </div>
 </div>
 </section>
@@ -1447,8 +1345,8 @@ Chain 4: </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">35</span>, <span class="at">length.out=</span><span class="dv">6</span>))</span>
-<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a>newdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">35</span>, <span class="at">length.out=</span><span class="dv">6</span>))</span>
+<span id="cb43-2"><a href="" aria-hidden="true" tabindex="-1"></a>newdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  mpg
 1  10
@@ -1462,10 +1360,14 @@ Chain 4: </code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">get_predicted</span>(model_priors, <span class="at">data=</span>newdata, <span class="at">iterations=</span><span class="dv">250</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb46-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb46-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(newdata)</span>
-<span id="cb46-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">get_predicted</span>(model_priors, <span class="at">data=</span>newdata, <span class="at">iterations=</span><span class="dv">250</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb45-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(newdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
@@ -1532,7 +1434,7 @@ Chain 4: </code></pre>
 <li class="fragment">Each iteration represents one possibility of model parameters</li>
 <li class="fragment">More plausible possibilities will appear more frequently</li>
 <li class="fragment">In our case, this means that we have one line (Intercept + Slope) for each iteration</li>
-<li class="fragment">We can visualize these various lines, that corresponds to possibilities emerging from our prior parameters (i.e;, before seeing the data)</li>
+<li class="fragment">We can visualize these various lines, that corresponds to possibilities emerging from our prior parameters (i.e., before seeing the data)</li>
 </ul>
 </section>
 <section id="prior-predictive-check---relationship" class="slide level2">
@@ -1545,7 +1447,7 @@ Chain 4: </code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-38-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-40-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1557,7 +1459,7 @@ Chain 4: </code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-39-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-41-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1574,7 +1476,7 @@ Chain 4: </code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-40-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-42-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1584,7 +1486,7 @@ Chain 4: </code></pre>
 <section id="reshaping-iterations" class="slide level2">
 <h2>Reshaping iterations</h2>
 <ul>
-<li class="fragment">We can reshape the dataframe (pivot longer) to have one column for all iterations and another to identify the iteration number</li>
+<li class="fragment">We can reshape the dataframe (pivot into longer format) to have one column for all iterations and another to identify the iteration number</li>
 </ul>
 <div class="fragment">
 <div class="cell">
@@ -1592,12 +1494,12 @@ Chain 4: </code></pre>
 <span id="cb55-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted mpg iter_index iter_group iter_value
-1  17.04352  10          1          1  16.899598
-2  17.49789  15          2          1  12.207235
-3  17.95225  20          3          1   7.514872
-4  18.40661  25          4          1   2.822509
-5  18.86098  30          5          1  -1.869854
-6  19.31534  35          6          1  -6.562217</code></pre>
+1  16.91122  10          1          1   41.22650
+2  16.38351  15          2          1   46.27231
+3  15.85580  20          3          1   51.31811
+4  15.32809  25          4          1   56.36392
+5  14.80038  30          5          1   61.40972
+6  14.27267  35          6          1   66.45553</code></pre>
 </div>
 </div>
 </div>
@@ -1615,7 +1517,7 @@ Chain 4: </code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-42-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-44-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1644,12 +1546,12 @@ Chain 4: </code></pre>
 <span id="cb58-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Predicted iter_index iter_group iter_value
-1 10.027735          1          1  -89.22534
-2 10.027735          2          1  -89.22534
-3  9.667275          3          1  -98.66967
-4  9.947633          4          1  -91.32408
-5 10.488324          5          1  -77.15758
-6 10.608477          6          1  -74.00947</code></pre>
+1  16.40507          1          1  -73.97298
+2  16.40507          2          1  -73.97298
+3  16.34220          3          1  -83.88313
+4  16.39110          4          1  -76.17524
+5  16.48541          5          1  -61.31002
+6  16.50636          6          1  -58.00664</code></pre>
 </div>
 </div>
 </div>
@@ -1662,7 +1564,7 @@ Chain 4: </code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-44-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-46-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1676,7 +1578,7 @@ Chain 4: </code></pre>
 <li class="fragment">Run posterior predictive checks. Try to obtain a plot that looks like this:</li>
 </ul>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-45-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-47-1.png" width="3000" class="r-stretch"></section>
 <section id="the-art-of-priors" class="slide level2 scrollable">
 <h2>The Art of Priors</h2>
 <p>Prior choice can depend on:</p>
@@ -1712,7 +1614,7 @@ Chain 4: </code></pre>
 <li class="fragment">In general, don’t panic and follow the rule of “good enough”
 <ul>
 <li class="fragment">If you have reasons to care about priors (e.g., complex models, convergence issues, having ideas about priors), then it’s worth spending time to think about them</li>
-<li class="fragment">If not, go with the default / flat / very weakly informative priors.</li>
+<li class="fragment">If not, going with the default / flat / very weakly informative priors is fine</li>
 <li class="fragment">But don’t forget to assess the convergence of the model (e.g., MCMC sampling process) to make sure the posterior has been well explored…</li>
 </ul></li>
 </ul>
