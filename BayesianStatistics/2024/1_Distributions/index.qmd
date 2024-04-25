@@ -972,6 +972,7 @@ p + facet_wrap(~parameters)
 *Why did the binomial distribution break up with its partner? Because it found their relationship too binary*
 
 ## Binomial Distribution
+
 ::: {.nonincremental .stretch}
 
 - The **Binomial distribution** models the probability of a series of **binary** outcome trials (e.g., successes/failures, heads/tails, etc.)[^3]

@@ -12,7 +12,9 @@ I also offer workshops to external universities (see [here for details](https://
 - [Lecture 4](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/4_BayesTheorem)
 - [Lecture 5 & 6](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/5_BayesFactors)
 - [Lecture 7](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/7_Posteriors)
-- [Lecture 8](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/8_LinearModelsPriors)
+- [Lecture 8 & 9](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/8_LinearModelsPriors)
+- [Lecture 10](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/9_LinearModelsPosterior)
+- [Lecture 11](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/10_Models)
 
 ## Physiology
 2024 - University of Basel (Workshop)

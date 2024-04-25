@@ -368,15 +368,13 @@ ggplot(mtcars, aes(x=mpg, y=qsec)) +
 - Each line corresponds to one "plausible" regression line (given our posterior beliefs about the model parameters)
 - Most of them indicate a positive relationship between `mpg` and `qsec`
 
-## Comparing Models
+## Exercice {background-color="#FFAB91"}
 
-- LOO (Leave-One-Out) cross-validation
+- Is there a relationship between **Petal Length** and **Petal Width** (`iris` builtin dataset)?
+  - Use default priors
 
 
-<!-- - Derivatives -->
-<!-- Complex models -->
-
-## The End <sub><sup>(for good)</sup></sub> {.center background-color="#212121"}
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
 
 *Thank you!*
 
