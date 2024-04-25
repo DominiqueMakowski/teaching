@@ -449,6 +449,12 @@
 </div>
 </div>
 </div>
+<ol start="3" type="1">
+<li class="fragment">Prior Predictive Checks</li>
+</ol>
+<ul>
+<li class="fragment">Predicted response density and relationships based on the priors only</li>
+</ul>
 </section>
 <section id="fitting-the-model" class="slide level2 scrollable">
 <h2>Fitting the model</h2>
@@ -509,6 +515,8 @@
 </section>
 <section id="sampling-diagnostics---trace-plots" class="slide level2">
 <h2>Sampling Diagnostics - Trace Plots</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
 <ul>
 <li class="fragment"><strong>HAIRY CATERPILLARS</strong></li>
 <li class="fragment">The MCMC algorithm is supposed to draw <strong>independent</strong> samples from the posterior</li>
@@ -518,13 +526,17 @@
 </ul></li>
 <li class="fragment">We typically draw multiple independent <strong>chains</strong> (useful for parallel computing, e.g., one chain per core)</li>
 </ul>
+</div><div class="column" style="width:30%;">
+<p><img data-src="img/colin.webp"></p>
+</div>
+</div>
 <div class="fragment">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="3600"></p>
 </figure>
 </div>
 </div>
@@ -1057,16 +1069,17 @@ ELPD    | ELPD_SE |   LOOIC | LOOIC_SE |    WAIC |    R2 | R2 (adj.) |  RMSE | S
 <li class="fragment">Most of them indicate a positive relationship between <code>mpg</code> and <code>qsec</code></li>
 </ul>
 </section>
-<section id="comparing-models" class="slide level2">
-<h2>Comparing Models</h2>
+<section id="exercice" class="slide level2" data-background-color="#FFAB91">
+<h2>Exercice</h2>
 <ul>
-<li class="fragment">LOO (Leave-One-Out) cross-validation</li>
+<li class="fragment">Is there a relationship between <strong>Petal Length</strong> and <strong>Petal Width</strong> (<code>iris</code> builtin dataset)?
+<ul>
+<li class="fragment">Use default priors</li>
+</ul></li>
 </ul>
-<!-- - Derivatives -->
-<!-- Complex models -->
 </section>
-<section id="the-end-for-good" class="slide level2 center" data-background-color="#212121">
-<h2>The End <sub><sup>(for good)</sup></sub></h2>
+<section id="the-end-for-now" class="slide level2 center" data-background-color="#212121">
+<h2>The End <sub><sup>(for now)</sup></sub></h2>
 <p><em>Thank you!</em></p>
 <div class="quarto-auto-generated-content">
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png" class="slide-logo"></p>

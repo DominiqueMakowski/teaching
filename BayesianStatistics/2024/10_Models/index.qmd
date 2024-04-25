@@ -1,0 +1,400 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**10. Linear Models (Comparison)**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # theme: blood
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+params:
+  show_answers: true
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+
+set.seed(333)
+```
+
+## Recap
+
+- Is there a relationship between **Petal Length** and **Petal Width** (`iris` builtin dataset)?
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+library(brms)
+
+f <- brms::brmsformula(Petal.Length ~ 0 + Intercept + Petal.Width)
+
+model <- brms::brm(f, data = iris, refresh=0)
+```
+
+:::
+
+  
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+performance::performance(model)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+parameters::parameters(model)
+```
+
+:::
+
+
+## Factors as Predictors
+
+- Is Petal Length different between different flower species?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+summary(iris$Species)
+```
+
+:::
+
+- `Species` is a *categorical* factor with 3 levels: `setosa`, `versicolor`, and `virginica`
+- Factors are very common in psychology, e.g.:
+  - Condition (control vs. treatment)
+  - Gender
+  - Group (healthy vs. patient)
+  - ...
+- When a factor is used as a predictor, the first level is used as the reference level (i.e., **becomes the intercept**)
+- The other levels are compared to the reference level
+
+## Petal.Length ~ Species
+
+- Fit the model with `Species` as a predictor
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model2 <- brms::brm(Petal.Length ~ 0 + Intercept + Species, 
+                    data = iris, refresh=0)
+```
+
+:::
+
+- Interpret parameters
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+parameters::parameters(model2)
+```
+
+:::
+
+## Interactions
+
+- Is the relationship between Petal Length and Petal Width different between species?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model3 <- brms::brm(Petal.Length ~ 0 + Intercept + Species * Petal.Width, 
+                    data = iris, refresh=0)
+
+parameters::parameters(model3)
+```
+
+:::
+
+- Interaction parameters shows how much the effect of `Petal.Width` on `Petal.Length` changes when the species changes
+
+
+## Visualization
+
+
+```{r}
+#| echo: false
+
+p <- ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) +
+  geom_point() 
+p
+```
+
+
+- `modelbased::estimate_relation()` is a convenient function to create a datagrid and make predictions
+  - `keep_iterations` to add individual predicted iterations
+  - `length` (default is 10), the number of points (more points: smoother line, but slower computation)
+  
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+
+pred <- modelbased::estimate_relation(model3, length=20, keep_iterations=8)
+pred
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+
+reshaped_iters <- reshape_iterations(pred)
+
+p <- p + geom_line(data = reshaped_iters, 
+            aes(y = iter_value, group = interaction(Species, iter_group)), 
+            alpha = 0.5)
+p
+```
+
+:::
+
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+
+p + geom_line(data = pred, aes(y = Predicted), 
+              linewidth=2)
+```
+
+:::
+
+
+## Exercice {background-color="#FFAB91"}
+
+- Interpret and visualize effect of the *Sepal Width* on *Sepal Length* (depending on the Species)
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+
+m <- brms::brm(Sepal.Length ~ 0 + Intercept + Species * Sepal.Width, 
+               data = iris, refresh=0)
+
+pred <- modelbased::estimate_relation(m, length=30, keep_iterations=100) 
+
+ggplot(iris, aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
+  geom_point() +
+  geom_line(data = reshape_iterations(pred), 
+            aes(y = iter_value, group = interaction(Species, iter_group)), 
+            alpha = 0.2) +
+  geom_line(data = pred, aes(y = Predicted), 
+            linewidth=2) +
+  theme_abyss()
+```
+
+:::
+
+## Model Comparison {.center background-color="#003B49"}
+
+
+## BF and R2
+
+::: {.columns}
+
+:::: {.column width=50%}
+
+- Paradoxically, Bayes Factors are complicated to obtain to compare Bayesian models
+  - Not impossible, but typically computationally expensive
+  - Not recommended given that good alternatives exist
+- Other indices of model performance? 
+  - **R2**
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+performance::r2(model)
+performance::r2(model2)
+performance::r2(model3)
+```
+
+:::::
+
+::::
+
+:::
+
+- R2 measures how well the model explains the data **already observed**, focusing on variance reduction
+- R2 can sometimes give misleading impressions in cases of **overfitting**; a model might appear to perform very well on the training data but poorly on new data
+- R2 is primarily applicable (and intuitive) to **linear models** where the **relationship between variables** is the primary interest
+
+
+## ELPD
+
+- Other "relative" indices of fit can be used that measures how well the model predicts each data point and how well it could in-theory generalize to new data
+  - This quality of fit metric is called the **ELPD** *(Expected Log Pointwise Predictive Density)*
+- It can be computed using 2 main methods
+  - **WAIC** (Widely Applicable Information Criterion)
+  - **LOO** (Leave-One-Out Information Criterion)
+  
+## ELPD - WAIC
+
+- **WAIC** (Widely Applicable Information Criterion)
+  - An index of prediction error adjusted for the number of parameters
+  - It provides a **balance between model fit and complexity**, penalizing models that have too many parameters (similar to the BIC).
+  - Computationally more straightforward than LOO, but might not be as accurate (more sensitive to outliers).
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+loo::waic(model)
+loo::waic(model2)
+loo::waic(model3)
+```
+
+:::
+
+## `loo_compare()`
+
+
+- Note that $ELPD = -(\frac{WAIC}{2})$
+- Use `loo::loo_compare()` to get the difference in ELPD between models
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+loo::loo_compare(loo::waic(model), loo::waic(model2), loo::waic(model3))
+```
+
+:::
+
+- Shows the "best" model first
+
+## ELPD - LOOIC
+
+- Leave-One-Out (LOO) Cross-Validation is a method to assess model performance by estimating how well a model predicts each observation, one at a time, using the rest of the data
+- Instead of refitting the model *n* times, each time leaving out one of the *n* data points, approximations like PSIS *(Pareto Smoothed Importance Sampling)* are used to avoid extensive computation
+- Provides a robust measure of model's predictive accuracy (without direct complexity adjustment)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+loo::loo(model)
+loo::loo(model2)
+loo::loo(model3)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+loo::loo_compare(loo::loo(model), loo::loo(model2), loo::loo(model3))
+```
+
+:::
+
+
+## Better by how much? Interpretation rules of thumb
+
+- We can focus on the ELPD difference and its SE
+- The "standardized" difference ($\Delta_{ELPD} / SE$) can be interpreted as a z-score
+  - $> |1.96|$ ~ p < .05
+  - $> |3.29|$ ~ p < .001
+
+
+## Exercice {background-color="#FFAB91"}
+
+- A researcher is interested in the relationship between the two dimensions (verbal and quantitative) of the SAT (a standardized test for college admissions), in particular whether the quantitative score is predicted by the verbal score. A colleague suggests that gender is important.
+- Using the real dataset `sat.act` from the `psych` package, analyze the data and answer the question.
+- Load the dataset as follows:
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+df <- psych::sat.act
+df$gender <- as.factor(df$gender)  # gender=1: males, 2: females
+```
+
+:::
+
+
+```{r}
+#| echo: false
+#| eval: false
+
+# summary(lm(SATQ ~ gender * SATV, data = df)) 
+# 
+# df |> 
+#   ggplot(aes(x=SATV, y=SATQ, color=gender)) + 
+#   geom_smooth(method="lm") 
+```
+
+<!-- - Polynomial and Derivatives -->
+<!-- - GLMs -->
+<!-- - Mixed models -->
+
+
+
+
+
+## The End <sub><sup>(for good)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+
+

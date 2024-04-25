@@ -79,6 +79,9 @@ priors
 
 :::
 
+3. Prior Predictive Checks
+
+- Predicted response density and relationships based on the priors only
 
 ## Fitting the model
 
@@ -138,17 +141,32 @@ model <- brms::brm(f,
 
 ## Sampling Diagnostics - Trace Plots 
 
+::: {.columns}
+
+:::: {.column width=70%}
+
+
 - **HAIRY CATERPILLARS**
 - The MCMC algorithm is supposed to draw **independent** samples from the posterior
 - There should be no autocorrelation between successive samples (i.e., no patterns in the trace plot)
   - They should look like [**hairy caterpillars**]{.fragment}
 - We typically draw multiple independent **chains** (useful for parallel computing, e.g., one chain per core)
 
+::::
+
+:::: {.column width=30%}
+
+![](img/colin.webp)
+
+::::
+
+:::
 
 ::: {.fragment}
 
 ```{r}
 #| echo: true
+#| fig-width: 12
 
 plot(model)
 ```
