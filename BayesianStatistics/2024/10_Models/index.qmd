@@ -214,6 +214,7 @@ p + geom_line(data = pred, aes(y = Predicted),
 
 ```{r}
 #| echo: false
+#| include: false
 
 m <- brms::brm(Sepal.Length ~ 0 + Intercept + Species * Sepal.Width, 
                data = iris, refresh=0)
@@ -235,17 +236,37 @@ ggplot(iris, aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
 ## Model Comparison {.center background-color="#003B49"}
 
 
-## BF and R2
+## Bayes Factors
+
+- It is *possible* to *estimate* Bayes Factors to compare models
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::bayesfactor_models(model, model2, model3)
+```
+
+:::
+
+- Paradoxically, BFs are not straightforward to obtain to compare Bayesian models
+  - Typically computationally expensive
+  - Typically algorithmically complex
+  - Typically not very reliable
+- Not necessarily the first choice as good alternatives exist
+- Other indices of model performance? 
+
+## Coefficient of Determination - R2
 
 ::: {.columns}
 
 :::: {.column width=50%}
 
-- Paradoxically, Bayes Factors are complicated to obtain to compare Bayesian models
-  - Not impossible, but typically computationally expensive
-  - Not recommended given that good alternatives exist
-- Other indices of model performance? 
-  - **R2**
+- R2 measures how well the model explains the data **already observed**, focusing on variance reduction
+- R2 can sometimes give misleading impressions in cases of **overfitting**; a model might appear to perform very well on the training data but poorly on new data
+- R2 is primarily applicable (and intuitive) to **linear models** where the **relationship between variables** is the primary interest
+
 
 ::::
 
@@ -267,9 +288,6 @@ performance::r2(model3)
 
 :::
 
-- R2 measures how well the model explains the data **already observed**, focusing on variance reduction
-- R2 can sometimes give misleading impressions in cases of **overfitting**; a model might appear to perform very well on the training data but poorly on new data
-- R2 is primarily applicable (and intuitive) to **linear models** where the **relationship between variables** is the primary interest
 
 
 ## ELPD
@@ -285,7 +303,7 @@ performance::r2(model3)
 - **WAIC** (Widely Applicable Information Criterion)
   - An index of prediction error adjusted for the number of parameters
   - It provides a **balance between model fit and complexity**, penalizing models that have too many parameters (similar to the BIC).
-  - Computationally more straightforward than LOO, but might not be as accurate (more sensitive to outliers).
+  - Computationally more straightforward than LOO, but might not be as accurate (more sensitive to outliers)
 
 ::: {.fragment}
 
@@ -321,7 +339,7 @@ loo::loo_compare(loo::waic(model), loo::waic(model2), loo::waic(model3))
 
 - Leave-One-Out (LOO) Cross-Validation is a method to assess model performance by estimating how well a model predicts each observation, one at a time, using the rest of the data
 - Instead of refitting the model *n* times, each time leaving out one of the *n* data points, approximations like PSIS *(Pareto Smoothed Importance Sampling)* are used to avoid extensive computation
-- Provides a robust measure of model's predictive accuracy (without direct complexity adjustment)
+- Provides a robust measure of model's predictive accuracy (without direct complexity adjustment - but indirect through overfitting sensitivity)
 
 ::: {.fragment}
 
@@ -352,12 +370,20 @@ loo::loo_compare(loo::loo(model), loo::loo(model2), loo::loo(model3))
 - The "standardized" difference ($\Delta_{ELPD} / SE$) can be interpreted as a z-score
   - $> |1.96|$ ~ p < .05
   - $> |3.29|$ ~ p < .001
+  - Use `1-pnorm(|z-score|)` to get the one-tailed p-value
+- But the standarized difference does not make much sense if the absolute is small ($|\Delta_{ELPD}|<4$)
+  - It's not useful to say one model is likely to provide better predictions than other if the the predictions are almost the same anyways
+- Reporting should include the raw ELPD difference and its SE (and eventually the z-score or *p*-value if it makes sense)
+
+## Exercice {background-color="#FFAB91"}
+
+- Make a conclusion about which model is better and report the analysis
 
 
 ## Exercice {background-color="#FFAB91"}
 
 - A researcher is interested in the relationship between the two dimensions (verbal and quantitative) of the SAT (a standardized test for college admissions), in particular whether the quantitative score is predicted by the verbal score. A colleague suggests that gender is important.
-- Using the real dataset `sat.act` from the `psych` package, analyze the data and answer the question.
+- Using the real dataset `sat.act` from the `psych` package, analyze the data and answer the question
 - Load the dataset as follows:
 
 ::: {.fragment}
@@ -388,7 +414,23 @@ df$gender <- as.factor(df$gender)  # gender=1: males, 2: females
 <!-- - Mixed models -->
 
 
+## Conclusion
 
+- You have (hopefully) learned:
+  - What Bayesian statistics were about, the philosophy and applications of Bayes theorem
+  - The strengths and drawbacks, and the differences and similarities with other approaches
+  - How to apply it using simple and less simple models
+- This background knowledge helped you gain confidence about knowing where to look to learn more
+- Bayesian statistics is a very rapidly evolving field
+  - Challenge to teach \& learn (lots of uncertainty)
+- Important to keep up-to-date with the latest developments
+  - Follow the development of new and existing packages (e.g., *brms*, *rstan*, ...)
+  - Follow forums, blogs and developers (e.g., *r-bloggers*, Twitter/X, ...)
+- Learn by engaging with the community
+  - Ask for help - it will often be helpful to people
+  - Help others (share tips and tricks, little successes)
+- Spread the Bayesian gospel to your fellow academics
+  - But don't be a blind zealot - **think for yourselves**
 
 
 ## The End <sub><sup>(for good)</sup></sub> {.center background-color="#212121"}

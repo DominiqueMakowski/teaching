@@ -628,51 +628,68 @@ Predictors modulated: Species, Petal.Width</code></pre>
 <li class="fragment">Interpret and visualize effect of the <em>Sepal Width</em> on <em>Sepal Length</em> (depending on the Species)</li>
 </ul>
 <div class="fragment">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" width="3000"></p>
-</figure>
-</div>
-</div>
-</div>
+
 </div>
 </section>
 <section id="model-comparison" class="slide level2 center" data-background-color="#003B49">
 <h2>Model Comparison</h2>
 </section>
-<section id="bf-and-r2" class="slide level2">
-<h2>BF and R2</h2>
+<section id="bayes-factors" class="slide level2">
+<h2>Bayes Factors</h2>
+<ul>
+<li class="fragment">It is <em>possible</em> to <em>estimate</em> Bayes Factors to compare models</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model, model2, model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes Factors for Model Comparison
+
+    Model                                       BF
+[2] 0 + Intercept + Species               3.14e+06
+[3] 0 + Intercept + Species * Petal.Width 6.20e+17
+
+* Against Denominator: [1] 0 + Intercept + Petal.Width
+*   Bayes Factor Type: marginal likelihoods (bridgesampling)</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Paradoxically, BFs are not straightforward to obtain to compare Bayesian models
+<ul>
+<li class="fragment">Typically computationally expensive</li>
+<li class="fragment">Typically algorithmically complex</li>
+<li class="fragment">Typically not very reliable</li>
+</ul></li>
+<li class="fragment">Not necessarily the first choice as good alternatives exist</li>
+<li class="fragment">Other indices of model performance?</li>
+</ul>
+</section>
+<section id="coefficient-of-determination---r2" class="slide level2">
+<h2>Coefficient of Determination - R2</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <ul>
-<li class="fragment">Paradoxically, Bayes Factors are complicated to obtain to compare Bayesian models
-<ul>
-<li class="fragment">Not impossible, but typically computationally expensive</li>
-<li class="fragment">Not recommended given that good alternatives exist</li>
-</ul></li>
-<li class="fragment">Other indices of model performance?
-<ul>
-<li class="fragment"><strong>R2</strong></li>
-</ul></li>
+<li class="fragment">R2 measures how well the model explains the data <strong>already observed</strong>, focusing on variance reduction</li>
+<li class="fragment">R2 can sometimes give misleading impressions in cases of <strong>overfitting</strong>; a model might appear to perform very well on the training data but poorly on new data</li>
+<li class="fragment">R2 is primarily applicable (and intuitive) to <strong>linear models</strong> where the <strong>relationship between variables</strong> is the primary interest</li>
 </ul>
 </div><div class="column">
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Bayesian R2 with Compatibility Interval
 
   Conditional R2: 0.927 (95% CI [0.920, 0.932])</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Bayesian R2 with Compatibility Interval
 
   Conditional R2: 0.941 (95% CI [0.936, 0.944])</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Bayesian R2 with Compatibility Interval
 
@@ -682,11 +699,6 @@ Predictors modulated: Species, Petal.Width</code></pre>
 </div>
 </div>
 </div>
-<ul>
-<li class="fragment">R2 measures how well the model explains the data <strong>already observed</strong>, focusing on variance reduction</li>
-<li class="fragment">R2 can sometimes give misleading impressions in cases of <strong>overfitting</strong>; a model might appear to perform very well on the training data but poorly on new data</li>
-<li class="fragment">R2 is primarily applicable (and intuitive) to <strong>linear models</strong> where the <strong>relationship between variables</strong> is the primary interest</li>
-</ul>
 </section>
 <section id="elpd" class="slide level2">
 <h2>ELPD</h2>
@@ -709,25 +721,25 @@ Predictors modulated: Species, Petal.Width</code></pre>
 <ul>
 <li class="fragment">An index of prediction error adjusted for the number of parameters</li>
 <li class="fragment">It provides a <strong>balance between model fit and complexity</strong>, penalizing models that have too many parameters (similar to the BIC).</li>
-<li class="fragment">Computationally more straightforward than LOO, but might not be as accurate (more sensitive to outliers).</li>
+<li class="fragment">Computationally more straightforward than LOO, but might not be as accurate (more sensitive to outliers)</li>
 </ul></li>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 150 log-likelihood matrix.
+Computed from 4000 by 150 log-likelihood matrix
 
           Estimate   SE
 elpd_waic   -104.5  9.5
 p_waic         3.3  0.6
 waic         208.9 19.0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 150 log-likelihood matrix.
+Computed from 4000 by 150 log-likelihood matrix
 
           Estimate   SE
 elpd_waic    -89.1 10.6
@@ -736,10 +748,10 @@ waic         178.3 21.1
 
 1 (0.7%) p_waic estimates greater than 0.4. We recommend trying loo instead. </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 150 log-likelihood matrix.
+Computed from 4000 by 150 log-likelihood matrix
 
           Estimate   SE
 elpd_waic    -64.4 11.5
@@ -759,7 +771,7 @@ waic         128.9 23.1
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">waic</span>(model), loo<span class="sc">::</span><span class="fu">waic</span>(model2), loo<span class="sc">::</span><span class="fu">waic</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">waic</span>(model), loo<span class="sc">::</span><span class="fu">waic</span>(model2), loo<span class="sc">::</span><span class="fu">waic</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       elpd_diff se_diff
 model3   0.0       0.0  
@@ -777,63 +789,60 @@ model  -40.0      10.3  </code></pre>
 <ul>
 <li class="fragment">Leave-One-Out (LOO) Cross-Validation is a method to assess model performance by estimating how well a model predicts each observation, one at a time, using the rest of the data</li>
 <li class="fragment">Instead of refitting the model <em>n</em> times, each time leaving out one of the <em>n</em> data points, approximations like PSIS <em>(Pareto Smoothed Importance Sampling)</em> are used to avoid extensive computation</li>
-<li class="fragment">Provides a robust measure of model’s predictive accuracy (without direct complexity adjustment)</li>
+<li class="fragment">Provides a robust measure of model’s predictive accuracy (without direct complexity adjustment - but indirect through overfitting sensitivity)</li>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 150 log-likelihood matrix.
+Computed from 4000 by 150 log-likelihood matrix
 
          Estimate   SE
 elpd_loo   -104.5  9.5
 p_loo         3.3  0.6
 looic       209.0 19.0
 ------
-MCSE of elpd_loo is 0.0.
-MCSE and ESS estimates assume MCMC draws (r_eff in [0.4, 1.3]).
+Monte Carlo SE of elpd_loo is 0.0.
 
-All Pareto k estimates are good (k &lt; 0.7).
+All Pareto k estimates are good (k &lt; 0.5).
 See help('pareto-k-diagnostic') for details.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 150 log-likelihood matrix.
+Computed from 4000 by 150 log-likelihood matrix
 
          Estimate   SE
 elpd_loo    -89.1 10.6
 p_loo         4.4  0.8
 looic       178.3 21.2
 ------
-MCSE of elpd_loo is 0.0.
-MCSE and ESS estimates assume MCMC draws (r_eff in [0.4, 1.1]).
+Monte Carlo SE of elpd_loo is 0.0.
 
-All Pareto k estimates are good (k &lt; 0.7).
+All Pareto k estimates are good (k &lt; 0.5).
 See help('pareto-k-diagnostic') for details.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 150 log-likelihood matrix.
+Computed from 4000 by 150 log-likelihood matrix
 
          Estimate   SE
 elpd_loo    -64.5 11.5
 p_loo         7.0  1.2
 looic       128.9 23.1
 ------
-MCSE of elpd_loo is 0.1.
-MCSE and ESS estimates assume MCMC draws (r_eff in [0.4, 1.0]).
+Monte Carlo SE of elpd_loo is 0.1.
 
-All Pareto k estimates are good (k &lt; 0.7).
+All Pareto k estimates are good (k &lt; 0.5).
 See help('pareto-k-diagnostic') for details.</code></pre>
 </div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">loo</span>(model), loo<span class="sc">::</span><span class="fu">loo</span>(model2), loo<span class="sc">::</span><span class="fu">loo</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">loo</span>(model), loo<span class="sc">::</span><span class="fu">loo</span>(model2), loo<span class="sc">::</span><span class="fu">loo</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       elpd_diff se_diff
 model3   0.0       0.0  
@@ -851,25 +860,67 @@ model  -40.0      10.3  </code></pre>
 <ul>
 <li class="fragment"><span class="math inline">\(&gt; |1.96|\)</span> ~ p &lt; .05</li>
 <li class="fragment"><span class="math inline">\(&gt; |3.29|\)</span> ~ p &lt; .001</li>
+<li class="fragment">Use <code>1-pnorm(|z-score|)</code> to get the one-tailed p-value</li>
 </ul></li>
+<li class="fragment">But the standarized difference does not make much sense if the absolute is small (<span class="math inline">\(|\Delta_{ELPD}|&lt;4\)</span>)
+<ul>
+<li class="fragment">It’s not useful to say one model is likely to provide better predictions than other if the the predictions are almost the same anyways</li>
+</ul></li>
+<li class="fragment">Reporting should include the raw ELPD difference and its SE (and eventually the z-score or <em>p</em>-value if it makes sense)</li>
 </ul>
 </section>
 <section id="exercice-1" class="slide level2" data-background-color="#FFAB91">
 <h2>Exercice</h2>
 <ul>
+<li class="fragment">Make a conclusion about which model is better and report the analysis</li>
+</ul>
+</section>
+<section id="exercice-2" class="slide level2" data-background-color="#FFAB91">
+<h2>Exercice</h2>
+<ul>
 <li class="fragment">A researcher is interested in the relationship between the two dimensions (verbal and quantitative) of the SAT (a standardized test for college admissions), in particular whether the quantitative score is predicted by the verbal score. A colleague suggests that gender is important.</li>
-<li class="fragment">Using the real dataset <code>sat.act</code> from the <code>psych</code> package, analyze the data and answer the question.</li>
+<li class="fragment">Using the real dataset <code>sat.act</code> from the <code>psych</code> package, analyze the data and answer the question</li>
 <li class="fragment">Load the dataset as follows:</li>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> psych<span class="sc">::</span>sat.act</span>
-<span id="cb36-2"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>gender)  <span class="co"># gender=1: males, 2: females</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> psych<span class="sc">::</span>sat.act</span>
+<span id="cb38-2"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>gender)  <span class="co"># gender=1: males, 2: females</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <!-- - Polynomial and Derivatives -->
 <!-- - GLMs -->
 <!-- - Mixed models -->
+</section>
+<section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<ul>
+<li class="fragment">You have (hopefully) learned:
+<ul>
+<li class="fragment">What Bayesian statistics were about, the philosophy and applications of Bayes theorem</li>
+<li class="fragment">The strengths and drawbacks, and the differences and similarities with other approaches</li>
+<li class="fragment">How to apply it using simple and less simple models</li>
+</ul></li>
+<li class="fragment">This background knowledge helped you gain confidence about knowing where to look to learn more</li>
+<li class="fragment">Bayesian statistics is a very rapidly evolving field
+<ul>
+<li class="fragment">Challenge to teach &amp; learn (lots of uncertainty)</li>
+</ul></li>
+<li class="fragment">Important to keep up-to-date with the latest developments
+<ul>
+<li class="fragment">Follow the development of new and existing packages (e.g., <em>brms</em>, <em>rstan</em>, …)</li>
+<li class="fragment">Follow forums, blogs and developers (e.g., <em>r-bloggers</em>, Twitter/X, …)</li>
+</ul></li>
+<li class="fragment">Learn by engaging with the community
+<ul>
+<li class="fragment">Ask for help - it will often be helpful to people</li>
+<li class="fragment">Help others (share tips and tricks, little successes)</li>
+</ul></li>
+<li class="fragment">Spread the Bayesian gospel to your fellow academics
+<ul>
+<li class="fragment">But don’t be a blind zealot - <strong>think for yourselves</strong></li>
+</ul></li>
+</ul>
 </section>
 <section id="the-end-for-good" class="slide level2 center" data-background-color="#212121">
 <h2>The End <sub><sup>(for good)</sup></sub></h2>
