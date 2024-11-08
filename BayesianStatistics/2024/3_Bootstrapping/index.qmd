@@ -266,7 +266,7 @@ actual_r
 
 ## Parent Population
 
-- Frequentist "inferential" statistics are used to make inferences about the **parent population** from which the data are **sampled**
+- Frequentist "inferential" statistics are used to make inferences about the **parent population** from which the data are **sampled**<sup><sub>(this is a difference with the Bayesian framework, but more on that later)</sub></sup>
 - We use a lot of assumptions about how the effects (and absence thereof) are distributed for the *parent population*, which allows us to estimate things like confidence intervals and p-values.
 - If we had access to the *parent populations*, we wouldn't need to compute these indices, we would just say this is the "true" value of the effect.
 - But we usually don't have access to the parent population, and we have to rely on the data at hand (assumed to be a **random sample** from the parent distribution) and infer/assume the shape of the parent distribution
@@ -459,7 +459,7 @@ p
 - Pros: 
   - Easy to compute
   - Easy to interpret ("average" value)
-  - It is important mathematical properties
+  - It is an important mathematical property
 - Cons:
   - Sensitive to outliers
   - Not suitable for discrete distributions (e.g. counts: `mean(c(0, 0, 1, 4, 6))`)

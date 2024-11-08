@@ -1,0 +1,693 @@
+---
+title: "Introduction to Bayesian Statistics"
+subtitle: "**@ LaPsyDé**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.3"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+```
+
+## Introduction
+
+::: {.columns .nonincremental}
+
+:::: {.column width=60%}
+
+- Internship at *LaPsyDé* (2012)
+- PhD 2019 <sub><sup>*(Université Paris Descartes)*</sup></sub>
+  - Emotion Regulation through "Fiction"
+  - Software development
+- Postdoc 2019-2023 <sub><sup>*(NTU Singapore)*</sup></sub>
+  - EEG and Physiological markers of Deception
+- Lecturer (2023-) <sub><sup>*(University of Sussex, Brighton)*</sup></sub>
+  - **Reality Bending Lab (ReBeL)** <sub><sup>[website](https://realitybending.github.io/)</sup></sub>
+    - Role of emotions and cognitive control in the perception of reality
+    - Illusions, fake news, altered states of consciousness, ...
+  - **Bayesian Statistics**
+
+::::
+
+:::: {.column width=40%}
+
+![](https://easystats.github.io/easystats/reference/figures/logo_wall.png){width="50%"}![](https://rpanderson-neurokit2.readthedocs.io/en/latest/_static/neurokit.png){width="50%"}
+![](img/rectangle_black.png){width="100%"}
+
+
+::::
+
+:::
+
+## Frequentist Framework Refresher {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
+
+
+## Tests vs. Models
+
+- Psychology uses a lot of **tests** (*t*-tests, correlation test, ANOVAs, etc.)
+- **Tests** != **Models**
+- However, tests are usually **based** on models
+- In particular, tests are related to specific **parameters** of models
+- **What are <span style="color:orange;">*Parameters*</span>**?
+
+
+## Quizz {background-color="#FFAB91"}
+
+::: {.stretch}
+
+- What is wrong with this [**Correlation**]{.fragment .strike} plot?
+- It is more a "regression" plot *(scatter plot + regression line)*
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df <- bayestestR::simulate_correlation(n=500, r=0.7)
+df |> 
+  ggplot(aes(x=V1, y=V2)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2, color="red") +
+  theme_bw()
+```
+
+:::
+
+## Solution {background-color="#80DEEA"}
+
+::: {.stretch}
+
+- A correlation is a measure of the **strength** of association [-1, 1]
+  - Better represented by an elipsis
+  - It is not a **model**: we can't predict the value of `y` given a value of `x`
+- The line is a **regression** line
+  - The angle of the line is the regression coefficient (can be > 1)
+  - **How is this line computed?**
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df |> 
+  ggplot(aes(x=V1, y=V2)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2, color="red") +
+  stat_ellipse(type = "norm", color="blue", linewidth=2) +
+  theme_bw()
+```
+
+:::
+
+## Linear Model
+
+::: {.stretch style="font-size: 85%"}
+
+- Linear function: $y = ax + b$
+- Regression formula: $\hat{y} = Intercept + \beta_{1}x$
+  - <span style="color:red;">$\hat{y}$</span> (Y-hat): *predicted* response/outcome/dependent variable
+  - <span style="color:blue;">$Intercept$ ($\beta_{0}$)</span>: "starting point". Value of $\hat{y}$ when $x=0$
+  - <span style="color:green;">$\beta_{1}$</span> (beta) : slope/"effect". Change of $\hat{y}$ from the intercept when $x$ **increases by 1**
+  - $x$: predictor/independent variable
+- **What are the parameters of the regression line below?** [<span style="color:orange;">***Intercept = 1 and beta = 3***</span>]{.fragment}
+  
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+ggplot(df, aes(x=V1, y=V2)) +
+  geom_point(alpha=0) +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  geom_abline(intercept = 1, slope = 3, color="red", linewidth=2)  +
+  geom_segment(aes(x = 0, y = 1, xend = 1, yend = 1), linewidth=1, 
+               color="green", linetype="dashed") +
+  geom_segment(aes(x = 1, y = 1, xend = 1, yend = 4), linewidth=1, 
+               color="green", linetype="solid", arrow=arrow(length = unit(0.1, "inches"))) +
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1), linewidth=1, 
+               color="blue", linetype="solid", arrow=arrow(length = unit(0.1, "inches"))) +
+  geom_point(aes(x = 0, y = 0), color="purple", size=8, shape="+") +
+  labs(x="x", y="y") +
+  theme_bw() +
+  coord_cartesian(xlim = c(-1, 1.5), ylim = c(-3, 4))
+```
+  
+
+
+:::
+
+## Impact of Parameters
+
+::: {.nonincremental .stretch}
+
+- What happens when we change the **slope** and the **intercept**?
+
+![](img/regression.jpg)
+
+:::
+
+## Linear Model in R
+
+::: {.stretch style="font-size: 90%"}
+
+- In R, we use the `lm()` function (linear model) with the `response ~ predictor` formula to specify the model
+- We can apply the `summary()` method to get the results
+- **What are the coefficients?** 
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- lm(mpg ~ qsec, data=mtcars)
+summary(model)
+```
+
+::::
+
+- $Intercept = -5.1140$ and $\beta_{qsec} = 1.4121$
+- **How are the parameters computed?**
+
+
+:::
+
+
+
+
+## Linear Model = "Gaussian" Model
+
+::: {.stretch .nonincremental}
+
+- Solving the linear model equation means finding the **best fitting normal distribution** around the *residuals*
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| dpi: 300
+
+p <- mtcars |> 
+  ggplot(aes(x=qsec, y=mpg)) +
+  geom_point(alpha=0.7, size=6) +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
+  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
+               color="red", linetype="dotted", linewidth=1) +
+  theme_bw() +
+  labs(x="x", y="y", title="The residuals are the vertical distances between each point and the line.")
+
+p2 <- data.frame(Error=insight::get_residuals(lm(mpg ~ qsec, data=mtcars))) |> 
+  ggplot(aes(x=Error)) +
+  geom_histogram(bins=10, fill="grey", color="black") +
+  geom_vline(xintercept = 0, linetype="dashed") +
+  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 2)),
+               aes(y=after_stat(density)*40), color="#F44336", linewidth=1, adjust=1) +
+  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 3)),
+               aes(y=after_stat(density)*50), color="#FF5722", linewidth=1, adjust=1) +
+  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 4)),
+               aes(y=after_stat(density)*60), color="#FF9800", linewidth=1, adjust=1) +
+  geom_point(aes(y=0), size=10, shape=16, alpha=0.3) +
+  theme_bw() +
+  coord_flip() +
+  labs(y = "Density")
+
+p + theme(plot.title = element_blank()) | p2
+```
+
+:::
+
+## Homoscedasticity   
+
+
+::: {.nonincremental .stretch}
+
+- The line that goes through the *Normal* distribution's locations $\mu$ also minimizes the sum of squared residuals (OLS)
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| dpi: 300
+
+model <- lm(mpg ~ qsec, data=mtcars)
+
+p <- mtcars |> 
+  ggplot(aes(x=qsec, y=mpg)) +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
+  theme_bw()
+
+# Function to add normal distribution curves
+add_normals <- function(p, model) {
+  sigma <- summary(model)$sigma  # Standard deviation of residuals
+  n <- 100  # Number of points for each curve
+  
+  for(i in 1:nrow(mtcars)) {
+    x_val <- mtcars$qsec[i]
+    y_pred <- predict(model, newdata = data.frame(qsec = x_val))
+    
+    # Create a sequence of y values for the normal curve
+    y_seq <- seq(y_pred - 3*sigma, y_pred + 3*sigma, length.out = n)
+    density <- dnorm(y_seq, mean = y_pred, sd = sigma)
+    
+    # Adjust density to match the scale of the plot
+    max_width <- 1  # Max width of areas
+    density_scaled <- (density / max(density)) * max_width
+    
+    # Create a dataframe for each path
+    path_df <- data.frame(x = x_val + density_scaled, y = y_seq)
+    path_dfv <- data.frame(x=path_df$x[1], ymin=min(path_df$y), ymax=max(path_df$y))
+    
+    # Add the path to the plot
+    p <- p + 
+      geom_segment(data = path_dfv, aes(x = x, xend=x, y = ymin, yend=ymax), 
+                   color = "#FF9800", size = 0.7, alpha=0.8, linetype="dotted") +
+      geom_path(data = path_df, aes(x = x, y = y), 
+                color = "#FF9800", size = 1, alpha=0.8) 
+  }
+  p
+}
+
+
+# Create the final plot
+p <- add_normals(p, model) +
+  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(alpha=0.8, size=6) 
+p
+```
+
+
+:::
+
+
+## Model Parameters
+
+- In regression models, 2 types of parameters are estimated (using OLS/MLE)
+  - The coefficients
+    - Intercept
+    - The slope(s)
+  - "Distributional" (aka "Auxiliary") parameters (about the distribution of errors)
+    - E.g., the standard deviation of the errors $\sigma$ (sigma) in linear models
+    - Usually, most people tend to ignore these... but they are important!
+- The remaining indices (SE, *t*-value, *p*-value) are calculated using them
+
+## Quizz {background-color="#FFAB91"}
+
+- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
+  - *Tip*: just look at the output...
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+model <- lm(mpg ~ qsec, data=mtcars)
+```
+
+:::
+
+## Solution {background-color="#80DEEA"}
+
+::: {.nonincremental .stretch}
+
+- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
+  - *Tip*: just look at the output...
+
+```{r}
+#| echo: true
+
+model <- lm(mpg ~ qsec, data=mtcars)
+summary(model)
+```
+
+:::: {.fragment}
+```{r}
+#| echo: true
+
+insight::get_sigma(model)
+```
+
+::::
+:::
+
+## Why is it important?
+
+- The characteristics of the estimated $Normal$ distribution of residuals, $\mu$ and $\sigma$, are used to compute the **coefficient** ($\beta$) and **standard error** ($SE$) of each of the model's parameters, respectively 
+  - $\mu$ (the center of the normal distribution) is used to compute the **coefficients** (intercept and slope) of the regression line
+  - $\sigma$ (the spread) is used to estimate the *covariance matrix*, from which we can then estimate the **standard error** (the uncertainty related to the coefficient) <sub><sup>*via a fairly complex formula*</sup></sub>
+- Two models can have the same coefficients, but different SEs, depending on the spread of the residuals
+
+
+## Quizz {background-color="#FFAB91"} 
+
+:::  .stretch}
+
+- What happens if you divide the coefficient by its SE?
+- **You obtain the *t*-value!**
+- Why is it called a *t*-value 🤔
+
+```{r}
+#| echo: true
+
+model <- lm(mpg ~ qsec, data=mtcars)
+summary(model)
+```
+
+:::
+
+## The *t*-value
+
+::: {.stretch}
+
+- The **t-value** is the ratio between the **coefficient** and its **standard error**
+- It can be seen as a "**standardized**" index of the coefficient's precision (independent of the scale/unit of the variable)
+- It corresponds to a point on a *t*-distribution of corresponding degrees of freedom (df), centered at 0
+- This *t*-distribution is the assumption made in Frequentist statistics about the distribution of coefficients (effects) **under the null hypothesis**
+  - Not to be confused with the distribution of residuals (which is assumed to be *Normal*)
+  - This *t*-distribution can be used to adjust for the sample size (*df*) - hence the use of *t* instead of *Normal* to introduce bias (especially for small sample sizes). For large sample sizes (= large *df*), it becomes equivalent to a Normal distribution
+
+:::
+
+## The *t*-value
+
+::: {.nonincremental .stretch}
+
+- The *t*-value shows how likely our coefficient compared to the assumed distributions of possible coefficient under the **null hypothesis** (i.e., if there is an absence of effect and we repeated the experiment an infinite number of times)
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+# Plot  t-distribution
+x <- seq(-5, 5, length.out = 1000)
+y <- dt(x, df=30)
+df <- data.frame(x = x, y = y)
+
+t_value <- insight::get_statistic(model)[2, 2]
+
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_area(color="black", fill="grey") +
+  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
+  theme_minimal() +
+  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
+       title = paste0("t-Distribution (df=30); ", "t-value = ", round(t_value, 2), "\n"))
+```
+
+:::
+
+## Is our coefficient "big" (i.e., precise)?
+
+- Is our coefficient likely to be observed under the null hypothesis?
+  - What is the *probability* to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
+  - $Prob > |t|$
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+df$Probability <- ifelse(df$x < -t_value, "< -t", "Smaller")
+df$Probability <- ifelse(df$x > t_value, "> +t", df$Probability)
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  geom_area(aes(x = x, y = y, fill = Probability), alpha = 0.5) +
+  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
+  theme_minimal() +
+  scale_fill_manual(values = c("red", "red", "grey")) +
+  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
+       title = paste0("t-Distribution (df=30); ", "t-value = ", round(t_value, 2), "\n"))
+```
+
+## Is our coefficient "big" (i.e., precise)?
+
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Is our coefficient likely to be observed under the null hypothesis?
+  - What is the *probability* $p$ to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
+  - $Prob > |t|$
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+prob <- pt(-t_value, df=30, lower.tail = TRUE) + 
+  pt(t_value, df=30, lower.tail = FALSE)
+
+round(prob, 4)
+```
+
+:::::
+
+- Look again at your summary...
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: false
+
+summary(model)
+```
+
+:::::
+
+- **It is the *p*-value!**
+- You computed the *p*-value by hand!
+
+::::
+
+:::
+
+
+
+## *p*-value
+
+::: {style="font-size: 75%"}
+
+- The **p-value** is the probability of observing a value >= to the ***t*-value** under the null hypothesis. In other words, it is the probability of obtaining test results at least as "big" (precisely away from 0) as the result actually observed if we repeat it an infinite amount of times and there is no true effect.
+  - It is quite convoluted... 
+  - Is not a "trivial" value. It has some delicate aspects.
+- **Estimation**: It is the product of several complicated steps:
+  - Estimate the SE of the coefficients (this is not a straightforward process and gets complicated in more complex models)
+  - Estimate the *df* (degrees of freedom) of the model (this is also problematic for complex models, e.g., mixed models)
+  - Make a strong assumption about the distribution of the coefficients under the null hypothesis (e.g., the *t*-distribution)
+- **Interpretation**:
+  - We tend to focus on a dichotomous interpretation of the *p*-value (significant or not), based on an arbitrary threshold $\alpha$ typically set to 5\% (.05) for literally no reason in particular
+  - We often interpret it as the probability of the null hypothesis being true, or as an index of effect magnitude, which is not correct (it's more related to the width of the certainty around the estimate than its absolute size)
+- However, ***p*-values are not *fundamentally* bad**. They are very good at one thing: controlling how often, if we repeat an experiment infinitely, we'll make a particular kind of error. *It's just that it's often not what we care about in practice.*
+
+:::
+
+## Confidence Intervals (CI)
+
+::: {.stretch}
+
+- Confidence Intervals are often seen as a "range" of likely values for the coefficient, and the more we would get close to the coefficient the more "likely" the values would be. It is **incorrect**
+- The **confidence interval** (CI) is the range of values that contains, e.g., with 95\% of probability, the value of the coefficient if the *t*-distribution was centered around the *t*-value (as if the null effect was the estimated coefficient).
+- The interpretation is, again, fairly convoluted
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+# Get 95% ETI of the t distribution
+ci <- qt(c(0.025, 0.975), df=30, lower.tail = TRUE) + t_value
+# ci * parameters::parameters(model)$SE[2]  # Indeed shows the right CI
+
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_area(fill="grey", alpha=0.5) +
+  geom_area(aes(x = x + t_value, y = y), color="red", fill="red", alpha=0.5) +
+  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
+  # Horizontal segment indicating the CI range
+  geom_segment(aes(x = ci[1], y = 0.05, xend = ci[2], yend = 0.05), 
+               color="orange", linetype="solid", linewidth=1, arrow = arrow(ends='both')) +
+  geom_vline(xintercept = ci[1], color="orange", linetype="dotted", linewidth=0.5) +
+  geom_vline(xintercept = ci[2], color="orange", linetype="dotted", linewidth=0.5) +
+  theme_minimal() +
+  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
+       title = paste0("Shifted t-Distribution (df=30); ", "location = ", round(t_value, 2), "(t-value)\n"))
+```
+
+:::
+
+## Alternatives?
+
+- Can we do better and get more intuitive quantities? 
+  - The answer starts with **"B"**... 
+  - And ends with **"...ootstrapping"**
+
+## Bootstrapping {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
+
+## Parent Population
+
+- Frequentist "inferential" statistics are used to make inferences about the **parent population** from which the data are **sampled** <sup><sub>(this is a difference with the Bayesian framework, but more on that later)</sub></sup>
+- We use a lot of assumptions about how the effects (and absence thereof) are distributed for the *parent population*, which allows us to estimate things like confidence intervals and p-values.
+- If we had access to the *parent populations*, we wouldn't need to compute these indices, we would just say this is the "true" value of the effect.
+- But we usually don't have access to the parent population, and we have to rely on the data at hand (assumed to be a **random sample** from the parent distribution) and infer/assume the shape of the parent distribution
+
+## "Data are random"
+
+- This assumption has an interesting consequence...
+- Data points can be seen as "**interchangeable**"!
+- We could make a new sample from the same data points
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+new_sample <- mtcars[sample(1:nrow(mtcars), replace = TRUE), ] 
+```
+
+:::
+
+- This sample is theoretically "as good" as the original one
+- We could compute the model again on this new sample...
+
+## Rince and repeat
+
+- Let's do it *n* times and store all the coefficients in a vector
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- lm(mpg ~ qsec, data=mtcars)
+true_coef <- coef(model)[2]
+
+coefs <- c()  # Initialize an empty vector of coefs
+for (i in 1:5000) {  # Repeat the process 500 times
+  new_sample <- mtcars[sample(1:nrow(mtcars), replace = TRUE), ]  # Sample new data
+  new_model <- lm(mpg ~ qsec, data=new_sample)  # recompute the model
+  coefs <- c(coefs, coef(new_model)[2])  # Append the coef to the vector
+}
+```
+
+:::
+
+::: {.fragment}
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+data.frame(coefs = coefs) |>
+  ggplot(aes(x = coefs)) +
+  geom_density(fill="orange") +
+  geom_vline(xintercept = true_coef, color="red", linetype="dashed", linewidth=2) +
+  theme_minimal() +
+  labs(x = "Coefficient", y = "Frequency", 
+       title = "Distribution of coefficients from 5000 bootstrapped samples\n") +
+  coord_cartesian(xlim = c(-0.5, NA))
+
+```
+:::
+
+
+
+## Why bootstrapping?
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Instead of having a **point-estimate** of a statistical parameter, we now have a **distribution** of the statistic
+- This distribution is valid (flows from the premises of frequentist statistics) and can be used to directly estimate the uncertainty related to the statistic of interest
+- From now on, you need to shift your thinking from "point-estimates" (single values) to start thinking in terms of "distribution" of statistical values
+- How to describe this distribution? 
+
+::::
+
+:::: {.column}
+
+![](https://media.giphy.com/media/s239QJIh56sRW/giphy.gif)
+
+::::
+
+:::
+
+
+## Indices of Centrality
+
+- We usually still compute a point-estimate, useful to give an idea of the "central tendency" of the distribution <sub><sup>*(as our little brains don't process well uncertainty and ranges)*</sup></sub>
+- **Mean** (average) of the distribution
+  - Pros: Easy to compute, Easy to interpret ("average" value)
+  - Cons: Sensitive to outliers, Not appropriate for non-symmetric distributions
+- **Median** (middle value) of the distribution
+  - Pros:  Easy to compute, Robust to outliers, Consistent interpretation in terms of probabilities
+  - Cons: Too robust? (to variability in the tails) 
+- **Mode** (most frequent value - peak - of the distribution) - aka **Maximum A Posteriori** (MAP)
+  - Pros: Easy to interpret
+  - Cons: Complex to compute, Problematic for multimodal distributions, Not really robust, Not always defined (e.g. uniform distributions)
+  
+  
+## Indices of Uncertainty
+
+- Standard deviation (SD), Median Absolute Deviation (MAD)
+- Credible Intervals (CI)
+  
+## Bootstrapping-specific indices?
+
+- Are these new indices (median, MAD, credible intervals, p-direction, ROPE) **bootstrapping**-specific?
+  - **NO!** Bootstrapping is just a method that provides a parameter **distribution** instead of point-values
+- These indices are "simply" descriptive summaries of parameter **distributions**
+- Thus, they can be used whenever we have a distributions of parameters
+- ⚠️**Spoiler Alert**⚠️ Such as in Bayesian stats...
+
+## Bayes Theorem {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
+
+  
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+

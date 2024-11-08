@@ -693,7 +693,7 @@ summary(model)
 
 ::: {.stretch}
 
-- Confidence Intervals are often seen as a "range" of likely values for the coefficient, and the more we would get close to the coefficient hte more "likely" the values would be. It is **incorrect**
+- Confidence Intervals are often seen as a "range" of likely values for the coefficient, and the more we would get close to the coefficient the more "likely" the values would be. It is **incorrect**
 - The **confidence interval** (CI) is the range of values that contains, e.g., with 95\% of probability, the value of the coefficient if the *t*-distribution was centered around the *t*-value (as if the null effect was the estimated coefficient).
 - The interpretation is, again, fairly convoluted
 
