@@ -4,7 +4,7 @@ I teach Bayesian statistics in R and psychophysiology at the University of Susse
 I also offer workshops to external universities (see [here for details](https://dominiquemakowski.github.io/services/))
 
 ## Bayesian Statistics
-2024 - University of Sussex (Masters & PhDs)
+*2024* - University of Sussex (Masters & PhDs)
 
 - [Lecture 1](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/1_Distributions)
 - [Lecture 2](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/2_MLE)
@@ -17,7 +17,12 @@ I also offer workshops to external universities (see [here for details](https://
 - [Lecture 11](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/10_Models)
 
 ## Physiology
-2024 - University of Basel (Workshop)
+
+*11/2024* - University of Sussex (Undergrad Lecture)
+
+- [Slides](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel)
+
+*04/2024* - University of Basel (Workshop)
 
 - [Slides](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel)
 - [Experiment](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/experiment)
