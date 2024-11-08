@@ -20,7 +20,7 @@ I also offer workshops to external universities (see [here for details](https://
 
 *11/2024* - University of Sussex (Undergrad Lecture)
 
-- [Slides](https://dominiquemakowski.github.io/teaching/Physiology/1_BodyMind)
+- [Slides](https://dominiquemakowski.github.io/teaching/Physiology/2024_UG_CognitiveNeuroscience)
 
 *04/2024* - University of Basel (Workshop)
 
