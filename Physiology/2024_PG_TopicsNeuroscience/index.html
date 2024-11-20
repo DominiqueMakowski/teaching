@@ -59,18 +59,20 @@
         </div>
         <iframe
             id="documentFrame"
-            src="https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_UG_CognitiveNeuroscience/EmbodiedBrain.pptx"
+            src="https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_PG_TopicsNeuroscienced/BodyMind.pptx"
             frameborder="0"
         >
         </iframe>
         <div>
-            <button class="button" onclick="previousDocument()">Previous Part</button>
+            <button class="button" onclick="previousDocument()">
+                Previous Part
+            </button>
             <button class="button" onclick="nextDocument()">Next Part</button>
         </div>
         <script>
             var documents = [
                 {
-                    src: "https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_UG_CognitiveNeuroscience/EmbodiedBrain.pptx",
+                    src: "https://view.officeapps.live.com/op/view.aspx?src=https://dominiquemakowski.github.io/teaching/Physiology/2024_PG_TopicsNeuroscienced/BodyMind.pptx",
                     subtitle: "Lecture",
                 },
             ]
@@ -79,7 +81,11 @@
             window.addEventListener("load", function () {
                 updateFrameFromHash()
 
-                window.addEventListener("hashchange", updateFrameFromHash, false)
+                window.addEventListener(
+                    "hashchange",
+                    updateFrameFromHash,
+                    false
+                )
             })
 
             function updateFrameFromHash() {
@@ -92,8 +98,10 @@
             }
 
             function updateFrame() {
-                document.getElementById("documentFrame").src = documents[currentIndex].src
-                document.getElementById("subtitle").innerText = documents[currentIndex].subtitle
+                document.getElementById("documentFrame").src =
+                    documents[currentIndex].src
+                document.getElementById("subtitle").innerText =
+                    documents[currentIndex].subtitle
                 window.location.hash = currentIndex // Update the URL hash
             }
 
@@ -103,10 +111,13 @@
             }
 
             function previousDocument() {
-                currentIndex = (currentIndex - 1 + documents.length) % documents.length
+                currentIndex =
+                    (currentIndex - 1 + documents.length) % documents.length
                 updateFrame()
             }
         </script>
-        <div id="copyright">&copy; 2024 Dominique Makowski. All rights reserved.</div>
+        <div id="copyright">
+            &copy; 2024 Dominique Makowski. All rights reserved.
+        </div>
     </body>
 </html>
