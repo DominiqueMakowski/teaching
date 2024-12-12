@@ -659,7 +659,7 @@ mad(r_values)
 ## Credible Interval - ETI
 
 - The **Equal-Tailed Interval** (**ETI**) is the commonly used as an index of CI because of its computational simplicity
-- It is made by exclusing an **equal amount data from each tail** of the distribution.
+- It is made by excluding an **equal amount data from each tail** of the distribution.
 - Typically, we do a 95% CI, which excludes 2.5% from each tail of the distribution.
 - It is the range of values that contains 95% of the distribution (i.e., the 2.5% and 97.5% quantiles)
 - It can be computed using the `bayestestR::eti()` function
@@ -1031,7 +1031,7 @@ for (i in 1:5000) {  # Repeat the process 5000 times
 - We are trying to describe this distribution using various indices
 - But given the nature of the index that we are focusing on (a correlation), we can already know some things about the distribution
   - *r*-values are bounded between -1 and 1
-  - They are "standardized" (i.e., invariant of the unit of the varialbes)
+  - They are "standardized" (i.e., invariant of the unit of the variables)
   - This is why they can be used as an index of effect size (similar to *Cohen's d*, $\eta^2$, etc.)
 
 ::::
@@ -1119,7 +1119,7 @@ bayestestR::describe_posterior(r_values)
 
 :::
 
-- Describe the "centrality" (e.g;, Median), the "uncertainty" (CI), and the "significance" (e.g., ROPE, pd, ...)
+- Describe the "centrality" (e.g;, Median), the "uncertainty" (CI), and the "significance" (e.g., ROPE, *pd*, ...)
 
 ::: {.fragment}
 

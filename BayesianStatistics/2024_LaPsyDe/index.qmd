@@ -42,7 +42,7 @@ library(easystats)
 :::: {.column width=60%}
 
 - Internship at *LaPsyDé* (2012)
-- PhD 2019 <sub><sup>*(Université Paris Descartes)*</sup></sub>
+- PhD 2018 <sub><sup>*(Université Paris Descartes)*</sup></sub>
   - Emotion Regulation through "Fiction"
   - Software development
 - Postdoc 2019-2023 <sub><sup>*(NTU Singapore)*</sup></sub>
@@ -65,16 +65,26 @@ library(easystats)
 
 :::
 
-## Frequentist Framework Refresher {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
+## Managing expectations
 
+::: {.columns}
 
-## Tests vs. Models
+:::: {.column width=50%}
 
-- Psychology uses a lot of **tests** (*t*-tests, correlation test, ANOVAs, etc.)
-- **Tests** != **Models**
-- However, tests are usually **based** on models
-- In particular, tests are related to specific **parameters** of models
-- **What are <span style="color:orange;">*Parameters*</span>**?
+- Provide a bird's eye view of Bayesian statistics applied to statistical models
+- Build on existing knowledge and "demystify" Bayesian statistics
+
+:::: 
+
+:::: {.column width=50%}
+
+![](img/seagull.jpg){width="75%"}
+
+::::
+
+:::
+
+## Frequentist Refresher {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
 
 
 ## Quizz {background-color="#FFAB91"}
@@ -105,10 +115,8 @@ df |>
 
 - A correlation is a measure of the **strength** of association [-1, 1]
   - Better represented by an elipsis
-  - It is not a **model**: we can't predict the value of `y` given a value of `x`
 - The line is a **regression** line
   - The angle of the line is the regression coefficient (can be > 1)
-  - **How is this line computed?**
 
 ```{r}
 #| echo: true
@@ -123,7 +131,42 @@ df |>
   theme_bw()
 ```
 
+::: 
+
+
+
+## Tests vs. Models
+
+- Psychology uses a lot of **tests** (*t*-tests, correlation tests, ANOVAs, etc.)
+- **Tests** != **Models**
+  - We can't predict the value of `y` given `x` with a test
+- However, tests are usually **based** on models
+- In particular, tests are related to specific **parameters** of models
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+cor.test(mtcars$wt, mtcars$qsec) |> 
+  parameters::parameters()
+```
+
 :::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+lm(wt ~ qsec, data=mtcars) |> 
+  parameters::parameters()
+```
+
+:::
+
+- **What are <span style="color:orange;">*Parameters*</span>**?
+
 
 ## Linear Model
 
@@ -171,32 +214,6 @@ ggplot(df, aes(x=V1, y=V2)) +
 ![](img/regression.jpg)
 
 :::
-
-## Linear Model in R
-
-::: {.stretch style="font-size: 90%"}
-
-- In R, we use the `lm()` function (linear model) with the `response ~ predictor` formula to specify the model
-- We can apply the `summary()` method to get the results
-- **What are the coefficients?** 
-
-:::: {.fragment}
-
-```{r}
-#| echo: true
-
-model <- lm(mpg ~ qsec, data=mtcars)
-summary(model)
-```
-
-::::
-
-- $Intercept = -5.1140$ and $\beta_{qsec} = 1.4121$
-- **How are the parameters computed?**
-
-
-:::
-
 
 
 
@@ -284,9 +301,9 @@ add_normals <- function(p, model) {
     # Add the path to the plot
     p <- p + 
       geom_segment(data = path_dfv, aes(x = x, xend=x, y = ymin, yend=ymax), 
-                   color = "#FF9800", size = 0.7, alpha=0.8, linetype="dotted") +
+                   color = "#FF9800", linewidth = 0.7, alpha=0.8, linetype="dotted") +
       geom_path(data = path_df, aes(x = x, y = y), 
-                color = "#FF9800", size = 1, alpha=0.8) 
+                color = "#FF9800", linewidth = 1, alpha=0.8) 
   }
   p
 }
@@ -313,91 +330,42 @@ p
   - "Distributional" (aka "Auxiliary") parameters (about the distribution of errors)
     - E.g., the standard deviation of the errors $\sigma$ (sigma) in linear models
     - Usually, most people tend to ignore these... but they are important!
-- The remaining indices (SE, *t*-value, *p*-value) are calculated using them
-
-## Quizz {background-color="#FFAB91"}
-
-- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
-  - *Tip*: just look at the output...
 
 ::: {.fragment}
 
 ```{r}
 #| echo: true
-#| eval: false
 
 model <- lm(mpg ~ qsec, data=mtcars)
-```
 
-:::
-
-## Solution {background-color="#80DEEA"}
-
-::: {.nonincremental .stretch}
-
-- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
-  - *Tip*: just look at the output...
-
-```{r}
-#| echo: true
-
-model <- lm(mpg ~ qsec, data=mtcars)
 summary(model)
-```
-
-:::: {.fragment}
-```{r}
-#| echo: true
 
 insight::get_sigma(model)
 ```
 
-::::
 :::
 
-## Why is it important?
-
-- The characteristics of the estimated $Normal$ distribution of residuals, $\mu$ and $\sigma$, are used to compute the **coefficient** ($\beta$) and **standard error** ($SE$) of each of the model's parameters, respectively 
-  - $\mu$ (the center of the normal distribution) is used to compute the **coefficients** (intercept and slope) of the regression line
-  - $\sigma$ (the spread) is used to estimate the *covariance matrix*, from which we can then estimate the **standard error** (the uncertainty related to the coefficient) <sub><sup>*via a fairly complex formula*</sup></sub>
-- Two models can have the same coefficients, but different SEs, depending on the spread of the residuals
+- The remaining indices (SE, *t*-value, *p*-value) are calculated using them
 
 
-## Quizz {background-color="#FFAB91"} 
-
-:::  .stretch}
-
-- What happens if you divide the coefficient by its SE?
-- **You obtain the *t*-value!**
-- Why is it called a *t*-value 🤔
+## Frequentist Inference
 
 ```{r}
-#| echo: true
-
-model <- lm(mpg ~ qsec, data=mtcars)
-summary(model)
+lm(wt ~ qsec, data=mtcars) |> 
+  parameters::parameters(digits=3)
 ```
 
-:::
+- The ***t*-value** is the ratio between the **coefficient** and its **standard error (SE)**
+  - It can be seen as a "**standardized**" index of the coefficient's precision (independent of the scale/unit of the variable)
+  - It corresponds to a point on a *t*-distribution of corresponding degrees of freedom (df), centered at 0
+  - This *t*-distribution is the assumption made in Frequentist statistics about the distribution of coefficients (effects) **under the null hypothesis** (Not to be confused with the distribution of residuals, which is assumed to be *Normal*)
+
 
 ## The *t*-value
 
-::: {.stretch}
-
-- The **t-value** is the ratio between the **coefficient** and its **standard error**
-- It can be seen as a "**standardized**" index of the coefficient's precision (independent of the scale/unit of the variable)
-- It corresponds to a point on a *t*-distribution of corresponding degrees of freedom (df), centered at 0
-- This *t*-distribution is the assumption made in Frequentist statistics about the distribution of coefficients (effects) **under the null hypothesis**
-  - Not to be confused with the distribution of residuals (which is assumed to be *Normal*)
-  - This *t*-distribution can be used to adjust for the sample size (*df*) - hence the use of *t* instead of *Normal* to introduce bias (especially for small sample sizes). For large sample sizes (= large *df*), it becomes equivalent to a Normal distribution
-
-:::
-
-## The *t*-value
-
-::: {.nonincremental .stretch}
-
-- The *t*-value shows how likely our coefficient compared to the assumed distributions of possible coefficient under the **null hypothesis** (i.e., if there is an absence of effect and we repeated the experiment an infinite number of times)
+- Is our coefficient likely to be observed under the null hypothesis?
+  - What is the *probability* to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
+  - $Prob > |t|$
 
 ```{r}
 #| echo: true
@@ -409,31 +377,7 @@ x <- seq(-5, 5, length.out = 1000)
 y <- dt(x, df=30)
 df <- data.frame(x = x, y = y)
 
-t_value <- insight::get_statistic(model)[2, 2]
-
-df |>
-  ggplot(aes(x = x, y = y)) +
-  geom_area(color="black", fill="grey") +
-  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
-               color="red", linetype="solid", linewidth=1) +
-  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
-  theme_minimal() +
-  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
-       title = paste0("t-Distribution (df=30); ", "t-value = ", round(t_value, 2), "\n"))
-```
-
-:::
-
-## Is our coefficient "big" (i.e., precise)?
-
-- Is our coefficient likely to be observed under the null hypothesis?
-  - What is the *probability* to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
-  - $Prob > |t|$
-
-```{r}
-#| echo: true
-#| code-fold: true
-#| fig.height: 3
+t_value <- 2.790 
 
 df$Probability <- ifelse(df$x < -t_value, "< -t", "Smaller")
 df$Probability <- ifelse(df$x > t_value, "> +t", df$Probability)
@@ -441,64 +385,15 @@ df |>
   ggplot(aes(x = x, y = y)) +
   geom_line() +
   geom_area(aes(x = x, y = y, fill = Probability), alpha = 0.5) +
-  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
+  geom_segment(data=data.frame(x=t_value, y=0),
+               aes(xend = t_value, yend = dt(t_value, df=30)), 
                color="red", linetype="solid", linewidth=1) +
-  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
+  geom_point(data=data.frame(x=t_value, y=dt(t_value, df=30)), color="red", size=3) +
   theme_minimal() +
   scale_fill_manual(values = c("red", "red", "grey")) +
   labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
        title = paste0("t-Distribution (df=30); ", "t-value = ", round(t_value, 2), "\n"))
 ```
-
-## Is our coefficient "big" (i.e., precise)?
-
-
-::: {.columns}
-
-:::: {.column width="50%"}
-
-- Is our coefficient likely to be observed under the null hypothesis?
-  - What is the *probability* $p$ to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
-  - $Prob > |t|$
-
-::::: {.fragment}
-
-
-```{r}
-#| echo: true
-
-prob <- pt(-t_value, df=30, lower.tail = TRUE) + 
-  pt(t_value, df=30, lower.tail = FALSE)
-
-round(prob, 4)
-```
-
-:::::
-
-- Look again at your summary...
-
-::::
-
-:::: {.column}
-
-::::: {.fragment}
-
-
-```{r}
-#| echo: false
-
-summary(model)
-```
-
-:::::
-
-- **It is the *p*-value!**
-- You computed the *p*-value by hand!
-
-::::
-
-:::
-
 
 
 ## *p*-value
@@ -516,42 +411,6 @@ summary(model)
   - We tend to focus on a dichotomous interpretation of the *p*-value (significant or not), based on an arbitrary threshold $\alpha$ typically set to 5\% (.05) for literally no reason in particular
   - We often interpret it as the probability of the null hypothesis being true, or as an index of effect magnitude, which is not correct (it's more related to the width of the certainty around the estimate than its absolute size)
 - However, ***p*-values are not *fundamentally* bad**. They are very good at one thing: controlling how often, if we repeat an experiment infinitely, we'll make a particular kind of error. *It's just that it's often not what we care about in practice.*
-
-:::
-
-## Confidence Intervals (CI)
-
-::: {.stretch}
-
-- Confidence Intervals are often seen as a "range" of likely values for the coefficient, and the more we would get close to the coefficient the more "likely" the values would be. It is **incorrect**
-- The **confidence interval** (CI) is the range of values that contains, e.g., with 95\% of probability, the value of the coefficient if the *t*-distribution was centered around the *t*-value (as if the null effect was the estimated coefficient).
-- The interpretation is, again, fairly convoluted
-
-```{r}
-#| echo: true
-#| code-fold: true
-#| fig.height: 3
-
-# Get 95% ETI of the t distribution
-ci <- qt(c(0.025, 0.975), df=30, lower.tail = TRUE) + t_value
-# ci * parameters::parameters(model)$SE[2]  # Indeed shows the right CI
-
-df |>
-  ggplot(aes(x = x, y = y)) +
-  geom_area(fill="grey", alpha=0.5) +
-  geom_area(aes(x = x + t_value, y = y), color="red", fill="red", alpha=0.5) +
-  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
-               color="red", linetype="solid", linewidth=1) +
-  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
-  # Horizontal segment indicating the CI range
-  geom_segment(aes(x = ci[1], y = 0.05, xend = ci[2], yend = 0.05), 
-               color="orange", linetype="solid", linewidth=1, arrow = arrow(ends='both')) +
-  geom_vline(xintercept = ci[1], color="orange", linetype="dotted", linewidth=0.5) +
-  geom_vline(xintercept = ci[2], color="orange", linetype="dotted", linewidth=0.5) +
-  theme_minimal() +
-  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
-       title = paste0("Shifted t-Distribution (df=30); ", "location = ", round(t_value, 2), "(t-value)\n"))
-```
 
 :::
 
@@ -581,7 +440,13 @@ df |>
 ```{r}
 #| echo: true
 
-new_sample <- mtcars[sample(1:nrow(mtcars), replace = TRUE), ] 
+df <- mtcars
+head(df)
+
+new_rows <- sample(1:nrow(mtcars), replace = TRUE)
+new_rows
+
+new_sample <- mtcars[new_rows, ] 
 ```
 
 :::
@@ -598,8 +463,8 @@ new_sample <- mtcars[sample(1:nrow(mtcars), replace = TRUE), ]
 ```{r}
 #| echo: true
 
-model <- lm(mpg ~ qsec, data=mtcars)
-true_coef <- coef(model)[2]
+model <- lm(mpg ~ qsec, data=mtcars)  # Fit linear regression
+true_coef <- coef(model)[2]  # Extract slope coefficient
 
 coefs <- c()  # Initialize an empty vector of coefs
 for (i in 1:5000) {  # Repeat the process 500 times
@@ -673,7 +538,252 @@ data.frame(coefs = coefs) |>
 
 - Standard deviation (SD), Median Absolute Deviation (MAD)
 - Credible Intervals (CI)
+  - **Equal-tailed Interval (ETI)**
+    - Easy to compute
+    - Potentially problematic for skewed distributions
+  - **Highest Density Interval (HDI)**
+    - More complex to compute
   
+![](https://easystats.github.io/bayestestR/articles/credible_interval_files/figure-html/unnamed-chunk-3-1.png)
+
+## Why 95% CI?
+
+- **Why do we use "95%" (0.95) for the CI?**
+- Because of the .05 alpha level (used for the *p*-value)
+- Indeed, confidence intervals have a direct relationship with the *p*-value: 
+  - if the 95% CI is $[0.00, x]$ or $[x, 0.00]$, then the *p*-value = .05. 
+  - In other words, a 0.95 CI excluding 0 has a *p*-value < .05.
+- But this .05 alpha level is arbitrary...
+  - Yes. And so is 95%. It is mostly a *convention*.
+- Recently, a trend emerged to "shake up" the conventions and highlight the arbitrary nature of the .05 alpha level
+  - McElreath (2018) suggested to use **89% CI** instead of 95% CI. *Why?* [**Because why not!**]{.fragment}
+- Some software also use 90% or 94% CI as default
+- However, I still personally recommends 95% 
+  - See **https://github.com/easystats/bayestestR/discussions/250**
+- **Importantly**, the choice of the CI is for you to decide.
+
+
+## Indices of Significance
+
+- What does **significance** even mean? 
+- Big? 
+- Certain?
+- Reliable?
+
+## Probability of Direction (pd)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+
+- The **Probability of Direction** (**pd**) is defined as the probability that the effect is positive or negative (whichever is the largest)
+- It varies between 0.50 (50\%) and 1.00 (100\%), with 0.50 indicating that the effect is equally likely to be positive or negative, and 100\% indicating that the effect is for sure positive or negative
+- We can conceptualize it as an **index of effect existence** (i.e., how likely is the effect to exist in a given direction *regardless* of its size)
+  - If $pd \rightarrow 100\%$, it means that there is certainly a positive|negative effect (but it can be small, large, or its size can be uncertain)
+
+::::
+
+:::: {.column}
+
+
+```{r}
+#| include: false
+
+data.frame(Coefficient = coefs) |> 
+  ggplot(aes(x=Coefficient)) +
+  geom_density(fill="orange") +
+  geom_vline(xintercept = 0, color="red", linetype="dashed", linewidth=2) +
+  theme_minimal() 
+```
+
+::::
+
+:::
+
+
+## *pd* vs. *p*-value
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Although **conceptually distinct**, the *pd* typically very strongly correlates with one-sided *p*-values
+  - But it is **not** an index of **significance** (the interpretation is more straightforward)
+- For example, if the *pd* is > 97.5\% (0.975), then the *p*-value is typically < .05
+  - $p_{onesided} = 1 - pd$
+  - $p_{twosided} = 2(1 - pd)$
+- A function `bayestestR` exists to convert between the two indices. 
+  - Use it only to gain an intuition, **is it not a formal conversion**
+
+<!-- Talk about advantages and limitations when we re-introduce these indices in the context of Bayesian statistics
+-->
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::p_to_pd(c(0.05, 0.01, 0.001), direction = "two-sided")
+bayestestR::pd_to_p(c(0.90, 0.95), direction = "two-sided")
+```
+
+:::::
+
+::::
+
+:::: {.column }
+
+
+![](img/spiderman.png)
+
+
+::::
+
+:::
+
+
+## Probability of null effect?
+
+- The *pd* tells us the probability that a distribution (of an effect) is positive (> 0) or negative (< 0)
+- Can we know if the effect is larger or smaller than **zero**?
+- In other words, can we know the probability of the effect being different from 0? 
+  - Which is the goal of **Null Hypothesis Significance Testing (NHST)**
+- Well, ***not really***...
+  - The probability of a continuous distribution being different from a single value is always **infinite**
+  - Infinity of values vs. a single one, exactly 0.0000
+- What can we do?
+  - What if instead of considering "no effect" as being exactly 0.0000, we consider it as being "close to 0.0000"?
+  - What if we defined a range of "negligible" values, **equivalent to 0 for practical** purposes?
+  - This is the idea behind the **Region of Practical Equivalence** (**ROPE**)
+
+## Region of Practical Equivalence (ROPE)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- The idea of the ROPE is to **explicitly** define a range that we consider as "negligible" (i.e., equivalent to 0 for practical purposes)
+- For instance, say I decide to define a **parameter < 0.42** as negligible <sub><sup>*because why not?*</sup></sub>
+  - Justified based on e.g., prior studies, preliminary data, theoretical knowledge, ...
+  - I *preregister* this hypothesis (so that I am not accused of making this choice after seeing the results)
+- What is the probability of $parameter < |0.42|$?
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+data.frame(Coefficient = coefs) |> 
+  ggplot(aes(x=Coefficient)) +
+  geom_density(fill="blue") +
+  geom_area(data=data.frame(x=c(-0.42, 0.42)), aes(x=x, y=2), fill="red", alpha=0.5) +
+  coord_cartesian(xlim=c(-0.6, 3.5))
+```
+
+:::::
+
+::::
+
+:::
+
+## Compute ROPE
+
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+
+```{r}
+#| echo: true
+
+bayestestR::rope(coefs, range = c(-0.42, 0.42), ci = 1.00)
+```
+
+
+- We often compute the proportion of a certain **Credible Interval** that lies within the ROPE
+- The ROPE index is often computed as the **95\% CI** of the distribution that lies within the ROPE bounds
+  - Because the CI is considered to be more stable than the whole distribution, and thus the resulting index is less prone to small random fluctuations
+- **Be careful** when reading and presenting results involving ROPE: what is the ROPE range and the CI used?
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+# ci=0.95 is the default setting for rope()
+result <- bayestestR::rope(coefs, range = c(-0.42, 0.42), ci = 0.95)
+result
+
+# The results can be plotted
+plot(result)
+```
+
+:::::
+
+::::
+
+:::
+
+## Is p-ROPE an index of significance?
+
+- This index corresponds to the **proportion of the distribution/Credible Interval that is within the ROPE**
+- *p*-ROPE ($P_{x~\in~ROPE}$) can be interpreted as an index of **significance**
+  - The probability that an effect is non-negligible
+  - i.e., "significant" is here meant in the sense of **"large enough to matter"** sense
+  - Note that *p*-ROPE index is **not** equivalent or highly correlated with *p*-values
+- Note that "**Equivalence Testing**" is sometimes presented as an alternative to Null-Hypothesis Significance Testing (NHST), and can be also used with more traditional tests (with the idea of testing against a range of pre-specified "negligible" values instead of a point-null).
+
+## ROPE range
+
+- The main challenge with ROPE is to define the range of negligible values
+- It is possible to use rules-of-thumb guidelines of effect size classification
+  - For correlations, Cohen (1988) suggests that *r* < 0.1 is a very small (i.e., negligible) effect
+  - For standardized differences, Cohen's *D* guidelines
+- It gets complicated for interaction parameters, or when the effect is not standardized
+
+## Describing parameter distributions: Summary
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::describe_posterior(coefs)
+```
+
+:::
+
+- Describe the "centrality" (e.g;, Median), the "uncertainty" (CI), and the "significance" (e.g., ROPE, *pd*, ...)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::describe_posterior(coefs, 
+                               centrality="mean", 
+                               dispersion=TRUE, 
+                               ci=0.90, 
+                               ci_method="hdi",
+                               rope_range =c(-0.9, 0.9), 
+                               test="rope")
+```
+
+:::
+
+- Choices must be made and justified: important to understand what the indices are and what they mean
+
 ## Bootstrapping-specific indices?
 
 - Are these new indices (median, MAD, credible intervals, p-direction, ROPE) **bootstrapping**-specific?
@@ -684,7 +794,167 @@ data.frame(coefs = coefs) |>
 
 ## Bayes Theorem {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
 
+## Bayes' Theorem
+
+- $P(A|B) = \frac{P(A)~P(B|A)}{P(B)}$
+- P(A|B): How likely A given the information about B
+- P(A) and P(B): Probability of A or B occurring on its own, without any information about the other
+  - It's our initial (*prior*) beliefs about A and B
+  - P(B) is the *marginal* probability of B, and is often just a normalizing constant (so that the total probability = 1). **The important part of the formula is the numerator**
+- P(B|A): Probability of B occurring given that A has already occurred. It quantifies how likely B is when we know A has happened
+  - It is the *likelihood* of B given A
+- Bayes' Theorem allows us to update our belief about the probability of A happening (*P(A|B)*) based on new evidence provided by the occurrence of B. It combines our initial belief (*P(A)*), the likelihood of B happening when A is true (*P(B|A)*), and the overall likelihood of B (*P(B)*) to calculate this (*a posteriori*) updated probability
+
+## Bayesian inference
+
+- Bayesian inference is the application of the product rule of probability to real problems of inference
+- "Bayesian inference is really just counting and comparing of possibilities [...] in order to make good inference about what actually happened, it helps to consider everything that could have happened" (McElreath, 2016)
+- "The first idea is that Bayesian inference is **reallocation of credibility across possibilities**. The second foundational idea is that the possibilities [i.e., the "hypotheses"], over which we allocate credibility, are **parameter values in meaningful mathematical models**" (Kruschke, 2015)
+  - Bayesian inference allows to compute or approximate the likelihood (think **density plot**) of different parameter values of a statistical model given the data
+
+## Bayesian inference in practice
+
+- In science, we are interested in the probability of a hypothesis $H$, given the data $X$
+  - $= P(H|X)$
+- Before any data is collected, the researcher has some level of prior belief $P(H)$ in this hypothesis 
+- $P(X|H)$: The researcher also has a model that makes specific predictions about the outcome given the data X (e.g., a linear model)
+  - This models tells how strongly the data are implied by a hypothesis
+- Bayes' theorem tells us that $P(H|X) =\frac{P(H)~P(X|H)}{P(X)}$ 
+- In words: The probability of a hypothesis given the data is equal to the probability of the hypothesis before seeing the data, multiplied by the probability that the data occur if that hypothesis is true, divided by the probability of the observed data
+
+## In short
+
+- Bayesian statistics are an elegant framework to update probabilities based on evidence
+- $P(H|X)=P(H)~P(X|H)$
+  - The probability of a hypothesis given the data is proportional to the prior probability of the hypothesis times the likelihood of the data given the hypothesis
+- It allows us to quantify the probability of a hypothesis **given the data**, whereas in Frequentist statistics, we can only quantify the probability of the data (data is random!) given a (null) hypothesis. Basically, it is the opposite answer.
+- While stemming from a simple theorem, it has deep consequences and powerful applications...
+
+## Bayesian inference for stats models
+
+- $P(H|X)=P(H)~P(X|H)$
+- In statistical models, *P(H)* is not one probability number but a (set of) **prior distribution** corresponding to beliefs about some parameter(s)
+- *P(X|H)* corresponds to the data **likelihood model** (the link between the outcome and the predictor given some value of the parameter)
+  - E.g., in a linear model $y ~ 0 + 2x$, if $x=3$, then predicted outcome is $2x=6$
+- *P(H|X)* corresponds to the posterior distribution of a parameter (given the prior and the data)
+- Resolving this equation empirically is actually very complex
+
+
+## Stan, JAGS, and BUGS
+
+- Modern Bayesian full inference (using MCMC), known to be resource-intensive and slow, is currently best performed (most fast and flexibly) by **dedicated languages**, aka **probabilistic programming languages**
+  - **Stan** (the most popular one): Named in honour of Stanislaw Ulam, pioneer of the *Monte Carlo* method
+  - **JAGS**: "Just Another Gibbs Sampler"
+  - **BUGS**: "Bayesian Inference Using Gibbs Sampling"
+  - **PyMC** (Python)
+  - **Turing** (Julia)
+- These languages are designed to perform Bayesian inference, and are optimized for that purpose
+- They are not general-purpose programming languages
+
+## About `brms`
+
+- There are "wrappers" around these languages that allow us to use them from other general purpose languages like R or Python
+- In R:
+  - **brms** = **B**ayesian **R**egression **M**odels using '**S**tan'
+  - **rstanarm** = **R** interface to **Stan** for **A**pplied **R**egression **M**odeling
+- **rstanarm**
+  - Has different functions for different models (e.g., `stan_lm()`, `stan_glm()`, `stan_lmer()`, `stan_glmer()`, `stan_gamm4()` etc.)
+  - Each models are implemented with precompiled Stan code
+  - It is slightly easier to install, but less flexible
+- **brms**
+  - Became the most popular
+  - Main difference is that **brms** has only one main function, `brm()`, which can fit almost any model
+  - These models are translated into Stan code, and then compiled
+  - Overhead time when fitting new models, but it is more flexible
   
+## Doing a Bayesian Regression
+
+- Frequentist model
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- lm(qsec ~ mpg, data = mtcars) 
+parameters::parameters(model)
+```
+
+:::
+
+- Bayesian model
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- brms::brm(qsec ~ mpg, data = mtcars, refresh=0) 
+parameters::parameters(model)
+```
+
+:::
+
+- `refresh=0` silences the printing of the sampling <sub>(to avoid cluttering this slide)</sub> 
+- R-hat: Convergence diagnostic index. Should be less than < 1.05.
+- ESS: Effective Sample Size: how many "good iterations" (truly independent draws) we have. Should be > 400 (the maximum being the number of iterations that we draw).  
+
+
+## Mixed Model
+
+- One function to rule them all.
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- glmmTMB::glmmTMB(qsec ~ mpg + (1|gear), data = mtcars) 
+parameters::parameters(model, effects="fixed")
+```
+
+:::
+
+- Bayesian model
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- brms::brm(qsec ~ mpg + (1|gear), data = mtcars, refresh=0) 
+parameters::parameters(model, effects="fixed")
+```
+
+:::
+
+
+## How about bayes factors?
+
+
+::: {style="font-size: 90%"}
+
+- Bayes factor are **intuitive** indices measuring of the strength of evidence for one hypothesis over another
+  - They have a natural interpretation in terms of odds (e.g., 3:1 odds), and have wide applications (comparing models, null-hypothesis testing, ...)
+  - They have well established interpretation guidelines (> 3; > 10; > 30; > 100)
+- They are "easy" to compute for simple statistical tests, but for more complex models, they are notoriously hard to compute
+- The fact that they are highly sensitive to the choice of priors + the fact that finding an "alternative" model is not at all trivial + that computing them is often very hard have been seen as **limitations** and made them the focal point of debates (even between Bayesians)
+- There are different schools: 
+  - Some Bayesians believe that BFs are the best indices ever (assuming one understands them) and the Graal of Bayesian statistics
+  - Some believe that other indices are better and that BFs reproduce the same culture of binary thinking as Frequentist NHST
+  - We'll adopt a middle view: BFs are useful, in particular for simple tests (*t*-tests, correlations, comparing models), but for modeling, analyzing the posterior distributions is better
+
+:::
+
+## Bayes Factors: Misconceptions
+
+- BFs do **not** tell us the absolute probability of a hypothesis being true. It quantifies how much we should **update** our belief in a hypothesis. If this hypothesis was extremely unlikely, then we might still believe it to be very unlikely, even after computing a large BF.
+- BFs provide **relative** evidence between 2 hypotheses, and it is possible that one hypothesis is supported more than another hypothesis, while both hypotheses are false. Saying *"BF shows evidence for the null (H0)"* is incorrect. It should be *"BF shows evidence for the H0 as compared to H1"* (what H1 is matters).
+- BFs tell us nothing about the size of effects.
+- See [Lakens' post](https://lakens.github.io/statistical_inferences/04-bayes.html#sec-bfgmisconceptions) for details
+
+
+
 ## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
 
 *Thank you!*

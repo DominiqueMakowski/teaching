@@ -412,7 +412,7 @@
 <div class="column" style="width:60%;">
 <ul>
 <li class="fragment">Internship at <em>LaPsyDé</em> (2012)</li>
-<li class="fragment">PhD 2019 <sub><sup><em>(Université Paris Descartes)</em></sup></sub>
+<li class="fragment">PhD 2018 <sub><sup><em>(Université Paris Descartes)</em></sup></sub>
 <ul>
 <li class="fragment">Emotion Regulation through “Fiction”</li>
 <li class="fragment">Software development</li>
@@ -436,18 +436,21 @@
 </div>
 </div>
 </section>
-<section id="frequentist-framework-refresher" class="slide level2 center" data-background-color="black" data-background-image="img/Brighton_pier.png" data-background-opacity="0.3">
-<h2>Frequentist Framework Refresher</h2>
-</section>
-<section id="tests-vs.-models" class="slide level2">
-<h2>Tests vs.&nbsp;Models</h2>
+<section id="managing-expectations" class="slide level2">
+<h2>Managing expectations</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
-<li class="fragment">Psychology uses a lot of <strong>tests</strong> (<em>t</em>-tests, correlation test, ANOVAs, etc.)</li>
-<li class="fragment"><strong>Tests</strong> != <strong>Models</strong></li>
-<li class="fragment">However, tests are usually <strong>based</strong> on models</li>
-<li class="fragment">In particular, tests are related to specific <strong>parameters</strong> of models</li>
-<li class="fragment"><strong>What are <span style="color:orange;"><em>Parameters</em></span></strong>?</li>
+<li class="fragment">Provide a bird’s eye view of Bayesian statistics applied to statistical models</li>
+<li class="fragment">Build on existing knowledge and “demystify” Bayesian statistics</li>
 </ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/seagull.jpg" style="width:75.0%"></p>
+</div>
+</div>
+</section>
+<section id="frequentist-refresher" class="slide level2 center" data-background-color="black" data-background-image="img/Brighton_pier.png" data-background-opacity="0.3">
+<h2>Frequentist Refresher</h2>
 </section>
 <section id="quizz" class="slide level2" data-background-color="#FFAB91">
 <h2>Quizz</h2>
@@ -477,12 +480,10 @@
 <li class="fragment">A correlation is a measure of the <strong>strength</strong> of association [-1, 1]
 <ul>
 <li class="fragment">Better represented by an elipsis</li>
-<li class="fragment">It is not a <strong>model</strong>: we can’t predict the value of <code>y</code> given a value of <code>x</code></li>
 </ul></li>
 <li class="fragment">The line is a <strong>regression</strong> line
 <ul>
 <li class="fragment">The angle of the line is the regression coefficient (can be &gt; 1)</li>
-<li class="fragment"><strong>How is this line computed?</strong></li>
 </ul></li>
 </ul>
 <div class="cell">
@@ -499,6 +500,48 @@
 </div>
 </div>
 <img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="3000" class="r-stretch"></section>
+<section id="tests-vs.-models" class="slide level2">
+<h2>Tests vs.&nbsp;Models</h2>
+<ul>
+<li class="fragment">Psychology uses a lot of <strong>tests</strong> (<em>t</em>-tests, correlation tests, ANOVAs, etc.)</li>
+<li class="fragment"><strong>Tests</strong> != <strong>Models</strong>
+<ul>
+<li class="fragment">We can’t predict the value of <code>y</code> given <code>x</code> with a test</li>
+</ul></li>
+<li class="fragment">However, tests are usually <strong>based</strong> on models</li>
+<li class="fragment">In particular, tests are related to specific <strong>parameters</strong> of models</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(mtcars<span class="sc">$</span>wt, mtcars<span class="sc">$</span>qsec) <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="" aria-hidden="true" tabindex="-1"></a>  parameters<span class="sc">::</span><span class="fu">parameters</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pearson's product-moment correlation
+
+Parameter1 |  Parameter2 |     r |        95% CI | t(30) |     p
+----------------------------------------------------------------
+mtcars$wt  | mtcars$qsec | -0.17 | [-0.49, 0.19] | -0.97 | 0.339
+
+Alternative hypothesis: true correlation is not equal to 0</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(wt <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars) <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a>  parameters<span class="sc">::</span><span class="fu">parameters</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parameter   | Coefficient |   SE |        95% CI | t(30) |     p
+----------------------------------------------------------------
+(Intercept) |        4.92 | 1.77 | [ 1.32, 8.53] |  2.79 | 0.009
+qsec        |       -0.10 | 0.10 | [-0.30, 0.11] | -0.97 | 0.339</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment"><strong>What are <span style="color:orange;"><em>Parameters</em></span></strong>?</li>
+</ul>
+</section>
 <section id="linear-model" class="slide level2">
 <h2>Linear Model</h2>
 <div class="" style="font-size: 85%">
@@ -516,25 +559,25 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>V1, <span class="at">y=</span>V2)) <span class="sc">+</span></span>
-<span id="cb3-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb3-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>) <span class="sc">+</span></span>
-<span id="cb3-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">1</span>, <span class="at">slope =</span> <span class="dv">3</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linewidth=</span><span class="dv">2</span>)  <span class="sc">+</span></span>
-<span id="cb3-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">yend =</span> <span class="dv">1</span>), <span class="at">linewidth=</span><span class="dv">1</span>, </span>
-<span id="cb3-6"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"green"</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb3-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">yend =</span> <span class="dv">4</span>), <span class="at">linewidth=</span><span class="dv">1</span>, </span>
-<span id="cb3-8"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"green"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">arrow=</span><span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.1</span>, <span class="st">"inches"</span>))) <span class="sc">+</span></span>
-<span id="cb3-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="dv">1</span>), <span class="at">linewidth=</span><span class="dv">1</span>, </span>
-<span id="cb3-10"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">arrow=</span><span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.1</span>, <span class="st">"inches"</span>))) <span class="sc">+</span></span>
-<span id="cb3-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>), <span class="at">color=</span><span class="st">"purple"</span>, <span class="at">size=</span><span class="dv">8</span>, <span class="at">shape=</span><span class="st">"+"</span>) <span class="sc">+</span></span>
-<span id="cb3-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"x"</span>, <span class="at">y=</span><span class="st">"y"</span>) <span class="sc">+</span></span>
-<span id="cb3-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-14"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">1.5</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>V1, <span class="at">y=</span>V2)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">1</span>, <span class="at">slope =</span> <span class="dv">3</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linewidth=</span><span class="dv">2</span>)  <span class="sc">+</span></span>
+<span id="cb7-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">yend =</span> <span class="dv">1</span>), <span class="at">linewidth=</span><span class="dv">1</span>, </span>
+<span id="cb7-6"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"green"</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">yend =</span> <span class="dv">4</span>), <span class="at">linewidth=</span><span class="dv">1</span>, </span>
+<span id="cb7-8"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"green"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">arrow=</span><span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.1</span>, <span class="st">"inches"</span>))) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="dv">1</span>), <span class="at">linewidth=</span><span class="dv">1</span>, </span>
+<span id="cb7-10"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">arrow=</span><span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.1</span>, <span class="st">"inches"</span>))) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>), <span class="at">color=</span><span class="st">"purple"</span>, <span class="at">size=</span><span class="dv">8</span>, <span class="at">shape=</span><span class="st">"+"</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"x"</span>, <span class="at">y=</span><span class="st">"y"</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb7-14"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">1.5</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="3000" class="r-stretch"></section>
 <section id="impact-of-parameters" class="slide level2">
 <h2>Impact of Parameters</h2>
 <div class="">
@@ -544,46 +587,6 @@
 
 </div>
 <img data-src="img/regression.jpg" class="r-stretch"></section>
-<section id="linear-model-in-r" class="slide level2">
-<h2>Linear Model in R</h2>
-<div class="stretch" style="font-size: 90%">
-<ul>
-<li class="fragment">In R, we use the <code>lm()</code> function (linear model) with the <code>response ~ predictor</code> formula to specify the model</li>
-<li class="fragment">We can apply the <code>summary()</code> method to get the results</li>
-<li class="fragment"><strong>What are the coefficients?</strong></li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span>
-<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = mpg ~ qsec, data = mtcars)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--9.8760 -3.4539 -0.7203  2.2774 11.6491 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept)  -5.1140    10.0295  -0.510   0.6139  
-qsec          1.4121     0.5592   2.525   0.0171 *
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 5.564 on 30 degrees of freedom
-Multiple R-squared:  0.1753,    Adjusted R-squared:  0.1478 
-F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment"><span class="math inline">\(Intercept = -5.1140\)</span> and <span class="math inline">\(\beta_{qsec} = 1.4121\)</span></li>
-<li class="fragment"><strong>How are the parameters computed?</strong></li>
-</ul>
-</div>
-</section>
 <section id="linear-model-gaussian-model" class="slide level2">
 <h2>Linear Model = “Gaussian” Model</h2>
 <div class="">
@@ -593,36 +596,36 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>qsec, <span class="at">y=</span>mpg)) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.7</span>, <span class="at">size=</span><span class="dv">6</span>) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">'y ~ x'</span>, <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> qsec, <span class="at">y =</span> mpg, <span class="at">xend =</span> qsec, <span class="at">yend =</span> <span class="fu">predict</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars))), </span>
-<span id="cb6-6"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb6-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb6-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"x"</span>, <span class="at">y=</span><span class="st">"y"</span>, <span class="at">title=</span><span class="st">"The residuals are the vertical distances between each point and the line."</span>)</span>
-<span id="cb6-9"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Error=</span>insight<span class="sc">::</span><span class="fu">get_residuals</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars))) <span class="sc">|&gt;</span> </span>
-<span id="cb6-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Error)) <span class="sc">+</span></span>
-<span id="cb6-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">10</span>, <span class="at">fill=</span><span class="st">"grey"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb6-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb6-14"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">Error=</span>bayestestR<span class="sc">::</span><span class="fu">distribution_normal</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">2</span>)),</span>
-<span id="cb6-15"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">y=</span><span class="fu">after_stat</span>(density)<span class="sc">*</span><span class="dv">40</span>), <span class="at">color=</span><span class="st">"#F44336"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">adjust=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb6-16"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">Error=</span>bayestestR<span class="sc">::</span><span class="fu">distribution_normal</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">3</span>)),</span>
-<span id="cb6-17"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">y=</span><span class="fu">after_stat</span>(density)<span class="sc">*</span><span class="dv">50</span>), <span class="at">color=</span><span class="st">"#FF5722"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">adjust=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb6-18"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">Error=</span>bayestestR<span class="sc">::</span><span class="fu">distribution_normal</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">4</span>)),</span>
-<span id="cb6-19"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">y=</span><span class="fu">after_stat</span>(density)<span class="sc">*</span><span class="dv">60</span>), <span class="at">color=</span><span class="st">"#FF9800"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">adjust=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb6-20"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y=</span><span class="dv">0</span>), <span class="at">size=</span><span class="dv">10</span>, <span class="at">shape=</span><span class="dv">16</span>, <span class="at">alpha=</span><span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb6-21"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb6-22"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb6-23"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Density"</span>)</span>
-<span id="cb6-24"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-25"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>()) <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>qsec, <span class="at">y=</span>mpg)) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.7</span>, <span class="at">size=</span><span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">'y ~ x'</span>, <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> qsec, <span class="at">y =</span> mpg, <span class="at">xend =</span> qsec, <span class="at">yend =</span> <span class="fu">predict</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars))), </span>
+<span id="cb8-6"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb8-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"x"</span>, <span class="at">y=</span><span class="st">"y"</span>, <span class="at">title=</span><span class="st">"The residuals are the vertical distances between each point and the line."</span>)</span>
+<span id="cb8-9"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Error=</span>insight<span class="sc">::</span><span class="fu">get_residuals</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars))) <span class="sc">|&gt;</span> </span>
+<span id="cb8-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Error)) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">10</span>, <span class="at">fill=</span><span class="st">"grey"</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb8-14"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">Error=</span>bayestestR<span class="sc">::</span><span class="fu">distribution_normal</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">2</span>)),</span>
+<span id="cb8-15"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">y=</span><span class="fu">after_stat</span>(density)<span class="sc">*</span><span class="dv">40</span>), <span class="at">color=</span><span class="st">"#F44336"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">adjust=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-16"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">Error=</span>bayestestR<span class="sc">::</span><span class="fu">distribution_normal</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">3</span>)),</span>
+<span id="cb8-17"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">y=</span><span class="fu">after_stat</span>(density)<span class="sc">*</span><span class="dv">50</span>), <span class="at">color=</span><span class="st">"#FF5722"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">adjust=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-18"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">Error=</span>bayestestR<span class="sc">::</span><span class="fu">distribution_normal</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">4</span>)),</span>
+<span id="cb8-19"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">y=</span><span class="fu">after_stat</span>(density)<span class="sc">*</span><span class="dv">60</span>), <span class="at">color=</span><span class="st">"#FF9800"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">adjust=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-20"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y=</span><span class="dv">0</span>), <span class="at">size=</span><span class="dv">10</span>, <span class="at">shape=</span><span class="dv">16</span>, <span class="at">alpha=</span><span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb8-21"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb8-22"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb8-23"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Density"</span>)</span>
+<span id="cb8-24"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>()) <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" width="3000" class="r-stretch"></section>
 <section id="homoscedasticity" class="slide level2">
 <h2>Homoscedasticity</h2>
 <div class="">
@@ -632,56 +635,56 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span>
-<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb7-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>qsec, <span class="at">y=</span>mpg)) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">'y ~ x'</span>, <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
-<span id="cb7-7"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to add normal distribution curves</span></span>
-<span id="cb7-9"><a href="" aria-hidden="true" tabindex="-1"></a>add_normals <span class="ot">&lt;-</span> <span class="cf">function</span>(p, model) {</span>
-<span id="cb7-10"><a href="" aria-hidden="true" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)<span class="sc">$</span>sigma  <span class="co"># Standard deviation of residuals</span></span>
-<span id="cb7-11"><a href="" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="dv">100</span>  <span class="co"># Number of points for each curve</span></span>
-<span id="cb7-12"><a href="" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mtcars)) {</span>
-<span id="cb7-14"><a href="" aria-hidden="true" tabindex="-1"></a>    x_val <span class="ot">&lt;-</span> mtcars<span class="sc">$</span>qsec[i]</span>
-<span id="cb7-15"><a href="" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">qsec =</span> x_val))</span>
-<span id="cb7-16"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-17"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a sequence of y values for the normal curve</span></span>
-<span id="cb7-18"><a href="" aria-hidden="true" tabindex="-1"></a>    y_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(y_pred <span class="sc">-</span> <span class="dv">3</span><span class="sc">*</span>sigma, y_pred <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>sigma, <span class="at">length.out =</span> n)</span>
-<span id="cb7-19"><a href="" aria-hidden="true" tabindex="-1"></a>    density <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(y_seq, <span class="at">mean =</span> y_pred, <span class="at">sd =</span> sigma)</span>
-<span id="cb7-20"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-21"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust density to match the scale of the plot</span></span>
-<span id="cb7-22"><a href="" aria-hidden="true" tabindex="-1"></a>    max_width <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># Max width of areas</span></span>
-<span id="cb7-23"><a href="" aria-hidden="true" tabindex="-1"></a>    density_scaled <span class="ot">&lt;-</span> (density <span class="sc">/</span> <span class="fu">max</span>(density)) <span class="sc">*</span> max_width</span>
-<span id="cb7-24"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-25"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a dataframe for each path</span></span>
-<span id="cb7-26"><a href="" aria-hidden="true" tabindex="-1"></a>    path_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x_val <span class="sc">+</span> density_scaled, <span class="at">y =</span> y_seq)</span>
-<span id="cb7-27"><a href="" aria-hidden="true" tabindex="-1"></a>    path_dfv <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>path_df<span class="sc">$</span>x[<span class="dv">1</span>], <span class="at">ymin=</span><span class="fu">min</span>(path_df<span class="sc">$</span>y), <span class="at">ymax=</span><span class="fu">max</span>(path_df<span class="sc">$</span>y))</span>
-<span id="cb7-28"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-29"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add the path to the plot</span></span>
-<span id="cb7-30"><a href="" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> </span>
-<span id="cb7-31"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_segment</span>(<span class="at">data =</span> path_dfv, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">xend=</span>x, <span class="at">y =</span> ymin, <span class="at">yend=</span>ymax), </span>
-<span id="cb7-32"><a href="" aria-hidden="true" tabindex="-1"></a>                   <span class="at">color =</span> <span class="st">"#FF9800"</span>, <span class="at">size =</span> <span class="fl">0.7</span>, <span class="at">alpha=</span><span class="fl">0.8</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>) <span class="sc">+</span></span>
-<span id="cb7-33"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_path</span>(<span class="at">data =</span> path_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), </span>
-<span id="cb7-34"><a href="" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"#FF9800"</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha=</span><span class="fl">0.8</span>) </span>
-<span id="cb7-35"><a href="" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-36"><a href="" aria-hidden="true" tabindex="-1"></a>  p</span>
-<span id="cb7-37"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-38"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-39"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-40"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the final plot</span></span>
-<span id="cb7-41"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">add_normals</span>(p, model) <span class="sc">+</span></span>
-<span id="cb7-42"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> qsec, <span class="at">y =</span> mpg, <span class="at">xend =</span> qsec, <span class="at">yend =</span> <span class="fu">predict</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars))), </span>
-<span id="cb7-43"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb7-44"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.8</span>, <span class="at">size=</span><span class="dv">6</span>) </span>
-<span id="cb7-45"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span>
+<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb9-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>qsec, <span class="at">y=</span>mpg)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">'y ~ x'</span>, <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb9-7"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to add normal distribution curves</span></span>
+<span id="cb9-9"><a href="" aria-hidden="true" tabindex="-1"></a>add_normals <span class="ot">&lt;-</span> <span class="cf">function</span>(p, model) {</span>
+<span id="cb9-10"><a href="" aria-hidden="true" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)<span class="sc">$</span>sigma  <span class="co"># Standard deviation of residuals</span></span>
+<span id="cb9-11"><a href="" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="dv">100</span>  <span class="co"># Number of points for each curve</span></span>
+<span id="cb9-12"><a href="" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mtcars)) {</span>
+<span id="cb9-14"><a href="" aria-hidden="true" tabindex="-1"></a>    x_val <span class="ot">&lt;-</span> mtcars<span class="sc">$</span>qsec[i]</span>
+<span id="cb9-15"><a href="" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">qsec =</span> x_val))</span>
+<span id="cb9-16"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-17"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a sequence of y values for the normal curve</span></span>
+<span id="cb9-18"><a href="" aria-hidden="true" tabindex="-1"></a>    y_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(y_pred <span class="sc">-</span> <span class="dv">3</span><span class="sc">*</span>sigma, y_pred <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>sigma, <span class="at">length.out =</span> n)</span>
+<span id="cb9-19"><a href="" aria-hidden="true" tabindex="-1"></a>    density <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(y_seq, <span class="at">mean =</span> y_pred, <span class="at">sd =</span> sigma)</span>
+<span id="cb9-20"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-21"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust density to match the scale of the plot</span></span>
+<span id="cb9-22"><a href="" aria-hidden="true" tabindex="-1"></a>    max_width <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># Max width of areas</span></span>
+<span id="cb9-23"><a href="" aria-hidden="true" tabindex="-1"></a>    density_scaled <span class="ot">&lt;-</span> (density <span class="sc">/</span> <span class="fu">max</span>(density)) <span class="sc">*</span> max_width</span>
+<span id="cb9-24"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-25"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a dataframe for each path</span></span>
+<span id="cb9-26"><a href="" aria-hidden="true" tabindex="-1"></a>    path_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x_val <span class="sc">+</span> density_scaled, <span class="at">y =</span> y_seq)</span>
+<span id="cb9-27"><a href="" aria-hidden="true" tabindex="-1"></a>    path_dfv <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>path_df<span class="sc">$</span>x[<span class="dv">1</span>], <span class="at">ymin=</span><span class="fu">min</span>(path_df<span class="sc">$</span>y), <span class="at">ymax=</span><span class="fu">max</span>(path_df<span class="sc">$</span>y))</span>
+<span id="cb9-28"><a href="" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-29"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add the path to the plot</span></span>
+<span id="cb9-30"><a href="" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> </span>
+<span id="cb9-31"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_segment</span>(<span class="at">data =</span> path_dfv, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">xend=</span>x, <span class="at">y =</span> ymin, <span class="at">yend=</span>ymax), </span>
+<span id="cb9-32"><a href="" aria-hidden="true" tabindex="-1"></a>                   <span class="at">color =</span> <span class="st">"#FF9800"</span>, <span class="at">linewidth =</span> <span class="fl">0.7</span>, <span class="at">alpha=</span><span class="fl">0.8</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb9-33"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_path</span>(<span class="at">data =</span> path_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), </span>
+<span id="cb9-34"><a href="" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"#FF9800"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">alpha=</span><span class="fl">0.8</span>) </span>
+<span id="cb9-35"><a href="" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-36"><a href="" aria-hidden="true" tabindex="-1"></a>  p</span>
+<span id="cb9-37"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-38"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the final plot</span></span>
+<span id="cb9-41"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">add_normals</span>(p, model) <span class="sc">+</span></span>
+<span id="cb9-42"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> qsec, <span class="at">y =</span> mpg, <span class="at">xend =</span> qsec, <span class="at">yend =</span> <span class="fu">predict</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars))), </span>
+<span id="cb9-43"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-44"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha=</span><span class="fl">0.8</span>, <span class="at">size=</span><span class="dv">6</span>) </span>
+<span id="cb9-45"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" width="3000" class="r-stretch"></section>
 <section id="model-parameters" class="slide level2">
 <h2>Model Parameters</h2>
 <ul>
@@ -698,35 +701,12 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 <li class="fragment">Usually, most people tend to ignore these… but they are important!</li>
 </ul></li>
 </ul></li>
-<li class="fragment">The remaining indices (SE, <em>t</em>-value, <em>p</em>-value) are calculated using them</li>
-</ul>
-</section>
-<section id="quizz-1" class="slide level2" data-background-color="#FFAB91">
-<h2>Quizz</h2>
-<ul>
-<li class="fragment">Find <span class="math inline">\(\sigma\)</span> (sigma, aka <em>residual standard error</em>) and <span class="math inline">\(df\)</span> for previous linear model.
-<ul>
-<li class="fragment"><em>Tip</em>: just look at the output…</li>
-</ul></li>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</section>
-<section id="solution-1" class="slide level2" data-background-color="#80DEEA">
-<h2>Solution</h2>
-<div class="stretch">
-<ul>
-<li>Find <span class="math inline">\(\sigma\)</span> (sigma, aka <em>residual standard error</em>) and <span class="math inline">\(df\)</span> for previous linear model.
-<ul>
-<li><em>Tip</em>: just look at the output…</li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span>
-<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span>
+<span id="cb10-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -747,10 +727,7 @@ Residual standard error: 5.564 on 30 degrees of freedom
 Multiple R-squared:  0.1753,    Adjusted R-squared:  0.1478 
 F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 </div>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a>insight<span class="sc">::</span><span class="fu">get_sigma</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a>insight<span class="sc">::</span><span class="fu">get_sigma</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5.563738
 attr(,"class")
@@ -758,100 +735,31 @@ attr(,"class")
 </div>
 </div>
 </div>
-</div>
-</section>
-<section id="why-is-it-important" class="slide level2">
-<h2>Why is it important?</h2>
 <ul>
-<li class="fragment">The characteristics of the estimated <span class="math inline">\(Normal\)</span> distribution of residuals, <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>, are used to compute the <strong>coefficient</strong> (<span class="math inline">\(\beta\)</span>) and <strong>standard error</strong> (<span class="math inline">\(SE\)</span>) of each of the model’s parameters, respectively
-<ul>
-<li class="fragment"><span class="math inline">\(\mu\)</span> (the center of the normal distribution) is used to compute the <strong>coefficients</strong> (intercept and slope) of the regression line</li>
-<li class="fragment"><span class="math inline">\(\sigma\)</span> (the spread) is used to estimate the <em>covariance matrix</em>, from which we can then estimate the <strong>standard error</strong> (the uncertainty related to the coefficient) <sub><sup><em>via a fairly complex formula</em></sup></sub></li>
-</ul></li>
-<li class="fragment">Two models can have the same coefficients, but different SEs, depending on the spread of the residuals</li>
+<li class="fragment">The remaining indices (SE, <em>t</em>-value, <em>p</em>-value) are calculated using them</li>
 </ul>
 </section>
-<section id="quizz-2" class="slide level2" data-background-color="#FFAB91">
-<h2>Quizz</h2>
-<div class=".stretch}">
-<ul>
-<li class="fragment">What happens if you divide the coefficient by its SE?</li>
-<li class="fragment"><strong>You obtain the <em>t</em>-value!</strong></li>
-<li class="fragment">Why is it called a <em>t</em>-value 🤔</li>
-</ul>
+<section id="frequentist-inference" class="slide level2">
+<h2>Frequentist Inference</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span>
-<span id="cb13-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = mpg ~ qsec, data = mtcars)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--9.8760 -3.4539 -0.7203  2.2774 11.6491 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept)  -5.1140    10.0295  -0.510   0.6139  
-qsec          1.4121     0.5592   2.525   0.0171 *
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 5.564 on 30 degrees of freedom
-Multiple R-squared:  0.1753,    Adjusted R-squared:  0.1478 
-F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
+<pre><code>Parameter   | Coefficient |    SE |          95% CI |  t(30) |     p
+--------------------------------------------------------------------
+(Intercept) |       4.925 | 1.765 | [ 1.319, 8.530] |  2.790 | 0.009
+qsec        |      -0.096 | 0.098 | [-0.297, 0.105] | -0.972 | 0.339</code></pre>
 </div>
 </div>
-</div>
+<ul>
+<li class="fragment">The <strong><em>t</em>-value</strong> is the ratio between the <strong>coefficient</strong> and its <strong>standard error (SE)</strong>
+<ul>
+<li class="fragment">It can be seen as a “<strong>standardized</strong>” index of the coefficient’s precision (independent of the scale/unit of the variable)</li>
+<li class="fragment">It corresponds to a point on a <em>t</em>-distribution of corresponding degrees of freedom (df), centered at 0</li>
+<li class="fragment">This <em>t</em>-distribution is the assumption made in Frequentist statistics about the distribution of coefficients (effects) <strong>under the null hypothesis</strong> (Not to be confused with the distribution of residuals, which is assumed to be <em>Normal</em>)</li>
+</ul></li>
+</ul>
 </section>
 <section id="the-t-value" class="slide level2">
 <h2>The <em>t</em>-value</h2>
-<div class="stretch">
-<ul>
-<li class="fragment">The <strong>t-value</strong> is the ratio between the <strong>coefficient</strong> and its <strong>standard error</strong></li>
-<li class="fragment">It can be seen as a “<strong>standardized</strong>” index of the coefficient’s precision (independent of the scale/unit of the variable)</li>
-<li class="fragment">It corresponds to a point on a <em>t</em>-distribution of corresponding degrees of freedom (df), centered at 0</li>
-<li class="fragment">This <em>t</em>-distribution is the assumption made in Frequentist statistics about the distribution of coefficients (effects) <strong>under the null hypothesis</strong>
-<ul>
-<li class="fragment">Not to be confused with the distribution of residuals (which is assumed to be <em>Normal</em>)</li>
-<li class="fragment">This <em>t</em>-distribution can be used to adjust for the sample size (<em>df</em>) - hence the use of <em>t</em> instead of <em>Normal</em> to introduce bias (especially for small sample sizes). For large sample sizes (= large <em>df</em>), it becomes equivalent to a Normal distribution</li>
-</ul></li>
-</ul>
-</div>
-</section>
-<section id="the-t-value-1" class="slide level2">
-<h2>The <em>t</em>-value</h2>
-<div class="">
-<ul>
-<li>The <em>t</em>-value shows how likely our coefficient compared to the assumed distributions of possible coefficient under the <strong>null hypothesis</strong> (i.e., if there is an absence of effect and we repeated the experiment an infinite number of times)</li>
-</ul>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot  t-distribution</span></span>
-<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
-<span id="cb15-3"><a href="" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">dt</span>(x, <span class="at">df=</span><span class="dv">30</span>)</span>
-<span id="cb15-4"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
-<span id="cb15-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="" aria-hidden="true" tabindex="-1"></a>t_value <span class="ot">&lt;-</span> insight<span class="sc">::</span><span class="fu">get_statistic</span>(model)[<span class="dv">2</span>, <span class="dv">2</span>]</span>
-<span id="cb15-7"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
-<span id="cb15-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb15-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb15-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> t_value, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> t_value, <span class="at">yend =</span> <span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), </span>
-<span id="cb15-12"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb15-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> t_value, <span class="at">y =</span> <span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb15-14"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb15-15"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">t-values - standardized coefficient under the null hypothesis"</span>, <span class="at">y =</span> <span class="st">"Probability"</span>, </span>
-<span id="cb15-16"><a href="" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"t-Distribution (df=30); "</span>, <span class="st">"t-value = "</span>, <span class="fu">round</span>(t_value, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-
-</div>
-</div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000" class="r-stretch"></section>
-<section id="is-our-coefficient-big-i.e.-precise" class="slide level2">
-<h2>Is our coefficient “big” (i.e., precise)?</h2>
 <ul>
 <li class="fragment">Is our coefficient likely to be observed under the null hypothesis?
 <ul>
@@ -862,80 +770,31 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Probability <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>x <span class="sc">&lt;</span> <span class="sc">-</span>t_value, <span class="st">"&lt; -t"</span>, <span class="st">"Smaller"</span>)</span>
-<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Probability <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>x <span class="sc">&gt;</span> t_value, <span class="st">"&gt; +t"</span>, df<span class="sc">$</span>Probability)</span>
-<span id="cb16-3"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
-<span id="cb16-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb16-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb16-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> Probability), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb16-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> t_value, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> t_value, <span class="at">yend =</span> <span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), </span>
-<span id="cb16-8"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb16-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> t_value, <span class="at">y =</span> <span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb16-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb16-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"red"</span>, <span class="st">"grey"</span>)) <span class="sc">+</span></span>
-<span id="cb16-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">t-values - standardized coefficient under the null hypothesis"</span>, <span class="at">y =</span> <span class="st">"Probability"</span>, </span>
-<span id="cb16-13"><a href="" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"t-Distribution (df=30); "</span>, <span class="st">"t-value = "</span>, <span class="fu">round</span>(t_value, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot  t-distribution</span></span>
+<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
+<span id="cb15-3"><a href="" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">dt</span>(x, <span class="at">df=</span><span class="dv">30</span>)</span>
+<span id="cb15-4"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb15-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="" aria-hidden="true" tabindex="-1"></a>t_value <span class="ot">&lt;-</span> <span class="fl">2.790</span> </span>
+<span id="cb15-7"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Probability <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>x <span class="sc">&lt;</span> <span class="sc">-</span>t_value, <span class="st">"&lt; -t"</span>, <span class="st">"Smaller"</span>)</span>
+<span id="cb15-9"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Probability <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>x <span class="sc">&gt;</span> t_value, <span class="st">"&gt; +t"</span>, df<span class="sc">$</span>Probability)</span>
+<span id="cb15-10"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb15-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb15-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> Probability), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb15-14"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">x=</span>t_value, <span class="at">y=</span><span class="dv">0</span>),</span>
+<span id="cb15-15"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">xend =</span> t_value, <span class="at">yend =</span> <span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), </span>
+<span id="cb15-16"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb15-17"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">x=</span>t_value, <span class="at">y=</span><span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb15-18"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-19"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"red"</span>, <span class="st">"grey"</span>)) <span class="sc">+</span></span>
+<span id="cb15-20"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">t-values - standardized coefficient under the null hypothesis"</span>, <span class="at">y =</span> <span class="st">"Probability"</span>, </span>
+<span id="cb15-21"><a href="" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"t-Distribution (df=30); "</span>, <span class="st">"t-value = "</span>, <span class="fu">round</span>(t_value, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" width="3000" class="r-stretch"></section>
-<section id="is-our-coefficient-big-i.e.-precise-1" class="slide level2">
-<h2>Is our coefficient “big” (i.e., precise)?</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li class="fragment">Is our coefficient likely to be observed under the null hypothesis?
-<ul>
-<li class="fragment">What is the <em>probability</em> <span class="math inline">\(p\)</span> to obtain a coefficient at least <em>as precise as ours</em> (in both directions) under the null hypothesis?</li>
-<li class="fragment"><span class="math inline">\(Prob &gt; |t|\)</span></li>
-</ul></li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fu">pt</span>(<span class="sc">-</span>t_value, <span class="at">df=</span><span class="dv">30</span>, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
-<span id="cb17-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb17-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(prob, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.0171</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Look again at your summary…</li>
-</ul>
-</div><div class="column">
-<div class="fragment">
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = mpg ~ qsec, data = mtcars)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--9.8760 -3.4539 -0.7203  2.2774 11.6491 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept)  -5.1140    10.0295  -0.510   0.6139  
-qsec          1.4121     0.5592   2.525   0.0171 *
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 5.564 on 30 degrees of freedom
-Multiple R-squared:  0.1753,    Adjusted R-squared:  0.1478 
-F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment"><strong>It is the <em>p</em>-value!</strong></li>
-<li class="fragment">You computed the <em>p</em>-value by hand!</li>
-</ul>
-</div>
-</div>
-</section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" width="3000" class="r-stretch"></section>
 <section id="p-value" class="slide level2">
 <h2><em>p</em>-value</h2>
 <div style="font-size: 75%">
@@ -960,41 +819,6 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 </ul>
 </div>
 </section>
-<section id="confidence-intervals-ci" class="slide level2">
-<h2>Confidence Intervals (CI)</h2>
-<div class="">
-<ul>
-<li class="fragment">Confidence Intervals are often seen as a “range” of likely values for the coefficient, and the more we would get close to the coefficient the more “likely” the values would be. It is <strong>incorrect</strong></li>
-<li class="fragment">The <strong>confidence interval</strong> (CI) is the range of values that contains, e.g., with 95% of probability, the value of the coefficient if the <em>t</em>-distribution was centered around the <em>t</em>-value (as if the null effect was the estimated coefficient).</li>
-<li class="fragment">The interpretation is, again, fairly convoluted</li>
-</ul>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Get 95% ETI of the t distribution</span></span>
-<span id="cb20-2"><a href="" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), <span class="at">df=</span><span class="dv">30</span>, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> t_value</span>
-<span id="cb20-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># ci * parameters::parameters(model)$SE[2]  # Indeed shows the right CI</span></span>
-<span id="cb20-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
-<span id="cb20-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb20-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">fill=</span><span class="st">"grey"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb20-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="fu">aes</span>(<span class="at">x =</span> x <span class="sc">+</span> t_value, <span class="at">y =</span> y), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb20-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> t_value, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> t_value, <span class="at">yend =</span> <span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), </span>
-<span id="cb20-10"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb20-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> t_value, <span class="at">y =</span> <span class="fu">dt</span>(t_value, <span class="at">df=</span><span class="dv">30</span>)), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb20-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Horizontal segment indicating the CI range</span></span>
-<span id="cb20-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> ci[<span class="dv">1</span>], <span class="at">y =</span> <span class="fl">0.05</span>, <span class="at">xend =</span> ci[<span class="dv">2</span>], <span class="at">yend =</span> <span class="fl">0.05</span>), </span>
-<span id="cb20-14"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">linetype=</span><span class="st">"solid"</span>, <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">ends=</span><span class="st">'both'</span>)) <span class="sc">+</span></span>
-<span id="cb20-15"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> ci[<span class="dv">1</span>], <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>, <span class="at">linewidth=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb20-16"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> ci[<span class="dv">2</span>], <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">linetype=</span><span class="st">"dotted"</span>, <span class="at">linewidth=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb20-17"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb20-18"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">t-values - standardized coefficient under the null hypothesis"</span>, <span class="at">y =</span> <span class="st">"Probability"</span>, </span>
-<span id="cb20-19"><a href="" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"Shifted t-Distribution (df=30); "</span>, <span class="st">"location = "</span>, <span class="fu">round</span>(t_value, <span class="dv">2</span>), <span class="st">"(t-value)</span><span class="sc">\n</span><span class="st">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-
-</div>
-</div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" width="3000" class="r-stretch"></section>
 <section id="alternatives" class="slide level2">
 <h2>Alternatives?</h2>
 <ul>
@@ -1026,7 +850,24 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a>new_sample <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>), ] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>new_rows <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>new_rows</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 26 14  3 24  4 17  3 28 31 30 18 14 11 20 27  8 19 31  3 20 12 19 12  7 20
+[26]  4 20 16  1 11  5 30</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>new_sample <span class="ot">&lt;-</span> mtcars[new_rows, ] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <ul>
@@ -1041,34 +882,34 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)</span>
-<span id="cb22-2"><a href="" aria-hidden="true" tabindex="-1"></a>true_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)[<span class="dv">2</span>]</span>
-<span id="cb22-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">c</span>()  <span class="co"># Initialize an empty vector of coefs</span></span>
-<span id="cb22-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5000</span>) {  <span class="co"># Repeat the process 500 times</span></span>
-<span id="cb22-6"><a href="" aria-hidden="true" tabindex="-1"></a>  new_sample <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]  <span class="co"># Sample new data</span></span>
-<span id="cb22-7"><a href="" aria-hidden="true" tabindex="-1"></a>  new_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>new_sample)  <span class="co"># recompute the model</span></span>
-<span id="cb22-8"><a href="" aria-hidden="true" tabindex="-1"></a>  coefs <span class="ot">&lt;-</span> <span class="fu">c</span>(coefs, <span class="fu">coef</span>(new_model)[<span class="dv">2</span>])  <span class="co"># Append the coef to the vector</span></span>
-<span id="cb22-9"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>mtcars)  <span class="co"># Fit linear regression</span></span>
+<span id="cb21-2"><a href="" aria-hidden="true" tabindex="-1"></a>true_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)[<span class="dv">2</span>]  <span class="co"># Extract slope coefficient</span></span>
+<span id="cb21-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">c</span>()  <span class="co"># Initialize an empty vector of coefs</span></span>
+<span id="cb21-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5000</span>) {  <span class="co"># Repeat the process 500 times</span></span>
+<span id="cb21-6"><a href="" aria-hidden="true" tabindex="-1"></a>  new_sample <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]  <span class="co"># Sample new data</span></span>
+<span id="cb21-7"><a href="" aria-hidden="true" tabindex="-1"></a>  new_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec, <span class="at">data=</span>new_sample)  <span class="co"># recompute the model</span></span>
+<span id="cb21-8"><a href="" aria-hidden="true" tabindex="-1"></a>  coefs <span class="ot">&lt;-</span> <span class="fu">c</span>(coefs, <span class="fu">coef</span>(new_model)[<span class="dv">2</span>])  <span class="co"># Append the coef to the vector</span></span>
+<span id="cb21-9"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">coefs =</span> coefs) <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> coefs)) <span class="sc">+</span></span>
-<span id="cb23-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill=</span><span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb23-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> true_coef, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb23-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb23-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Coefficient"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>, </span>
-<span id="cb23-7"><a href="" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Distribution of coefficients from 5000 bootstrapped samples</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">+</span></span>
-<span id="cb23-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="cn">NA</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">coefs =</span> coefs) <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> coefs)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill=</span><span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> true_coef, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb22-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Coefficient"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>, </span>
+<span id="cb22-7"><a href="" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Distribution of coefficients from 5000 bootstrapped samples</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">+</span></span>
+<span id="cb22-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="cn">NA</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1109,6 +950,524 @@ F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
 <li class="fragment">Pros: Easy to interpret</li>
 <li class="fragment">Cons: Complex to compute, Problematic for multimodal distributions, Not really robust, Not always defined (e.g.&nbsp;uniform distributions)</li>
 </ul></li>
+</ul>
+</section>
+<section id="indices-of-uncertainty" class="slide level2">
+<h2>Indices of Uncertainty</h2>
+<ul>
+<li class="fragment">Standard deviation (SD), Median Absolute Deviation (MAD)</li>
+<li class="fragment">Credible Intervals (CI)
+<ul>
+<li class="fragment"><strong>Equal-tailed Interval (ETI)</strong>
+<ul>
+<li class="fragment">Easy to compute</li>
+<li class="fragment">Potentially problematic for skewed distributions</li>
+</ul></li>
+<li class="fragment"><strong>Highest Density Interval (HDI)</strong>
+<ul>
+<li class="fragment">More complex to compute</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<img data-src="https://easystats.github.io/bayestestR/articles/credible_interval_files/figure-html/unnamed-chunk-3-1.png" class="r-stretch"></section>
+<section id="why-95-ci" class="slide level2">
+<h2>Why 95% CI?</h2>
+<ul>
+<li class="fragment"><strong>Why do we use “95%” (0.95) for the CI?</strong></li>
+<li class="fragment">Because of the .05 alpha level (used for the <em>p</em>-value)</li>
+<li class="fragment">Indeed, confidence intervals have a direct relationship with the <em>p</em>-value:
+<ul>
+<li class="fragment">if the 95% CI is <span class="math inline">\([0.00, x]\)</span> or <span class="math inline">\([x, 0.00]\)</span>, then the <em>p</em>-value = .05.</li>
+<li class="fragment">In other words, a 0.95 CI excluding 0 has a <em>p</em>-value &lt; .05.</li>
+</ul></li>
+<li class="fragment">But this .05 alpha level is arbitrary…
+<ul>
+<li class="fragment">Yes. And so is 95%. It is mostly a <em>convention</em>.</li>
+</ul></li>
+<li class="fragment">Recently, a trend emerged to “shake up” the conventions and highlight the arbitrary nature of the .05 alpha level
+<ul>
+<li class="fragment">McElreath (2018) suggested to use <strong>89% CI</strong> instead of 95% CI. <em>Why?</em> <span class="fragment"><strong>Because why not!</strong></span></li>
+</ul></li>
+<li class="fragment">Some software also use 90% or 94% CI as default</li>
+<li class="fragment">However, I still personally recommends 95%
+<ul>
+<li class="fragment">See <strong>https://github.com/easystats/bayestestR/discussions/250</strong></li>
+</ul></li>
+<li class="fragment"><strong>Importantly</strong>, the choice of the CI is for you to decide.</li>
+</ul>
+</section>
+<section id="indices-of-significance" class="slide level2">
+<h2>Indices of Significance</h2>
+<ul>
+<li class="fragment">What does <strong>significance</strong> even mean?</li>
+<li class="fragment">Big?</li>
+<li class="fragment">Certain?</li>
+<li class="fragment">Reliable?</li>
+</ul>
+</section>
+<section id="probability-of-direction-pd" class="slide level2">
+<h2>Probability of Direction (pd)</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li class="fragment">The <strong>Probability of Direction</strong> (<strong>pd</strong>) is defined as the probability that the effect is positive or negative (whichever is the largest)</li>
+<li class="fragment">It varies between 0.50 (50%) and 1.00 (100%), with 0.50 indicating that the effect is equally likely to be positive or negative, and 100% indicating that the effect is for sure positive or negative</li>
+<li class="fragment">We can conceptualize it as an <strong>index of effect existence</strong> (i.e., how likely is the effect to exist in a given direction <em>regardless</em> of its size)
+<ul>
+<li class="fragment">If <span class="math inline">\(pd \rightarrow 100\%\)</span>, it means that there is certainly a positive|negative effect (but it can be small, large, or its size can be uncertain)</li>
+</ul></li>
+</ul>
+</div><div class="column">
+
+</div>
+</div>
+</section>
+<section id="pd-vs.-p-value" class="slide level2">
+<h2><em>pd</em> vs.&nbsp;<em>p</em>-value</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li class="fragment">Although <strong>conceptually distinct</strong>, the <em>pd</em> typically very strongly correlates with one-sided <em>p</em>-values
+<ul>
+<li class="fragment">But it is <strong>not</strong> an index of <strong>significance</strong> (the interpretation is more straightforward)</li>
+</ul></li>
+<li class="fragment">For example, if the <em>pd</em> is &gt; 97.5% (0.975), then the <em>p</em>-value is typically &lt; .05
+<ul>
+<li class="fragment"><span class="math inline">\(p_{onesided} = 1 - pd\)</span></li>
+<li class="fragment"><span class="math inline">\(p_{twosided} = 2(1 - pd)\)</span></li>
+</ul></li>
+<li class="fragment">A function <code>bayestestR</code> exists to convert between the two indices.
+<ul>
+<li class="fragment">Use it only to gain an intuition, <strong>is it not a formal conversion</strong></li>
+</ul></li>
+</ul>
+<!-- Talk about advantages and limitations when we re-introduce these indices in the context of Bayesian statistics
+-->
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">p_to_pd</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.01</span>, <span class="fl">0.001</span>), <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9750 0.9950 0.9995</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">pd_to_p</span>(<span class="fu">c</span>(<span class="fl">0.90</span>, <span class="fl">0.95</span>), <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2 0.1</code></pre>
+</div>
+</div>
+</div>
+</div><div class="column">
+<p><img data-src="img/spiderman.png"></p>
+</div>
+</div>
+</section>
+<section id="probability-of-null-effect" class="slide level2">
+<h2>Probability of null effect?</h2>
+<ul>
+<li class="fragment">The <em>pd</em> tells us the probability that a distribution (of an effect) is positive (&gt; 0) or negative (&lt; 0)</li>
+<li class="fragment">Can we know if the effect is larger or smaller than <strong>zero</strong>?</li>
+<li class="fragment">In other words, can we know the probability of the effect being different from 0?
+<ul>
+<li class="fragment">Which is the goal of <strong>Null Hypothesis Significance Testing (NHST)</strong></li>
+</ul></li>
+<li class="fragment">Well, <strong><em>not really</em></strong>…
+<ul>
+<li class="fragment">The probability of a continuous distribution being different from a single value is always <strong>infinite</strong></li>
+<li class="fragment">Infinity of values vs.&nbsp;a single one, exactly 0.0000</li>
+</ul></li>
+<li class="fragment">What can we do?
+<ul>
+<li class="fragment">What if instead of considering “no effect” as being exactly 0.0000, we consider it as being “close to 0.0000”?</li>
+<li class="fragment">What if we defined a range of “negligible” values, <strong>equivalent to 0 for practical</strong> purposes?</li>
+<li class="fragment">This is the idea behind the <strong>Region of Practical Equivalence</strong> (<strong>ROPE</strong>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="region-of-practical-equivalence-rope" class="slide level2">
+<h2>Region of Practical Equivalence (ROPE)</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li class="fragment">The idea of the ROPE is to <strong>explicitly</strong> define a range that we consider as “negligible” (i.e., equivalent to 0 for practical purposes)</li>
+<li class="fragment">For instance, say I decide to define a <strong>parameter &lt; 0.42</strong> as negligible <sub><sup><em>because why not?</em></sup></sub>
+<ul>
+<li class="fragment">Justified based on e.g., prior studies, preliminary data, theoretical knowledge, …</li>
+<li class="fragment">I <em>preregister</em> this hypothesis (so that I am not accused of making this choice after seeing the results)</li>
+</ul></li>
+<li class="fragment">What is the probability of <span class="math inline">\(parameter &lt; |0.42|\)</span>?</li>
+</ul>
+</div><div class="column">
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Coefficient =</span> coefs) <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Coefficient)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill=</span><span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.42</span>, <span class="fl">0.42</span>)), <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span><span class="dv">2</span>), <span class="at">fill=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.6</span>, <span class="fl">3.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="compute-rope" class="slide level2">
+<h2>Compute ROPE</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">rope</span>(coefs, <span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.42</span>, <span class="fl">0.42</span>), <span class="at">ci =</span> <span class="fl">1.00</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Proportion of samples inside the ROPE [-0.42, 0.42]:
+
+inside ROPE
+-----------
+0.66 %     </code></pre>
+</div>
+</div>
+<ul>
+<li class="fragment">We often compute the proportion of a certain <strong>Credible Interval</strong> that lies within the ROPE</li>
+<li class="fragment">The ROPE index is often computed as the <strong>95% CI</strong> of the distribution that lies within the ROPE bounds
+<ul>
+<li class="fragment">Because the CI is considered to be more stable than the whole distribution, and thus the resulting index is less prone to small random fluctuations</li>
+</ul></li>
+<li class="fragment"><strong>Be careful</strong> when reading and presenting results involving ROPE: what is the ROPE range and the CI used?</li>
+</ul>
+</div><div class="column">
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># ci=0.95 is the default setting for rope()</span></span>
+<span id="cb30-2"><a href="" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">rope</span>(coefs, <span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.42</span>, <span class="fl">0.42</span>), <span class="at">ci =</span> <span class="fl">0.95</span>)</span>
+<span id="cb30-3"><a href="" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Proportion of samples inside the ROPE [-0.42, 0.42]:
+
+inside ROPE
+-----------
+0.00 %     </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># The results can be plotted</span></span>
+<span id="cb32-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="is-p-rope-an-index-of-significance" class="slide level2">
+<h2>Is p-ROPE an index of significance?</h2>
+<ul>
+<li class="fragment">This index corresponds to the <strong>proportion of the distribution/Credible Interval that is within the ROPE</strong></li>
+<li class="fragment"><em>p</em>-ROPE (<span class="math inline">\(P_{x~\in~ROPE}\)</span>) can be interpreted as an index of <strong>significance</strong>
+<ul>
+<li class="fragment">The probability that an effect is non-negligible</li>
+<li class="fragment">i.e., “significant” is here meant in the sense of <strong>“large enough to matter”</strong> sense</li>
+<li class="fragment">Note that <em>p</em>-ROPE index is <strong>not</strong> equivalent or highly correlated with <em>p</em>-values</li>
+</ul></li>
+<li class="fragment">Note that “<strong>Equivalence Testing</strong>” is sometimes presented as an alternative to Null-Hypothesis Significance Testing (NHST), and can be also used with more traditional tests (with the idea of testing against a range of pre-specified “negligible” values instead of a point-null).</li>
+</ul>
+</section>
+<section id="rope-range" class="slide level2">
+<h2>ROPE range</h2>
+<ul>
+<li class="fragment">The main challenge with ROPE is to define the range of negligible values</li>
+<li class="fragment">It is possible to use rules-of-thumb guidelines of effect size classification
+<ul>
+<li class="fragment">For correlations, Cohen (1988) suggests that <em>r</em> &lt; 0.1 is a very small (i.e., negligible) effect</li>
+<li class="fragment">For standardized differences, Cohen’s <em>D</em> guidelines</li>
+</ul></li>
+<li class="fragment">It gets complicated for interaction parameters, or when the effect is not standardized</li>
+</ul>
+</section>
+<section id="describing-parameter-distributions-summary" class="slide level2">
+<h2>Describing parameter distributions: Summary</h2>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Median |       95% CI |     pd |          ROPE | % in ROPE
+----------------------------------------------------------------------
+Posterior |   1.41 | [0.65, 2.63] | 99.92% | [-0.10, 0.10] |        0%</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Describe the “centrality” (e.g;, Median), the “uncertainty” (CI), and the “significance” (e.g., ROPE, <em>pd</em>, …)</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">describe_posterior</span>(coefs, </span>
+<span id="cb35-2"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">centrality=</span><span class="st">"mean"</span>, </span>
+<span id="cb35-3"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">dispersion=</span><span class="cn">TRUE</span>, </span>
+<span id="cb35-4"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">ci=</span><span class="fl">0.90</span>, </span>
+<span id="cb35-5"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">ci_method=</span><span class="st">"hdi"</span>,</span>
+<span id="cb35-6"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rope_range =</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.9</span>, <span class="fl">0.9</span>), </span>
+<span id="cb35-7"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">test=</span><span class="st">"rope"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary of Posterior Distribution
+
+Parameter | Mean |   SD |       90% CI |          ROPE | % in ROPE
+------------------------------------------------------------------
+Posterior | 1.46 | 0.50 | [0.72, 2.30] | [-0.90, 0.90] |     8.51%</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Choices must be made and justified: important to understand what the indices are and what they mean</li>
+</ul>
+</section>
+<section id="bootstrapping-specific-indices" class="slide level2">
+<h2>Bootstrapping-specific indices?</h2>
+<ul>
+<li class="fragment">Are these new indices (median, MAD, credible intervals, p-direction, ROPE) <strong>bootstrapping</strong>-specific?
+<ul>
+<li class="fragment"><strong>NO!</strong> Bootstrapping is just a method that provides a parameter <strong>distribution</strong> instead of point-values</li>
+</ul></li>
+<li class="fragment">These indices are “simply” descriptive summaries of parameter <strong>distributions</strong></li>
+<li class="fragment">Thus, they can be used whenever we have a distributions of parameters</li>
+<li class="fragment">⚠️<strong>Spoiler Alert</strong>⚠️ Such as in Bayesian stats…</li>
+</ul>
+</section>
+<section id="bayes-theorem" class="slide level2 center" data-background-color="black" data-background-image="img/Brighton_pier.png" data-background-opacity="0.3">
+<h2>Bayes Theorem</h2>
+</section>
+<section id="bayes-theorem-1" class="slide level2">
+<h2>Bayes’ Theorem</h2>
+<ul>
+<li class="fragment"><span class="math inline">\(P(A|B) = \frac{P(A)~P(B|A)}{P(B)}\)</span></li>
+<li class="fragment">P(A|B): How likely A given the information about B</li>
+<li class="fragment">P(A) and P(B): Probability of A or B occurring on its own, without any information about the other
+<ul>
+<li class="fragment">It’s our initial (<em>prior</em>) beliefs about A and B</li>
+<li class="fragment">P(B) is the <em>marginal</em> probability of B, and is often just a normalizing constant (so that the total probability = 1). <strong>The important part of the formula is the numerator</strong></li>
+</ul></li>
+<li class="fragment">P(B|A): Probability of B occurring given that A has already occurred. It quantifies how likely B is when we know A has happened
+<ul>
+<li class="fragment">It is the <em>likelihood</em> of B given A</li>
+</ul></li>
+<li class="fragment">Bayes’ Theorem allows us to update our belief about the probability of A happening (<em>P(A|B)</em>) based on new evidence provided by the occurrence of B. It combines our initial belief (<em>P(A)</em>), the likelihood of B happening when A is true (<em>P(B|A)</em>), and the overall likelihood of B (<em>P(B)</em>) to calculate this (<em>a posteriori</em>) updated probability</li>
+</ul>
+</section>
+<section id="bayesian-inference" class="slide level2">
+<h2>Bayesian inference</h2>
+<ul>
+<li class="fragment">Bayesian inference is the application of the product rule of probability to real problems of inference</li>
+<li class="fragment">“Bayesian inference is really just counting and comparing of possibilities […] in order to make good inference about what actually happened, it helps to consider everything that could have happened” (McElreath, 2016)</li>
+<li class="fragment">“The first idea is that Bayesian inference is <strong>reallocation of credibility across possibilities</strong>. The second foundational idea is that the possibilities [i.e., the ”hypotheses”], over which we allocate credibility, are <strong>parameter values in meaningful mathematical models</strong>” (Kruschke, 2015)
+<ul>
+<li class="fragment">Bayesian inference allows to compute or approximate the likelihood (think <strong>density plot</strong>) of different parameter values of a statistical model given the data</li>
+</ul></li>
+</ul>
+</section>
+<section id="bayesian-inference-in-practice" class="slide level2">
+<h2>Bayesian inference in practice</h2>
+<ul>
+<li class="fragment">In science, we are interested in the probability of a hypothesis <span class="math inline">\(H\)</span>, given the data <span class="math inline">\(X\)</span>
+<ul>
+<li class="fragment"><span class="math inline">\(= P(H|X)\)</span></li>
+</ul></li>
+<li class="fragment">Before any data is collected, the researcher has some level of prior belief <span class="math inline">\(P(H)\)</span> in this hypothesis</li>
+<li class="fragment"><span class="math inline">\(P(X|H)\)</span>: The researcher also has a model that makes specific predictions about the outcome given the data X (e.g., a linear model)
+<ul>
+<li class="fragment">This models tells how strongly the data are implied by a hypothesis</li>
+</ul></li>
+<li class="fragment">Bayes’ theorem tells us that <span class="math inline">\(P(H|X) =\frac{P(H)~P(X|H)}{P(X)}\)</span></li>
+<li class="fragment">In words: The probability of a hypothesis given the data is equal to the probability of the hypothesis before seeing the data, multiplied by the probability that the data occur if that hypothesis is true, divided by the probability of the observed data</li>
+</ul>
+</section>
+<section id="in-short" class="slide level2">
+<h2>In short</h2>
+<ul>
+<li class="fragment">Bayesian statistics are an elegant framework to update probabilities based on evidence</li>
+<li class="fragment"><span class="math inline">\(P(H|X)=P(H)~P(X|H)\)</span>
+<ul>
+<li class="fragment">The probability of a hypothesis given the data is proportional to the prior probability of the hypothesis times the likelihood of the data given the hypothesis</li>
+</ul></li>
+<li class="fragment">It allows us to quantify the probability of a hypothesis <strong>given the data</strong>, whereas in Frequentist statistics, we can only quantify the probability of the data (data is random!) given a (null) hypothesis. Basically, it is the opposite answer.</li>
+<li class="fragment">While stemming from a simple theorem, it has deep consequences and powerful applications…</li>
+</ul>
+</section>
+<section id="bayesian-inference-for-stats-models" class="slide level2">
+<h2>Bayesian inference for stats models</h2>
+<ul>
+<li class="fragment"><span class="math inline">\(P(H|X)=P(H)~P(X|H)\)</span></li>
+<li class="fragment">In statistical models, <em>P(H)</em> is not one probability number but a (set of) <strong>prior distribution</strong> corresponding to beliefs about some parameter(s)</li>
+<li class="fragment"><em>P(X|H)</em> corresponds to the data <strong>likelihood model</strong> (the link between the outcome and the predictor given some value of the parameter)
+<ul>
+<li class="fragment">E.g., in a linear model <span class="math inline">\(y ~ 0 + 2x\)</span>, if <span class="math inline">\(x=3\)</span>, then predicted outcome is <span class="math inline">\(2x=6\)</span></li>
+</ul></li>
+<li class="fragment"><em>P(H|X)</em> corresponds to the posterior distribution of a parameter (given the prior and the data)</li>
+<li class="fragment">Resolving this equation empirically is actually very complex</li>
+</ul>
+</section>
+<section id="stan-jags-and-bugs" class="slide level2">
+<h2>Stan, JAGS, and BUGS</h2>
+<ul>
+<li class="fragment">Modern Bayesian full inference (using MCMC), known to be resource-intensive and slow, is currently best performed (most fast and flexibly) by <strong>dedicated languages</strong>, aka <strong>probabilistic programming languages</strong>
+<ul>
+<li class="fragment"><strong>Stan</strong> (the most popular one): Named in honour of Stanislaw Ulam, pioneer of the <em>Monte Carlo</em> method</li>
+<li class="fragment"><strong>JAGS</strong>: “Just Another Gibbs Sampler”</li>
+<li class="fragment"><strong>BUGS</strong>: “Bayesian Inference Using Gibbs Sampling”</li>
+<li class="fragment"><strong>PyMC</strong> (Python)</li>
+<li class="fragment"><strong>Turing</strong> (Julia)</li>
+</ul></li>
+<li class="fragment">These languages are designed to perform Bayesian inference, and are optimized for that purpose</li>
+<li class="fragment">They are not general-purpose programming languages</li>
+</ul>
+</section>
+<section id="about-brms" class="slide level2">
+<h2>About <code>brms</code></h2>
+<ul>
+<li class="fragment">There are “wrappers” around these languages that allow us to use them from other general purpose languages like R or Python</li>
+<li class="fragment">In R:
+<ul>
+<li class="fragment"><strong>brms</strong> = <strong>B</strong>ayesian <strong>R</strong>egression <strong>M</strong>odels using ‘<strong>S</strong>tan’</li>
+<li class="fragment"><strong>rstanarm</strong> = <strong>R</strong> interface to <strong>Stan</strong> for <strong>A</strong>pplied <strong>R</strong>egression <strong>M</strong>odeling</li>
+</ul></li>
+<li class="fragment"><strong>rstanarm</strong>
+<ul>
+<li class="fragment">Has different functions for different models (e.g., <code>stan_lm()</code>, <code>stan_glm()</code>, <code>stan_lmer()</code>, <code>stan_glmer()</code>, <code>stan_gamm4()</code> etc.)</li>
+<li class="fragment">Each models are implemented with precompiled Stan code</li>
+<li class="fragment">It is slightly easier to install, but less flexible</li>
+</ul></li>
+<li class="fragment"><strong>brms</strong>
+<ul>
+<li class="fragment">Became the most popular</li>
+<li class="fragment">Main difference is that <strong>brms</strong> has only one main function, <code>brm()</code>, which can fit almost any model</li>
+<li class="fragment">These models are translated into Stan code, and then compiled</li>
+<li class="fragment">Overhead time when fitting new models, but it is more flexible</li>
+</ul></li>
+</ul>
+</section>
+<section id="doing-a-bayesian-regression" class="slide level2">
+<h2>Doing a Bayesian Regression</h2>
+<ul>
+<li class="fragment">Frequentist model</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars) </span>
+<span id="cb37-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parameter   | Coefficient |   SE |         95% CI | t(30) |      p
+------------------------------------------------------------------
+(Intercept) |       15.35 | 1.03 | [13.25, 17.46] | 14.91 | &lt; .001
+mpg         |        0.12 | 0.05 | [ 0.02,  0.22] |  2.53 | 0.017 </code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Bayesian model</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars, <span class="at">refresh=</span><span class="dv">0</span>) </span>
+<span id="cb39-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Fixed Effects
+
+Parameter   | Median |         95% CI |     pd |  Rhat |     ESS
+----------------------------------------------------------------
+(Intercept) |  15.34 | [13.25, 17.47] |   100% | 1.000 | 3454.00
+mpg         |   0.12 | [ 0.02,  0.22] | 99.30% | 1.000 | 3394.00
+
+# Sigma
+
+Parameter | Median |       95% CI |   pd |  Rhat |     ESS
+----------------------------------------------------------
+sigma     |   1.68 | [1.34, 2.22] | 100% | 1.000 | 3387.00</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment"><code>refresh=0</code> silences the printing of the sampling <sub>(to avoid cluttering this slide)</sub></li>
+<li class="fragment">R-hat: Convergence diagnostic index. Should be less than &lt; 1.05.</li>
+<li class="fragment">ESS: Effective Sample Size: how many “good iterations” (truly independent draws) we have. Should be &gt; 400 (the maximum being the number of iterations that we draw).</li>
+</ul>
+</section>
+<section id="mixed-model" class="slide level2">
+<h2>Mixed Model</h2>
+<ul>
+<li class="fragment">One function to rule them all.</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> glmmTMB<span class="sc">::</span><span class="fu">glmmTMB</span>(qsec <span class="sc">~</span> mpg <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>gear), <span class="at">data =</span> mtcars) </span>
+<span id="cb41-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model, <span class="at">effects=</span><span class="st">"fixed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Fixed Effects
+
+Parameter   | Coefficient |   SE |         95% CI |     z |      p
+------------------------------------------------------------------
+(Intercept) |       14.81 | 1.26 | [12.34, 17.28] | 11.75 | &lt; .001
+mpg         |        0.13 | 0.05 | [ 0.03,  0.23] |  2.64 | 0.008 </code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Bayesian model</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brm</span>(qsec <span class="sc">~</span> mpg <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>gear), <span class="at">data =</span> mtcars, <span class="at">refresh=</span><span class="dv">0</span>) </span>
+<span id="cb43-2"><a href="" aria-hidden="true" tabindex="-1"></a>parameters<span class="sc">::</span><span class="fu">parameters</span>(model, <span class="at">effects=</span><span class="st">"fixed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Fixed Effects
+
+Parameter   | Median |         95% CI |     pd |  Rhat |     ESS
+----------------------------------------------------------------
+(Intercept) |  14.83 | [11.70, 17.92] |   100% | 1.001 |  887.00
+mpg         |   0.13 | [ 0.03,  0.23] | 99.33% | 1.001 | 2213.00
+
+# Sigma
+
+Parameter | Median |       95% CI |   pd |  Rhat |     ESS
+----------------------------------------------------------
+sigma     |   1.35 | [1.05, 1.83] | 100% | 1.002 | 1658.00</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="how-about-bayes-factors" class="slide level2">
+<h2>How about bayes factors?</h2>
+<div style="font-size: 90%">
+<ul>
+<li class="fragment">Bayes factor are <strong>intuitive</strong> indices measuring of the strength of evidence for one hypothesis over another
+<ul>
+<li class="fragment">They have a natural interpretation in terms of odds (e.g., 3:1 odds), and have wide applications (comparing models, null-hypothesis testing, …)</li>
+<li class="fragment">They have well established interpretation guidelines (&gt; 3; &gt; 10; &gt; 30; &gt; 100)</li>
+</ul></li>
+<li class="fragment">They are “easy” to compute for simple statistical tests, but for more complex models, they are notoriously hard to compute</li>
+<li class="fragment">The fact that they are highly sensitive to the choice of priors + the fact that finding an “alternative” model is not at all trivial + that computing them is often very hard have been seen as <strong>limitations</strong> and made them the focal point of debates (even between Bayesians)</li>
+<li class="fragment">There are different schools:
+<ul>
+<li class="fragment">Some Bayesians believe that BFs are the best indices ever (assuming one understands them) and the Graal of Bayesian statistics</li>
+<li class="fragment">Some believe that other indices are better and that BFs reproduce the same culture of binary thinking as Frequentist NHST</li>
+<li class="fragment">We’ll adopt a middle view: BFs are useful, in particular for simple tests (<em>t</em>-tests, correlations, comparing models), but for modeling, analyzing the posterior distributions is better</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="bayes-factors-misconceptions" class="slide level2">
+<h2>Bayes Factors: Misconceptions</h2>
+<ul>
+<li class="fragment">BFs do <strong>not</strong> tell us the absolute probability of a hypothesis being true. It quantifies how much we should <strong>update</strong> our belief in a hypothesis. If this hypothesis was extremely unlikely, then we might still believe it to be very unlikely, even after computing a large BF.</li>
+<li class="fragment">BFs provide <strong>relative</strong> evidence between 2 hypotheses, and it is possible that one hypothesis is supported more than another hypothesis, while both hypotheses are false. Saying <em>“BF shows evidence for the null (H0)”</em> is incorrect. It should be <em>“BF shows evidence for the H0 as compared to H1”</em> (what H1 is matters).</li>
+<li class="fragment">BFs tell us nothing about the size of effects.</li>
+<li class="fragment">See <a href="https://lakens.github.io/statistical_inferences/04-bayes.html#sec-bfgmisconceptions">Lakens’ post</a> for details</li>
 </ul>
 </section>
 <section id="the-end-for-now" class="slide level2 center" data-background-color="#212121">
