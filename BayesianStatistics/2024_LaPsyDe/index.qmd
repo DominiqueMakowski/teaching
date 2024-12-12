@@ -71,8 +71,9 @@ library(easystats)
 
 :::: {.column width=50%}
 
-- Provide a bird's eye view of Bayesian statistics applied to statistical models
+- **Learn Bayesian by understanding Frequentist**
 - Build on existing knowledge and "demystify" Bayesian statistics
+- Provide a bird's eye view of Bayesian statistics applied to statistical models
 
 :::: 
 
@@ -792,7 +793,7 @@ bayestestR::describe_posterior(coefs,
 - Thus, they can be used whenever we have a distributions of parameters
 - ⚠️**Spoiler Alert**⚠️ Such as in Bayesian stats...
 
-## Bayes Theorem {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
+## Bayesian Statistics {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
 
 ## Bayes' Theorem
 
@@ -953,9 +954,31 @@ parameters::parameters(model, effects="fixed")
 - BFs tell us nothing about the size of effects.
 - See [Lakens' post](https://lakens.github.io/statistical_inferences/04-bayes.html#sec-bfgmisconceptions) for details
 
+## A rabbit hole
 
+::: {.columns}
 
-## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+:::: {.column width="50%"}
+
+- **Bayesian statistics** has a lot more to offer
+  - Inference algorithms (MCMC, ...)
+  - Priors
+  - Model comparison
+  - Usage in neuroscientific theories
+  - ...
+- But it is **easy to start using it**
+  
+::::
+
+:::: {.column width="50%"}
+
+![](img/rabbit.jpg){width=70%}
+
+::::
+
+:::
+
+## Questions? {.center background-color="black" background-image="https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true" background-opacity=0.3}
 
 *Thank you!*
 
