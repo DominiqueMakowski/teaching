@@ -35,7 +35,28 @@ library(patchwork)
 library(easystats)
 ```
 
-## Introduction
+
+## Managing expectations
+
+::: {.columns}
+
+:::: {.column width=50%}
+
+- **Learn Bayesian by understanding Frequentist**
+- Build on existing knowledge and "demystify" Bayesian statistics
+- Provide a bird's eye view of Bayesian statistics applied to statistical models
+
+:::: 
+
+:::: {.column width=50%}
+
+![](img/seagull.jpg){width="75%"}
+
+::::
+
+:::
+
+## Introductions
 
 ::: {.columns .nonincremental}
 
@@ -65,25 +86,6 @@ library(easystats)
 
 :::
 
-## Managing expectations
-
-::: {.columns}
-
-:::: {.column width=50%}
-
-- **Learn Bayesian by understanding Frequentist**
-- Build on existing knowledge and "demystify" Bayesian statistics
-- Provide a bird's eye view of Bayesian statistics applied to statistical models
-
-:::: 
-
-:::: {.column width=50%}
-
-![](img/seagull.jpg){width="75%"}
-
-::::
-
-:::
 
 ## Frequentist Refresher {.center background-color="black" background-image="img/Brighton_pier.png" background-opacity=0.3}
 
@@ -960,7 +962,7 @@ parameters::parameters(model, effects="fixed")
 
 :::: {.column width="50%"}
 
-- **Bayesian statistics** has a lot more to offer
+- There is a lot more to **Bayesian statistics**
   - Inference algorithms (MCMC, ...)
   - Priors
   - Model comparison
