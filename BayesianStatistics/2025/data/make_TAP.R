@@ -36,7 +36,7 @@ df <-  filter(df, Gender %in% c("Female", "Male"))
 
 
 df |>
-  dplyr::select(Age, Gender, Anxiety=STAI5_General, Interoception, MoodDisorder) |>
+  dplyr::select(Age, Gender, Anxiety=STAI5_General, Interoception, MoodDisorder, Depression=BDI2_Total) |>
   write.csv("tap2.csv", row.names=FALSE)
 
 
@@ -45,6 +45,3 @@ df |>
 #
 # plot(estimate_relation(m))
 
-df |>
-  dplyr::select(Interoception, Gender, Depression=BDI2_Total, Interoception, MoodDisorder) |>
-  write.csv("tap2_resit.csv", row.names=FALSE)
