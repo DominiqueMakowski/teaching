@@ -7,7 +7,7 @@ I also offer workshops to external universities (see [here for details](https://
 
 *2025* - University of Sussex (Masters & PhDs)
 
-- [Lecture 0](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/1_RefreshR)
+- [Lecture 0](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/0_RefreshR)
 - [Lecture 1](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/1_Distributions)
 
 *12/2024* - University of Paris-Cité (LaPsyDé Workshop)
