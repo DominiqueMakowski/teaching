@@ -7,10 +7,10 @@ I also offer workshops to external universities (see [here for details](https://
 
 *2025* - University of Sussex (Masters & PhDs)
 
-- Lecture 1:
+- **Lecture 1:**
     - [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/0_RefreshR): R basics
     - [Distributions](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/1_Distributions): The Normal distribution
-- Lecture 2:
+- **Lecture 2:**
     - [Distributions](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/1_Distributions): Other distributions
     - [Frequentist Framework](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/2_Frequentist)
 
