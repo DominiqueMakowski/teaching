@@ -105,6 +105,9 @@ df |>
   theme_bw() 
 ```
 
+## Regression Parameters {.center background-color="#003B49"}
+
+
 ## Quizz {background-color="#FFAB91"}
 
 ::: {.stretch}
@@ -271,34 +274,34 @@ summary(model)
 
 ## Unit sensitivity
 
-- What happens if you divide the predictor by 10?
-  - Will it change the model? Will it make the effect less significant? Will change the coefficient?
-
 ```{r}
 #| echo: true
-#| eval: false
 
 df <- mtcars
 df$qsec10 <- df$qsec / 10
 model <- lm(mpg ~ qsec10, data=df)
-summary(model)
 ```
+
+- What happens if you divide the predictor by 10?
+  - Will it change the model? Will it make the effect less significant? Will change the coefficient?
+
 
 ::: {.fragment}
 
 ```{r}
-#| echo: false
+#| echo: true
 #| eval: true
 
-df <- mtcars
-df$qsec10 <- df$qsec / 10
-model <- lm(mpg ~ qsec10, data=df)
 summary(model)
 ```
 
 :::
 
 - Raw coefficient in a regression model are unit dependent (it is important to know the scale of your variables for interpreting the coefficients)
+
+
+## Frequentist Estimation {.center background-color="#003B49"}
+
 
 ## Ordinary Least Squares (OLS)
 
