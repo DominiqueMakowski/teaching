@@ -612,12 +612,16 @@
 <h2>Vectors vs.&nbsp;Lists (2)</h2>
 <ul>
 <li class="fragment">A <strong>list</strong> is a container of named elements of <strong>any kind</strong>, indexed by their <strong>name</strong></li>
+<li class="fragment">The order of things doesn’t matter (unlike in a vector)</li>
+<li class="fragment">We can extract elements via their <strong>names</strong> (instead of via their index)</li>
 </ul>
+<div class="fragment">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var1 =</span> <span class="st">"some text"</span>, <span class="at">var2 =</span> <span class="dv">30</span>, <span class="at">var3 =</span> x)</span>
 <span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a>mylist<span class="sc">$</span>var3 <span class="co"># = mylist[["var3"]]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0 1 2</code></pre>
+</div>
 </div>
 </div>
 <div class="fragment">
@@ -994,7 +998,7 @@ $var4
 <span id="cb37-9"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb37-10"><a href="" aria-hidden="true" tabindex="-1"></a>myseq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 2.3 1.8 1.6 1.8 1.8 2.2 2.0 1.7 1.8 1.8</code></pre>
+<pre><code> [1] 1.7 2.1 1.8 1.8 2.7 2.2 1.6 1.9 2.2 1.9</code></pre>
 </div>
 </div>
 </div>

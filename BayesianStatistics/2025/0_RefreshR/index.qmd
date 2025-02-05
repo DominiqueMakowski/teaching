@@ -231,6 +231,10 @@ x[2]
 
 
 - A **list** is a container of named elements of **any kind**, indexed by their **name**
+- The order of things doesn't matter (unlike in a vector)
+- We can extract elements via their **names** (instead of via their index)
+
+::: {.fragment}
 
 ```{r}
 #| echo: true
@@ -238,6 +242,8 @@ x[2]
 mylist <- list(var1 = "some text", var2 = 30, var3 = x)
 mylist$var3 # = mylist[["var3"]]
 ```
+
+::: 
 
 ::: {.fragment}
 
