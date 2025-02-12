@@ -1146,7 +1146,7 @@ p
 
 means <- c()  # Initialize an empty vector
 for(i in 1:10000) {  # Iterate
-  x <- rbeta(100, shape1 = 10, shape2 = 1.5)
+  x <- rnorm(100, 5, 10)
   means <- c(means, mean(x))
 }
 ```
@@ -1165,7 +1165,7 @@ for(i in 1:10000) {  # Iterate
 
 means <- c()  # Initialize an empty vector
 for(i in 1:10000) {  # Iterate
-  x <- rbeta(100, shape1 = 10, shape2 = 1.5)
+  x <- rnorm(100, 5, 10)
   means <- c(means, mean(x))
 }
 
