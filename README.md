@@ -15,7 +15,10 @@ I also offer workshops to external universities (see [here for details](https://
     - [Frequentist Framework](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/2_Frequentist): Until slide 13
 - **Lecture 3:**
     - [Frequentist Framework](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/2_Frequentist)
+    - [Bootstrapping](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/3_Bootstrapping): Until slide 34
+- **Lecture 4:**
     - [Bootstrapping](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/3_Bootstrapping)
+    - [Bayesian Theorem](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/4_BayesTheorem)
 
 *12/2024* - University of Paris-Cité (LaPsyDé Workshop)
 

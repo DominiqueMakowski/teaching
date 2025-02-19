@@ -1,0 +1,695 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**4. On Bayes' Theorem**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+```
+
+## What are Probabilities {.center background-color="#1A237E"}
+
+
+## Probabilities? It's *probably* ambiguous
+
+::: {.columns}
+
+:::: {.column width="70%"}
+
+- Despite its ubiquity, the concept of *probability* is actually quite ambiguous
+- Classical meaning:
+  - $P(event~A) = \frac{number\ of\ of\ events\ A}{number\ of\ possible\ events} = \frac{4}{8} = 0.5$
+  - This formula only works when there is a **finite number** of equiprobable outcomes
+  - What is the probability of raining tomorrow? 
+  - $P(rain) = \frac{rain}{\{rain,~no~rain\}} = \frac{1}{2}$
+  - That doesn't seem right...
+- Typical conceptualization of probabilities applies to *series*, not to single events
+- But **what about non-repeatable events?** What is the probability of you learning something new during this course?
+
+::::
+
+:::: {.column width="30%"}
+
+![](img/meme_probabilities.jpg){width=100%}
+
+::::
+
+::: 
+
+
+## Epistemic vs. Physical Probabilities
+
+::: {style="font-size: 85%;"}
+
+- Traditional definitions of probability conceptualize them as **physical** probabilities
+  - Probabilities depend on a state of the world, on physical characteristics, and are independent of available information (or uncertainty)
+- This can be opposed to an **epistemic** <sub><sup>(related to knowledge)</sup></sub> view of probabilities, where probabilities correspond to a **degree of belief**
+- In the Bayesian sense, all probabilities are **conditional** on available information (e.g., premises or data)
+- Probability is used as a means of **quantifying uncertainty**
+    - An event that is certain will therefore have a probability of 1 and an event that is impossible will have a probability of 0
+  - Probabilities depend on the information available to the observer
+  - Probabilities are a measure of the observer's belief
+  - Probabilities are "subjective"
+
+:::: {.fragment}
+
+> So to assign equal probabilities to two events is not in any way an assertion that they must occur equally often in any random experiment [...], it is only a formal way of saying *I don’t know* (Jaynes, 1986).
+
+::::
+
+:::
+
+## In Psychology
+
+- This distinction is directly relevant for empirical psychology
+- In the overwhelming majority of cases, psychologists are interested in making probabilistic statements about **single events**
+  - A hypothesis is either true or not
+  - An effect is either zero or not; the effect size is likely to be between X and Y
+  - One model or the other is more likely given the data
+  - ...
+- Even when we are interested in serise of events, we don't have **infinite** data. How many observations are enough?
+- On top of all the practical limitations of the Frequentist approach, it might seem that the Frequentist philosophy itself is not appropriate for psychology
+  - **This is debatable**
+  - Some experts ("neofrequentists") argue that Frequentist statistics are actually perfectly suited for their purpose
+
+## Take home message
+
+- From now on, we will use probabilities to express our (subjective) *degree of certainty* about something.
+
+
+## Bayes' Theorem {.center background-color="#1A237E"}
+
+
+## Probabilities: Notation
+
+- $(A)$ is an event: a statement that can be true or false
+- $P(A)$: probability of event $A$
+- $(A, B)$ is a joint event: A and B are both true
+  - $P(A, B) = P(B, A)$
+- $(A|B)$ is a **conditional event**: A is true if B is true
+  - Independence means $P(A) = P(A|B)$
+- $P(A|B) \ne P(B|A)$
+  - The probability of dying knowing that you did a backflip is not the same as the probability of doing a backflip knowing that you are dead ("confusion of the inverse")
+
+## Product Rule of Probability
+
+- The **Product Rule of probability**: $P(A, B) = P(B)~P(A|B) = P(A)~P(B|A)$
+- The probability that A and B are both true is equal to the probability of B multiplied by the conditional probability of A assuming B is true
+- As a consequence: $P(A|B) = \frac{P(A, B)}{P(B)}$
+- As a consequence: $P(A|B) = \frac{P(A)~P(B|A)}{P(B)}$
+- **THIS IS BAYES' THEOREM!**
+
+## Thomas Bayes
+
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- $P(A|B) = \frac{P(A)~P(B|A)}{P(B)}$
+- Thomas Bayes (1701-1761) was an English statistician, philosopher and Presbyterian minister
+- He is best known for his work in probability theory
+- Bayes never actually published what would become his most famous accomplishment; his notes were edited and published posthumously
+- Ironically, he is not the "biggest" name in the field of Bayesian statistics. It is later authors who applied his ideas to develop a new statistical framework
+
+::::
+:::: {.column .nonincremental}
+
+![](img/Thomas_Bayes.gif)
+
+*Only portrait Thomas Bayes. But probably not him.*
+
+::::
+
+:::
+
+  
+## Bayes' Theorem
+
+- $P(A|B) = \frac{P(A)~P(B|A)}{P(B)}$
+- P(A|B): How likely A given the information about B
+- P(A) and P(B): Probability of A or B occurring on its own, without any information about the other
+  - It's our initial (*prior*) beliefs about A and B
+  - P(B) is the *marginal* probability of B, and is often just a normalizing constant (so that the total probability = 1). **The important part of the formula is the numerator**
+- P(B|A): Probability of B occurring given that A has already occurred. It quantifies how likely B is when we know A has happened
+  - It is the *likelihood* of B given A
+- Bayes' Theorem allows us to update our belief about the probability of A happening (*P(A|B)*) based on new evidence provided by the occurrence of B. It combines our initial belief (*P(A)*), the likelihood of B happening when A is true (*P(B|A)*), and the overall likelihood of B (*P(B)*) to calculate this (*a posteriori*) updated probability
+
+## Bayesian inference
+
+- Bayesian inference is the application of the product rule of probability to real problems of inference
+- "Bayesian inference is really just counting and comparing of possibilities [...] in order to make good inference about what actually happened, it helps to consider everything that could have happened" (McElreath, 2016)
+- "The first idea is that Bayesian inference is **reallocation of credibility across possibilities**. The second foundational idea is that the possibilities [i.e., the "hypotheses"], over which we allocate credibility, are **parameter values in meaningful mathematical models**" (Kruschke, 2015)
+  - In other words, we start with (priors) beliefs about the *distribution* of parameters of models, and we "simply" reallocate these probabilities after seeing the data
+  - Bayesian inference allows to compute or approximate the likelihood (think **density plot**) of different parameter values of a statistical model given the data
+
+## Bayesian inference in practice
+
+- In science, we are interested in the probability of a hypothesis $H$, given the data $X$
+  - $= P(H|X)$
+- Before any data is collected, the researcher has some level of prior belief $P(H)$ in this hypothesis 
+- $P(X|H)$: The researcher also has a model that makes specific predictions about the outcome given the data X (e.g., a linear model)
+  - This models tells how strongly the data are implied by a hypothesis
+- Bayes' theorem tells us that $P(H|X) =\frac{P(H)~P(X|H)}{P(X)}$ <sub><sup>(replaced A with H and B with X)</sup></sub>
+- In words: The probability of a hypothesis given the data is equal to the probability of the hypothesis before seeing the data, multiplied by the probability that the data occur if that hypothesis is true, divided by the probability of the observed data
+
+
+## The Cop, the Gentleman and the Sketchy Looking Guy {.center background-color="#1A237E"}
+
+![](./img/copsketchy.webp)
+
+## The Cop
+::: {style="font-size: 80%; "}
+- You are an undercover policeman tasked with catching street criminals that invite people to play a coin toss game with rigged coins
+- You know that 5 types of coins exist...
+  - The coin might be **fair** (50% tails - 0; 50% heads - 1)
+    - `sample(c(0, 1), 1, prob=c(0.5, 0.5))`
+  - The coin might be slightly imperfect and land on **heads** 60% of the time
+    - `sample(c(0, 1), 1, prob=c(0.4, 0.6))`
+  - The coin might be slightly imperfect and land on **heads** 40% of the time
+    - `sample(c(0, 1), 1, prob=c(0.6, 0.4))`
+  - The coin might be deliberately **rigged** to land on **heads** 70% of the time
+    - `sample(c(0, 1), 1, prob=c(0.3, 0.7))`
+  - The coin might be deliberately **rigged** to land on **heads** 30% of the time
+    - `sample(c(0, 1), 1, prob=c(0.7, 0.3))`
+- Your goal is to see if we can quickly infer the type of coin used by potential criminals by playing the game
+
+:::
+
+## The Gentleman
+
+- You come across a very proper and good-looking gentleman that propose to play the game and guess what the outcome of the coin toss will be
+- We bet that it's heads (1), and the result is... heads!
+- What is the probability that the coin is fair (50%/50%)?
+- Let's call on Uncle Bayes to help us out. To apply Bayes' theorem, we need:
+  - Data: the first coin toss gave heads (1) 
+  - A likelihood model
+  - Priors
+
+## Likelihood Model
+
+- A likelihood model is a model that links predictors with outcomes (a predictor variable value of X generates a dependent variable value of y)
+- The likelihood of an event is the probability of that event according to various values of the predictor(s) following the likelihood model
+- What is the likelihood of obtaining heads given various possibilities (types of coin)?
+  - Corresponds to probability of a "heads" outcome given each value of the **parameter space** (here, 5 discrete values of coin type)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+cointypes <- c(0.3, 0.4, 0.5, 0.6, 0.7)  # Probability of heads
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+likelihood_heads <- c(0.3, 0.4, 0.5, 0.6, 0.7)  # Likelihood is the same
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 4
+
+d <- data.frame(cointypes=cointypes, likelihood_heads=likelihood_heads)
+
+d |> 
+  ggplot(aes(x=cointypes, y=likelihood_heads)) +
+  geom_line(color="red") + 
+  geom_point(size=3, color="red") +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Likelihood of heads") +
+  theme_bw()
+```
+
+:::
+
+
+
+## Priors
+
+
+- What is our prior belief about the probability of each type of coin being used?
+  - The Gentleman is attractive and looks very honest
+  - We assign a high prior probability to the coin being fair ("3")
+  - It is also *fairly* possible that the coin is slightly imperfect ("2")
+  - Given how honest the man looks, we think it's *unlikely* that the coin is rigged ("1")
+
+::: {.fragment}
+```{r}
+#| echo: true
+
+# cointypes: [0.3, 0.4, 0.5, 0.6, 0.7]
+
+prior <- c(1, 2, 3, 2, 1)  # We assign "weights" to each coin type
+prior <- prior / sum(prior)  # Normalize it so that the total = 1
+prior
+```
+:::
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 2
+
+d$prior <- prior
+
+d |> 
+  ggplot(aes(x=cointypes, y=prior)) +
+  geom_line(color="blue") + 
+  geom_point(size=3, color="blue") +  
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Prior Probability") +
+  theme_bw()
+```
+:::
+
+
+## Apply Bayes's Theorem
+
+- The posterior is proportional to the prior and the likelihood (note that we ignore the denominator, also referred to as "the constant of proportionality" by normalizing so that the probabilities sum to 1)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Posterior probabilities given the head
+posterior <- prior * likelihood_heads
+posterior <- posterior / sum(posterior)
+posterior
+```
+
+:::
+
+- The probabilities represent our updated beliefs after seeing the data (one coin toss)
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3
+
+data <- data.frame(cointypes=cointypes,
+                   posterior=posterior,
+                   n = 1,
+                   result = 1) 
+
+data |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(data=d, aes(y=prior, color="Prior")) +
+  geom_point(data=d, aes(y=prior, color="Prior"), size=3) +
+  geom_line(aes(color="Posterior"), linewidth=1) + 
+  geom_point(aes(color="Posterior"), size=3) +  
+  scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 1 coin toss") +
+  theme_bw()
+```
+:::
+
+## Second Toss
+
+- It's a head again!
+- We can update our posterior probabilities again but this time, by starting taking the previous posterior as new prior
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+prior <- posterior
+
+# Update
+posterior <- prior * likelihood_heads
+posterior <- posterior / sum(posterior)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3
+
+data <- rbind(data, 
+              data.frame(cointypes=cointypes,
+                   posterior=posterior,
+                   n = 2,
+                   result = 1))
+
+data[data$n==2, ] |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(data=d, aes(y=prior, color="Prior")) +
+  geom_point(data=d, aes(y=prior, color="Prior"), size=3) +
+  geom_line(aes(color="Posterior"), linewidth=1) + 
+  geom_point(aes(color="Posterior"), size=3) +  
+  scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 2 coin tosses") +
+  theme_bw()
+```
+:::
+
+
+## Exercice 1
+
+- Third toss, it's head sagain!
+- Compute the new posterior probabilities
+- What can we conclude?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+prior <- posterior
+  
+# Update
+posterior <- prior * likelihood_heads
+posterior <- posterior / sum(posterior)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3
+
+data <- rbind(data, 
+              data.frame(cointypes=cointypes,
+                   posterior=posterior,
+                   n = 3,
+                   result = 1)) 
+
+data[data$n==3, ] |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(data=d, aes(y=prior, color="Prior")) +
+  geom_point(data=d, aes(y=prior, color="Prior"), size=3) +
+  geom_line(aes(color="Posterior"), linewidth=1) + 
+  geom_point(aes(color="Posterior"), size=3) +  
+  scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 3 coin tosses") +
+  theme_bw()
+```
+:::
+
+## Change of Beliefs
+
+- We started with a certain prior beliefs in which the most likely coin was the fair one
+- After seeing 3 heads in a row, the most likely outcome has now changed
+- This "most likely outcome" is an index that we have seen before in the context of distribution description known as...
+- The **MAP** (Maximum A *Posteriori*) estimate
+
+
+## Sequential Evidence Accumulation
+
+- How many consecutive tails should we observe to change our beliefs to favour the biased (0.3) coin?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+likelihood_tails <- c(0.7, 0.6, 0.5, 0.4, 0.3)
+for(n in 4:10) {
+  posterior <- posterior * likelihood_tails
+  posterior <- posterior / sum(posterior)
+}
+```
+:::
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3
+
+likelihood_tails <- c(0.7, 0.6, 0.5, 0.4, 0.3)
+for(n in 4:20) {
+  posterior <- posterior * likelihood_tails
+  posterior <- posterior / sum(posterior)
+  
+  newdata <- data.frame(cointypes=cointypes,
+                        posterior=posterior,
+                        n = n,
+                        result = 0)
+  
+  data <- rbind(data, newdata) 
+}
+
+data[data$n >= 4, ] |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  # geom_line(data=d, aes(y=prior), color="blue") +
+  # geom_point(data=d, aes(y=prior), color="blue") +
+  geom_line(aes(color=n, group=n), linewidth=1) + 
+  # geom_point(aes(color="Posterior", alpha=n, group=n), size=3) +  
+  scale_color_viridis_c(option = "magma") +
+  # scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  # scale_alpha_continuous(breaks = 1:max(data$n), range = c(0.1, 1)) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 20 coin tosses") +
+  theme_bw()
+```
+:::
+
+- We can see how the evidence accumulates over time depending on the data (and of our priors)
+
+## Back to the problem
+
+- Let's go back to our original problem. We want to know if the coin is fair or not, but we don't have 20 tosses to spare.
+- We have limited time and resources, so we need to make a decision as soon as possible
+- Let's say we have only 3 tosses, and all of them are "heads" (as before)
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3
+
+data[data$n==3, ] |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(data=d, aes(y=prior, color="Prior")) +
+  geom_point(data=d, aes(y=prior, color="Prior"), size=3) +
+  geom_line(aes(color="Posterior"), linewidth=1) + 
+  geom_point(aes(color="Posterior"), size=3) +  
+  scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 3 coin tosses") +
+  theme_bw()
+```
+:::
+
+- After 3 tosses, we conclude that the coin is most likely the Imperfect (0.6), which is fine, we won't put him to prison
+
+## The Sketchy Looking Guy
+
+- Now, on the next dodgy street, we find a super sketchy looking guy that invites us to play the same game
+- He has a coin that he claims is fair, but we don't trust him
+- We play we him, and we also have 3 heads in a row (same result as before)
+- What can we conclude?
+- **It depends**... In Bayesian statistics, the conclusion depends on the prior beliefs
+
+## Different Priors {.nostretch}
+
+- The likelihood is the same as before
+
+:::: {.fragment}
+
+```{r}
+#| fig-height: 1.5
+
+d <- data.frame(cointypes=cointypes, likelihood_heads=likelihood_heads)
+
+d |> 
+  ggplot(aes(x=cointypes, y=likelihood_heads)) +
+  geom_line(color="red") + 
+  geom_point(size=3, color="red") +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Likelihood of heads") +
+  theme_bw()
+```
+::::
+
+- But we have different prior beliefs is different
+
+::: {.fragment}
+```{r}
+#| echo: true
+
+prior <- c(3, 2, 1, 2, 3)  # We assign "weights" to each coin type
+prior <- prior / sum(prior)  # Normalize it so that the total = 1
+prior
+```
+:::
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 2
+
+d$prior <- prior
+
+d |> 
+  ggplot(aes(x=cointypes, y=prior)) +
+  geom_line(color="blue") + 
+  geom_point(size=3, color="blue") +  
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Prior Probability") +
+  theme_bw()
+```
+:::
+
+## Update posterior
+
+- We can update the posterior after seeing 3 heads in a row
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+for(n in 1:3) {
+  posterior <- prior * likelihood_heads
+  posterior <- posterior / sum(posterior)
+  prior <- posterior
+}
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3
+
+data.frame(cointypes=cointypes, posterior=posterior) |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(data=d, aes(y=prior, color="Prior")) +
+  geom_point(data=d, aes(y=prior, color="Prior"), size=3) +
+  geom_line(aes(color="Posterior"), linewidth=1) + 
+  geom_point(aes(color="Posterior"), size=3) +  
+  scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 3 coin tosses (Sketchy guy)") +
+  theme_bw()
+```
+:::
+
+- We can see that the posterior is different from the previous case
+- We conclude that the coin is most likely the Biased (0.)
+- In any case, we put the sketchy guy in jail. Thanks, maths!
+
+## What? I can tweak my results by tweaking the prior? It feels *illegal*
+
+- Yes, the results depend on the priors. And it's a good thing (we'll come back to that)
+- Priors are not necessarily subjective
+- Results converge to the same posterior with enough data (if the data is clear, the results are clear regardless of the prior)
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3.5
+
+posterior1 <- c(1, 2, 3, 2, 1)  # We assign "weights" to each coin type
+posterior1 <- posterior1 / sum(posterior1)  
+
+posterior2 <- c(3, 2, 1, 2, 3)
+posterior2 <- posterior2 / sum(posterior2)
+
+dat <- data.frame()
+for(n in 1:40) {
+  posterior1 <- posterior1 * likelihood_heads
+  posterior1 <- posterior1 / sum(posterior1)
+  
+  posterior2 <- posterior2 * likelihood_heads
+  posterior2 <- posterior2 / sum(posterior2)
+  dat <- rbind(dat, 
+               data.frame(cointypes=cointypes, posterior=posterior1, prior_type="Prior Good Guy", nobs=n),
+               data.frame(cointypes=cointypes, posterior=posterior2, prior_type="Prior Sketchy Guy", nobs=n))
+  }
+
+dat |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(aes(color=nobs, group=nobs), linewidth=1) + 
+  scale_color_viridis_c(option = "B") +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Posterior Probability", title="After 40 coin tosses") +
+  theme_bw() +
+  facet_grid(~prior_type)
+```
+:::
+
+
+## Conclusion
+
+- Bayesian statistics are an elegant framework to update probabilities based on evidence
+- $P(H|X)=P(H)~P(X|H)$
+  - The probability of a hypothesis given the data is proportional to the prior probability of the hypothesis times the likelihood of the data given the hypothesis
+- It allows us to quantify the probability of a hypothesis **given the data**, whereas in Frequentist statistics, we can only quantify the probability of the data (data is random!) given a (null) hypothesis. Basically, it is the opposite answer.
+- While stemming from a simple theorem, it has deep consequences and powerful applications...
+
+
+## Homework
+
+::: {.nonincremental .stretch}
+
+- Watch Andy's video (link will be added to Canvas)
+  - https://youtu.be/DjpxTmiombE?si=colYgBLaD2t8bBSo&t=1413
+
+<!-- {{< video https://youtu.be/DjpxTmiombE?si=colYgBLaD2t8bBSo start="1423" width="800" height="500" >}} -->
+
+:::
+
+
+
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
