@@ -18,7 +18,10 @@ I also offer workshops to external universities (see [here for details](https://
     - [Bootstrapping](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/3_Bootstrapping): Until slide 34
 - **Lecture 4:**
     - [Bootstrapping](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/3_Bootstrapping)
+    - [Bayesian Theorem](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/4_BayesTheorem): Until slide 28
+- **Lecture 5:**
     - [Bayesian Theorem](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/4_BayesTheorem)
+    - [Bayes Factors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/5_BayesFactors)
 
 *12/2024* - University of Paris-Cité (LaPsyDé Workshop)
 

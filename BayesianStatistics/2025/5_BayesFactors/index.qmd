@@ -1,0 +1,1145 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**5. Bayes Factors**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+```
+
+## Recap {.center background-color="#1A237E"}
+
+- We learned about the **Bayes' Theorem**: 
+  - $P(H|X) =\frac{P(H)~P(X|H)}{P(X)}$
+- And how it can be used to update our beliefs about a hypothesis given new data
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3.5
+
+cointypes <- c(0.3, 0.4, 0.5, 0.6, 0.7)
+posterior <- c(1, 2, 3, 2, 1)  # We assign "weights" to each coin type
+posterior <- posterior / sum(posterior)  
+likelihood <- c(0.3, 0.4, 0.5, 0.6, 0.7) 
+
+dat <- data.frame()
+for(n in 1:3) {
+  posterior <- posterior * likelihood
+  posterior <- posterior / sum(posterior)
+
+  dat <- rbind(dat, 
+               data.frame(cointypes=cointypes, posterior=posterior, prior_type="Prior", nobs=n, 
+                          prior = c(1, 2, 3, 2, 1) / 9))
+  }
+
+dat[dat$n==3, ] |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(data=dat[dat$n==1, ], aes(y=prior, color="Prior")) +
+  geom_point(data=dat[dat$n==1, ], aes(y=prior, color="Prior"), size=3) +
+  geom_line(aes(color="Posterior"), linewidth=1) + 
+  geom_point(aes(color="Posterior"), size=3) +  
+  scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 3 coin toss") +
+  theme_bw()
+```
+
+:::
+
+
+
+
+## Final nail in the coffin for the *p*-value
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+<!-- ![](img/LuciferLikesP.jpg){width="30%"} -->
+![](img/BayesBurstsThePValueBalloon.jpg){width="45%"} 
+
+- Another thing often heard about the *p*-value is that it can only be used to **reject** the **null hypothesis** (effect = 0), not as an index of evidence **in favour of the null**
+- This is because the *p*-value, by definition, is **uniformly distributed** under the null hypothesis
+  - This means that, if the null hypothesis is true, all values of the *p*-value are equally likely; *p* = .001 is just as likely as *p* = 1
+
+
+
+::::
+
+:::: {.column}
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+p <- c()
+for(i in 1:10000) {
+  x <- rnorm(100)
+  y <- rnorm(100)
+  test <- cor.test(x, y)
+  p <- c(p, test$p.value)
+}
+
+data.frame(p = p) |> 
+  ggplot(aes(x=p)) +
+  geom_histogram(bins=40, color="white", fill="grey") +
+  labs(x="p-values", y="Count") +
+  theme_bw()
+```
+
+:::::
+
+::::
+
+:::
+
+## Evidence against the null hypothesis?
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Altough Frequentists recently came up with some workarounds (region of practical equivalence testing), it is still seen as a limitation of the Frequentist framework
+- This is problematic in science because we are often interested in disproving a hypothesis, or proving that there is no effect
+- Does Uncle Bayes have a trick in his hat?
+
+::::
+
+:::: {.column}
+
+![](img/BayesMagic.jpg)
+
+
+::::
+
+:::
+
+## The "Likelihood" as a *known* model
+
+::: {.columns}
+
+:::: {.column width="55%" style="font-size: 85%;"}
+
+- **Bayes' Theorem**: $P(H|data) =P(H)~P(data|H)$
+  - Bayes' theorem relates the probability of a hypothesis (H) given some observed evidence (data X) to the probability of data given the hypothesis, as well as the prior probability of the hypothesis
+- $P(data|H)$ is the **likelihood** of the data given a hypothesis
+- It typically corresponds to a "model of the world"
+- In the previous example, we had "the model" of coin tosses. We know the likelihood of outcomes given various coin types because it corresponds to a physical reality (a fair coin gives 50% heads). So the "model" was obvious and easy to define.
+
+
+::::
+
+:::: {.column width="45%" style="font-size: 80%;"}
+
+::::: {.fragment}
+
+![](img/likelihood1.png)
+
+:::::
+
+- Conceptually, in this experiment:
+  - The **likelihood** was a statistical model linking a parameter ***x*** (the probability by which a coin is biased towards heads: 0.3, 0.4, 0.5, 0.6, 0.7) to the outcome (heads). 
+  - The **prior** corresponded to the distribution of our credibility across the different possible ***x*** values.
+  - The **posterior** corresponded to the updated distribution of our credibility across the different possible ***x*** values after observing the data (coin tosses).
+
+::::
+
+:::
+
+## The "Likelihood" as a model with *probabilistic* parameters
+
+
+::: {.columns}
+
+:::: {.column width="65%"}
+
+- We often have general beliefs about probabilistic models. 
+  - *What are the odds that more type of coints exist?* 
+  - *What are the odds that my model of the coin is True*
+  - ...
+- In practice, the model's likelihood depends on uncertain parameter over which we have other priors, or a combination of priors (e.g., Intercept + Slope)
+
+::::
+
+:::: {.column width="35%"}
+
+![](img/likelihood2.png)
+
+
+::::
+
+:::
+
+- The "likelihood", as well as the "hypothesis", can represent different things (a statistical model, beliefs about whether a general hypothesis is True, etc.)
+- Problems can be specified in different ways (it is flexible framework)
+- In typical real-life statistical scenarios, the **likelihood** term $P(data|H)$ is very complex to establish mathematically (i.e., it is hard to compute/approximate it)
+- But it is not impossible. And accessing the likelihood is very useful...
+  
+## The "Likelihood": Summary
+
+- The likelihood $P(data|H)$ represents "the probability of the data given a hypothesis"
+- This hypothesis can be:
+  - A statistical model with fixed and known parameters (e.g., $y = 2x + 3$)
+  - A statistical model with unknown (probabilistic) parameters (e.g., $y = \beta x + Intercept$ with $\beta \sim Normal(0, 1)$ and $Intercept \sim Normal(3, 2)$)
+  - Any other statement about the world (e.g., a hypothesis like "this model is *true*")
+- Mathematically computing the value of $P(data|H)$ is hard (aside from the first case)
+
+## Bayes Factor (BF) 
+
+- Bayes' theorem provides a natural way to test hypotheses and compare models. Suppose we have two competing hypotheses: **H1** and an alternative hypothesis **H0**
+- What if we compared the likelihood of the data given two competing hypotheses (i.e., models)?
+  - $P(data|H_{0})$ / $P(data|H_{1})$
+- This ratio of likelihoods is known as the **Bayes Factor** (BF)
+  - It quantifies the relative strength of evidence in favor of **one hypothesis over another** based on the observed evidence (data)
+  - It tells us how much more likely the data (evidence) is under one hypothesis compared to another (often taking into account prior probabilities in the definition of the likelihood model)
+- $BF_{10} = \frac{P(data|H_{1})}{P(data|H_{0})}$
+- $BF_{01} = \frac{P(data|H_{0})}{P(data|H_{1})}$
+  - Note the convention of writing what is the numerator
+
+<!-- - From Bayes' theorem, it follows that:  -->
+<!-- - $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior~odds} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior~odds}$ -->
+
+## BFs with BIC approximation
+
+- The Bayes Factor is a ratio of likelihoods, which is often difficult to compute, especially for Bayesian models where parameters are themselves probabilistic
+- Wagenmakers (2007)^[Wagenmakers, E. J. (2007). A practical solution to the pervasive problems of p values. Psychonomic bulletin & review, 14(5), 779-804.] <sub><sup>*(one of the principal proponent of Bayes factors)*</sup></sub> proposed an approximation of the Bayes Factor based on the **Bayesian Information Criterion** (BIC), that can easily be computed for traditional Frequentist models (e.g., linear models)
+- $BF_{01} \approx exp(\frac{BIC_{1} - BIC_{0}}{2})$
+
+## Model 0: qsec ~ mpg
+
+::: {.columns}
+
+:::: {.column width="50%"}
+```{r}
+#| echo: true
+
+head(mtcars[c("mpg", "qsec", "wt")])
+
+mtcars |> 
+  ggplot(aes(x=mpg, y=qsec)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = "y ~ x") +
+  theme_bw()
+```
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+model0 <- lm(qsec ~ mpg, data = mtcars)
+summary(model0)
+```
+
+:::::
+
+- `mpg` is a significant predictor of `qsec` ($\beta$ = 0.12, *p* < .05)
+- Is it worth it to add another predictor? Does it improve the model?
+
+::::
+
+:::
+
+## Model 1: qsec ~ mpg + wt
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+```{r}
+#| echo: true
+
+mtcars |> 
+  ggplot(aes(x=wt, y=qsec)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = "y ~ x") +
+  theme_bw()
+```
+
+- Do you think adding `wt` will improve the model?
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+model1 <- lm(qsec ~ mpg + wt, data = mtcars)
+summary(model1)
+```
+
+:::::
+
+- Be careful! A model with multiple predictors is different from individual models taken separately (because variables interact with each other)
+
+
+::::
+
+:::
+
+- Is **model1** better than **model0**?
+- Higher R2, but more parameters (more complex model). Comparing BICs is an alternative that takes into account the number of parameters
+
+## Extract BICs
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+perf0 <- performance::performance(model0)
+perf0
+```
+
+::::
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+bic0 <- perf0$BIC
+bic0
+```
+
+::::
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+bic1 <- performance::performance(model1)$BIC
+bic1
+```
+
+::::
+
+- Normally, the lower the BIC, the better the model
+- Hard to interpret in absolute terms (the unit is meaningless), but we can compare models (if they are related to the same data)
+
+## Compare BICs
+
+- $BF_{10} \approx exp(\frac{BIC_{0} - BIC_{1}}{2})$
+- We can apply the formula to `bic1` and `bic0`
+
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+bf10 <- exp((bic0 - bic1) / 2)
+bf10
+```
+
+::::
+
+- You computed an approximation of the Bayes Factor "by hand"!
+
+## Using `bayestestR`
+
+```{r}
+#| echo: true
+
+bayestestR::bayesfactor_models(model1, denominator=model0)
+```
+
+
+## BF10 vs. BF01
+
+- Bayes factors are a **ratio** of likelihood of data under some hypothesis
+- They quantify "how much" the data is more likely under one model compared to another
+- $BF_{10} = 3.80$ means the data is 3.80 times more likely under **model1** than **model0**
+- **Importantly**, BFs are "reversable":
+- $BF_{01} = \frac{1}{BF_{10}} = 1 / 3.80 = 0.263$
+- The data is 0.26 times more likely under **model0** than **model1**
+- We gather evidence **both ways** (in *favour* or *against* a hypothesis)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::bayesfactor_models(model0, denominator=model1)
+```
+
+:::
+
+- Is this "big"? How to interpret BFs?
+
+## Bayes Factor Interpretation
+
+::: {style="font-size: 90%"}
+
+- The standard threshold for a "significant" BF is 3 or 10
+  - *Jeffreys, H. (1961), Theory of Probability, 3rd ed., Oxford University Press, Oxford*
+
+:::: {.fragment}
+
+| Bayes Factor ($BF_{10}$)       | Interpretation        |
+|--------------------|-----------------------------------|
+| > 100              | Extreme evidence for H1           |
+| 30 – 100           | Very strong evidence for H1       |
+| 10 – 30            | Strong evidence for H1            |
+| 3 – 10             | Moderate evidence for H1          |
+| 1 – 3              | Anecdotal evidence for H1         |
+| 1                  | No evidence                       |
+| 1/3 – 1            | Anecdotal evidence for H0         |
+| 1/3 – 1/10         | Moderate evidence for null H0     |
+| 1/10 – 1/30        | Strong evidence for null H0       |
+| 1/30 – 1/100       | Very strong evidence for H0       |
+| < 1/100            | Extreme evidence for H0           |
+
+::::
+
+:::
+
+## Bayes Factor Interpretation
+
+- The `effectsize` package provides many automated interpretation functions
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+effectsize::interpret_bf(bf10)
+```
+
+:::
+
+- Note that because BFs can be very big or very small, they are sometimes presented on the log scale ($log~BF_{10}$), in which case **numbers smaller than 1 become negative**
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+log(3.8)
+log(1/3.8)
+```
+
+:::
+
+- To "unlog" a logged BF, use `exp()`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+log(3.8)
+exp(1.335001)
+```
+
+:::
+
+
+## Exercice {background-color="#FFAB91"}
+
+- Compute the Bayes Factor for the following models: `qsec ~ wt` vs. a **constant model**
+- A constant model, aka an "intercept-only" model, is a model with no predictors (only an intercept)
+- A constant model basically predicts the mean of the outcome variable for all observations
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mean(mtcars$qsec)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model0 <- lm(qsec ~ 1, data = mtcars)
+model0
+```
+
+:::
+
+
+- Compute the BF and interpret it. Make a conclusion
+
+## Solution
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model1 <- lm(qsec ~ wt, data = mtcars)
+model1
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::bayesfactor_models(model1, denominator=model0)
+```
+
+:::
+
+- BF < 1/3 (0.3333)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+effectsize::interpret_bf(0.290)
+```
+
+:::
+
+
+## Exercice 2 {background-color="#FFAB91"}
+
+- "I try to analyze the linear relationship between the sepal length and the sepal width of the iris flowers (`iris` built in dataset). Should I control for *Species*?"
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+m1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+m2 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
+
+bayestestR::bayesfactor_models(m1, denominator=m2)
+```
+
+:::
+
+- Pizzas can help us get a intuitive feeling for BFs
+
+## 1 {background-image="img/LetsPokeAPizza1.jpg" background-size="contain"}
+
+## 2 {background-image="img/LetsPokeAPizza2.jpg" background-size="contain"}
+
+## Pizza plot
+
+```{r}
+#| echo: true
+
+plot(bayestestR::bayesfactor_models(model1, denominator=model0)) +
+  scale_fill_manual(values = c("red", "yellow")) 
+```
+
+## *t*-Tests
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- True Bayes factor (i.e., not approximations using Frequentist models) can be also computed for "simple" tests, such as *t*-tests
+- *t*-tests test for the difference of means of a variable between two groups (or against a constant value)
+- This is a frequentist *t*-test:
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+# `am` is a binary variable (0 and 1)
+t.test(mtcars$mpg ~ mtcars$am)
+```
+
+:::::
+::::
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+mtcars |> 
+  ggplot(aes(x=as.factor(am), y=mpg)) +
+  geom_jitter(width=0.1, size=3)  
+```
+
+:::::
+
+- We conclude that there is a significance difference between the two groups (am == 1 > am == 0, *p* < .01)
+::::
+:::
+
+## Bayesian *t*-Tests
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- They are implemented in the `BayesFactor` package (by Richard Morey) where BFs are computed using a technique called *Gaussian Quadrature* ^[Rouder, J. N., Speckman, P. L., Sun, D., Morey, R. D., & Iverson, G. (2009). Bayesian *t*-tests for accepting and rejecting the null hypothesis. Psychonomic bulletin & review, 16, 225-237.] possible for simple models <sub><sup>(not important)<sub></sup>
+- The Bayes factor compares two hypotheses: that the standardized effect size is 0, or that the standardized effect size is not 0.
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+library(BayesFactor)  # Case sensitive!
+
+# Note the use of `formula` and `data` arguments
+BayesFactor::ttestBF(formula=mpg ~ am, data=mtcars)
+```
+
+:::::
+
+::::
+
+:::: {.column}
+
+- What can we conclude?
+- $BF_{10}$ = 86.59
+- Very strong evidence in favour of the hypothesis that there is a non-null difference between the two groups
+- What about priors?
+  - In this particular case, let's just say that they are good enough "default" priors (there is a lot of literature justifying it). Can be used "as-is" without too much worry\*
+  - \*Some people will might lose it if they see this
+
+::::
+
+:::
+
+
+## Correlation Test
+
+- The `BayesFactor` package also implements correlation tests
+
+::: {.fragment}
+```{r}
+#| echo: true
+
+library(BayesFactor)  # Case sensitive!
+
+BayesFactor::correlationBF(mtcars$drat, mtcars$qsec)
+```
+:::
+
+- What can we conclude?
+- $BF_{10}$ = 0.43
+- No evidence in favour of any models (that there is a null vs. non-null correlation)
+
+## Priors
+
+- Remember: the Bayes Factor is a ratio of the likelihood of the data under the two models
+- $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior~odds} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior~odds}$
+- The likelhood can be interpreted as an **updating factor**: how much the data updated our prior beliefs
+  - In other words, how much did we move from Prior to Posterior
+- The stronger the BF, the stronger the "difference" between the **prior** and the **posterior**
+- But what is the prior?
+  - Remember, we are trying to estimate the correlation coefficient rho $\rho$ after seeing the data
+  - But we need to have a prior idea of what $\rho$ could be
+- How to specify a prior for $\rho$?
+
+## Prior Distribution
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- In the previous examples, we had priors in the form of discrete categories (e.g., 1/3 that the coin is fair, 1/3 that it's rigged, ...)
+
+::::: {.fragment}
+
+```{r}
+d <- data.frame(
+  cointypes=c(0.3, 0.4, 0.5, 0.6, 0.7),
+  prior=c(1, 2, 3, 2, 1) / 9
+)
+
+d |> 
+  ggplot(aes(x=cointypes, y=prior)) +
+  geom_line(color="blue") + 
+  geom_point(size=3, color="blue") +  
+  scale_x_continuous(breaks=c(0.3, 0.4, 0.5, 0.6, 0.7), 
+                     labels = paste0(c(0.3, 0.4, 0.5, 0.6, 0.7), "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Prior Probability", title="Prior for the Gentleman") +
+  theme_bw()
+```
+
+:::::
+
+- But how to specify a prior for a continuous variable like a correlation coefficient?
+- Using a distribution!
+
+::::
+:::: {.column}
+
+- Let's imagine taking a normal distribution as a prior for $\rho$ (i.e., we think that $\rho$ is normally distributed)
+- Imagine that someone proposes the following parameters
+  - e.g., $\mu = 0.42, \sigma = 0.7$
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+xspace <- seq(-1.5, 1.5, by=0.01)
+prob <- dnorm(xspace, mean=0.42, sd=0.333)
+
+data <- data.frame(x = xspace, y = prob) 
+
+data |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_line(color="blue", linewidth=3) 
+```
+
+:::::
+::::
+:::
+
+## Exercice {background-color="#FFAB91"}
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Do you think this is a good prior?
+- Why is this not a very good prior?
+- Try to come up with a suitable prior for the correlation coefficient $\rho$ 
+
+::::
+
+:::: {.column}
+
+```{r}
+#| echo: false
+
+data |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_line(color="blue", linewidth=3) 
+```
+
+::::
+
+:::
+
+
+## Solution {background-color="#80DEEA"}
+
+::: {.columns}
+:::: {.column width="50%" style="font-size: 80%;"}
+
+- Priors represent your beliefs **before** seeing the data
+  - In can be from previous studies, from your own experience, from your intuition, ...
+- Do we have a hypothesis about the direction (positive vs. negative) of the correlation between `drat` and `qsec`
+  - No. The correlation could be positive or negative.
+- Do we have reasons to expect a non-null correlation?
+  - No. 
+  - Our prior could be symmetric around 0, with a higher probability on 0 (i.e., we think that the correlation is more likely to be 0 than any other value)
+  
+::::
+:::: {.column width="50%" style="font-size: 80%;"}
+  
+- What about $Normal(0, 0.5)$
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+data$y <- dnorm(xspace, mean=0, sd=0.5) 
+
+data |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_line(color="blue", linewidth=3) 
+```
+
+:::::
+
+- What's the problem?
+
+::::
+:::
+
+## Priors for Correlation Coefficients?
+
+- Bayesian inference is, fundamentally, the process of reallocating *credibility* across candidate parameter values
+  - From prior to posterior
+- Priors **should** incorporate "domain knowledge" (critical for good Bayesian models)
+  - For example, knowledge about the range of possible values
+- We know that the correlation coefficient is bounded between -1 and 1 by definition. We should incorporate this knowledge in our prior and assign a probability of 0 to values outside of this range
+- How can we do that?
+  - We could use a truncated normal distribution (e.g., $Normal(0, 0.5)$ truncated between -1 and 1)
+  - Or pick a distribution that has bounds
+- What is a distribution that has negative and positive bounds?
+
+## What about *Uniform*?
+
+::: {.columns}
+:::: {.column width="50%" }
+
+- $Uniform(-1, 1)$ means that all values between -1 and 1 are equally likely
+
+::::: {.fragment}
+```{r}
+#| echo: true
+
+# Compute the uniform distribution
+data$y <- dunif(xspace, -1, 1) 
+
+data |> 
+  ggplot(aes(y=y)) +
+  geom_line(aes(x=x), color="blue", linewidth=3) +
+  theme_bw()
+```
+:::::
+
+::::
+:::: {.column width="50%" }
+
+- This is a **non-informative prior**
+  - i.e., we don't introduce any prior knowledge about the correlation coefficient (other than domain knowledge about what a correlation coefficient is)
+  - As we will see later, uniform priors tend to give results that are similar to frequentist maximum likelihood estimates (i.e., Bayesian models with uniform priors tend to have very similar results to frequentist models)
+- But they are non-recommended.
+  - They are often non realistic: we tend to have some expectations about our parameters, and priors should reflect these beliefs
+
+::::
+:::
+
+## What other prior?
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- What is another distribution that has bounds?
+  - The beta distribution!
+- But what's the problem?
+  - It is defined on the interval [0, 1]
+- Solution?
+  - Distributions can often be *scaled* and *shifted*
+  
+::::
+:::: {.column width="50%"}
+
+![](img/distributions.jpg)
+::::
+:::
+
+## Shifted and Scaled Beta
+
+::: {.columns}
+:::: {.column width="50%"}
+
+- We can have a shifted & scaled beta distribution that is defined on the interval [-1, 1] with a peak at 0 
+- E.g., How about $Beta(1.5, 1.5)$ rescaled and shifted to [-1, 1]?
+
+
+::::
+:::: {.column width="50%"}
+
+::::: {.fragment}
+```{r}
+#| echo: true
+
+# Compute the beta distribution
+data$y <- dbeta(xspace, 1.5, 1.5)
+# Rescale its x-axis
+data$x2 <- (data$x - 0.5) * 2
+
+data |>
+  ggplot(aes(y=y)) +
+  geom_line(aes(x=x), color="blue", linewidth=3) +
+  geom_line(aes(x=x2), color="orange", linewidth=2, alpha=0.9) +
+  coord_cartesian(xlim=c(-1.2, 1.2)) +
+  theme_bw()
+```
+
+:::::
+
+- Original distribution in blue and shifted and scaled in orange   
+
+::::
+:::
+
+## Meaning
+
+```{r}
+#| echo: false
+
+data |>
+  ggplot(aes(y=y)) +
+  geom_line(aes(x=x2), color="orange", linewidth=2, alpha=0.9) +
+  coord_cartesian(xlim=c(-1.2, 1.2)) +
+  theme_bw()
+```
+
+- This means that we think that the correlation coefficient is more likely to be 0, and then "gradually" less likely as we move away from 0, with very low likelihood for values close to -1 or 1
+
+
+## BayesFactor's defaults
+
+- What does `BayesFactor` use?
+- We can read the documentation of `correlationBF` to find out
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: false
+
+?BayesFactor::correlationBF
+```
+:::
+
+::: {.fragment}
+
+> Noninformative priors are assumed for the population means and variances of the two population; **a shifted, scaled beta(1/rscale,1/rscale) prior distribution is assumed for $rho$** [...]
+
+:::
+
+::: {.fragment}
+
+> For the rscale argument, several named values are recognized: "medium.narrow", "medium" [default], "wide", and "ultrawide". These correspond to r scale values of $1/\sqrt{27}$, 1/3, $1/\sqrt{3}$, and $1$, respectively.
+
+
+:::
+
+## Visualize BayesFactor's defaults
+
+::: {.columns}
+:::: {.column width="50%"}
+
+::::: {.fragment}
+```{r}
+#| echo: true
+
+# List of rscales
+rscales <- list(
+  "medium.narrow" = 1/sqrt(27),
+  "medium" = 1/3,
+  "wide" = 1/sqrt(3),
+  "ultrawide" = 1
+)
+```
+:::::
+
+::::: {.fragment}
+```{r}
+#| echo: true
+
+# Compute the beta distribution following the formula 
+# And store in the same dataframe
+
+xspace <- seq(0, 1, by=0.01)  # Original beta is ]0, 1[
+
+data <- data.frame()  # Inititalize empty dataframe
+for(scale in names(rscales)) {
+  rscale <- rscales[[scale]]
+  dat <- data.frame(
+    y = dbeta(xspace, 1/rscale, 1/rscale),
+    x = (xspace - 0.5) * 2, # Rescale its x-axis
+    scale = scale
+  ) 
+  data <- rbind(data, dat)
+}
+```
+:::::
+
+::::
+:::: {.column width="50%"}
+
+- Exercice: plot that!
+
+::::: {.fragment}
+```{r}
+#| echo: true
+
+data |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_line(aes(color=scale), linewidth=2) +
+  coord_cartesian(xlim=c(-1.2, 1.2)) 
+```
+:::::
+
+
+::::
+:::
+
+
+## Priors impact Bayes Factors
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- The prior we choose has an impact on the Bayes Factor
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+BayesFactor::correlationBF(mtcars$drat, mtcars$qsec, 
+                           rscale="medium.narrow")
+```
+
+:::::
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+BayesFactor::correlationBF(mtcars$drat, mtcars$qsec, 
+                           rscale="medium")
+```
+
+:::::
+
+::::
+
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+
+BayesFactor::correlationBF(mtcars$drat, mtcars$qsec, 
+                           rscale="wide")
+```
+
+:::::
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+BayesFactor::correlationBF(mtcars$drat, mtcars$qsec, 
+                           rscale="ultrawide")
+```
+
+:::::
+
+- The Bayes Factor is sensitive to the choice of prior
+- In this case, the wider the prior, the lower the Bayes factor
+  - Why?
+- It's not **always** the case
+
+::::
+
+:::
+
+## Misconceptions about Bayes Factors
+
+- BFs do **not** tell us the absolute probability of a hypothesis being true. It quantifies how much we should **update** our belief in a hypothesis. If this hypothesis was extremely unlikely, then we might still believe it to be very unlikely, even after computing a large BF.
+- BFs provide **relative** evidence between 2 hypotheses, and it is possible that one hypothesis is supported more than another hypothesis, while both hypotheses are false. Saying *"BF shows evidence for the null (H0)"* is incorrect. It should be *"BF shows evidence for the H0 as compared to H1"* (what H1 is matters).
+- BFs tell us nothing about the size of effects.
+
+::: {.columns}
+
+:::: {.column width="30%"}
+
+
+- See [Lakens' post](https://lakens.github.io/statistical_inferences/04-bayes.html#sec-bfgmisconceptions) for details
+- See [Tendeiro et al. (2024)](https://journals.sagepub.com/doi/epub/10.1177/25152459231213371)
+
+::::
+
+:::: {.column width="70%"}
+
+::::: {.fragment}
+
+![](img/misuse.png)
+
+:::::
+
+::::
+
+:::
+
+
+## Bayes Factors: Summary
+
+::: {style="font-size: 90%"}
+
+- Bayes factor are **intuitive** indices measuring of the strength of evidence for one hypothesis over another
+  - They have a natural interpretation in terms of odds (e.g., 3:1 odds), and have wide applications (comparing models, null-hypothesis testing, ...)
+  - They have well established interpretation guidelines (> 3; > 10; > 30; > 100)
+- They are "easy" to compute for simple statistical tests, but for more complex models, they are notoriously hard to compute
+- The fact that they are highly sensitive to the choice of priors + the fact that finding an "alternative" model is not at all trivial + that computing them is often very hard have been seen as **limitations** and made them the focal point of debates (even between Bayesians)
+- There are different schools: 
+  - Some Bayesians believe that BFs are the best indices ever (assuming one understands them) and the Graal of Bayesian statistics
+  - Some believe that other indices are better and that BFs reproduce the same culture of binary thinking as Frequentist NHST
+  - We'll adopt a middle view: BFs are useful, in particular for simple tests, but they are not the only good thing in Bayesian statistics
+
+:::
+
+## Exercice {background-color="#FFAB91"}
+
+- Compute and report the Bayes Factor for the correlation between `Sepal.Length` and `Sepal.Width` from the `iris` dataset.
+
+```{r}
+#| include: false
+
+BayesFactor::correlationBF(iris$Sepal.Length, iris$Sepal.Width)
+```
+
+
+
+
+## Recap
+
+- $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior}$
+- We have seen what Bayes Factors are
+- We have seen how we can place *priors* on parameters (e.g., for correlations)
+- But... what about the *posterior*?
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+

@@ -9,5 +9,6 @@
 
 # Bayesian
 
-Part on OLS vs. MLE very confusing. Introduce OLS directly using formulas, make example for correlation / regression. Mention sigma, and only after present MLE idea and what this sigma represents.
-- Add Misuse of Bayes Factors: https://journals.sagepub.com/doi/epub/10.1177/25152459231213371
+- Make R refresher either a full 2 hours / an online video pre-course
+- Part on OLS vs. MLE very confusing. Introduce OLS directly using formulas, make example for correlation / regression. Mention sigma, and only after present MLE idea and what this sigma represents.
+- Assignment: Make TAP 1 in-person (during week 6) + final TAP at the end

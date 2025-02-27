@@ -390,9 +390,9 @@ data[data$n==2, ] |>
 :::
 
 
-## Exercice 1
+## Third Toss
 
-- Third toss, it's head sagain!
+- Third toss, it's heads again!
 - Compute the new posterior probabilities
 - What can we conclude?
 
