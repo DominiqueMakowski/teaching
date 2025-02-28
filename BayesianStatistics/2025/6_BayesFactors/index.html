@@ -406,629 +406,15 @@
 </div>
 
 </section>
-<section id="recap" class="slide level2 center" data-background-color="#1A237E">
-<h2>Recap</h2>
+<section id="bayes-factors-for-simple-tests" class="slide level2 scrollable">
+<h2>Bayes Factors for Simple Tests</h2>
 <ul>
-<li class="fragment">We learned about the <strong>Bayes’ Theorem</strong>:
-<ul>
-<li class="fragment"><span class="math inline">\(P(H|X) =\frac{P(H)~P(X|H)}{P(X)}\)</span></li>
-</ul></li>
-<li class="fragment">And how it can be used to update our beliefs about a hypothesis given new data</li>
+<li class="fragment">The likelihood term <span class="math inline">\(P(data|H)\)</span> is often hard to compute for Bayesian models (in which the parameters are themselves probabilistic)</li>
+<li class="fragment">It is not impossible, but it is 1) computationally expensive and 2) not always clear what’s the best way to do it (i.e., there are multiple ways with no consensus)</li>
+<li class="fragment">However, it is possible to compute Bayes factors efficiently and adequately for “simple” tests</li>
+<li class="fragment">We can do that in an automated and consensual<sup>1</sup> way using the <strong>BayesFactor</strong> package</li>
 </ul>
-<div class="fragment">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-2-1.png" width="3000"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="final-nail-in-the-coffin-for-the-p-value" class="slide level2">
-<h2>Final nail in the coffin for the <em>p</em>-value</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<!-- ![](img/LuciferLikesP.jpg){width="30%"} -->
-<p><img data-src="img/BayesBurstsThePValueBalloon.jpg" style="width:45.0%"></p>
-<ul>
-<li class="fragment">Another thing often heard about the <em>p</em>-value is that it can only be used to <strong>reject</strong> the <strong>null hypothesis</strong> (effect = 0), not as an index of evidence <strong>in favour of the null</strong></li>
-<li class="fragment">This is because the <em>p</em>-value, by definition, is <strong>uniformly distributed</strong> under the null hypothesis
-<ul>
-<li class="fragment">This means that, if the null hypothesis is true, all values of the <em>p</em>-value are equally likely; <em>p</em> = .001 is just as likely as <em>p</em> = 1</li>
-</ul></li>
-</ul>
-</div><div class="column">
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {</span>
-<span id="cb1-3"><a href="" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb1-4"><a href="" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb1-5"><a href="" aria-hidden="true" tabindex="-1"></a>  test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(x, y)</span>
-<span id="cb1-6"><a href="" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">c</span>(p, test<span class="sc">$</span>p.value)</span>
-<span id="cb1-7"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">p =</span> p) <span class="sc">|&gt;</span> </span>
-<span id="cb1-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>p)) <span class="sc">+</span></span>
-<span id="cb1-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">40</span>, <span class="at">color=</span><span class="st">"white"</span>, <span class="at">fill=</span><span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb1-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"p-values"</span>, <span class="at">y=</span><span class="st">"Count"</span>) <span class="sc">+</span></span>
-<span id="cb1-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="3000"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="evidence-against-the-null-hypothesis" class="slide level2">
-<h2>Evidence against the null hypothesis?</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li class="fragment">Altough Frequentists recently came up with some workarounds (region of practical equivalence testing), it is still seen as a limitation of the Frequentist framework</li>
-<li class="fragment">This is problematic in science because we are often interested in disproving a hypothesis, or proving that there is no effect</li>
-<li class="fragment">Does Uncle Bayes have a trick in his hat?</li>
-</ul>
-</div><div class="column">
-<p><img data-src="img/BayesMagic.jpg"></p>
-</div>
-</div>
-</section>
-<section id="the-likelihood-as-a-known-model" class="slide level2">
-<h2>The “Likelihood” as a <em>known</em> model</h2>
-<div class="columns">
-<div class="column" style="font-size: 85%;">
-<ul>
-<li class="fragment"><strong>Bayes’ Theorem</strong>: <span class="math inline">\(P(H|data) =P(H)~P(data|H)\)</span>
-<ul>
-<li class="fragment">Bayes’ theorem relates the probability of a hypothesis (H) given some observed evidence (data X) to the probability of data given the hypothesis, as well as the prior probability of the hypothesis</li>
-</ul></li>
-<li class="fragment"><span class="math inline">\(P(data|H)\)</span> is the <strong>likelihood</strong> of the data given a hypothesis</li>
-<li class="fragment">It typically corresponds to a “model of the world”</li>
-<li class="fragment">In the previous example, we had “the model” of coin tosses. We know the likelihood of outcomes given various coin types because it corresponds to a physical reality (a fair coin gives 50% heads). So the “model” was obvious and easy to define.</li>
-</ul>
-</div><div class="column" style="font-size: 80%;">
-<div class="fragment">
-<p><img data-src="img/likelihood1.png"></p>
-</div>
-<ul>
-<li class="fragment">Conceptually, in this experiment:
-<ul>
-<li class="fragment">The <strong>likelihood</strong> was a statistical model linking a parameter <strong><em>x</em></strong> (the probability by which a coin is biased towards heads: 0.3, 0.4, 0.5, 0.6, 0.7) to the outcome (heads).</li>
-<li class="fragment">The <strong>prior</strong> corresponded to the distribution of our credibility across the different possible <strong><em>x</em></strong> values.</li>
-<li class="fragment">The <strong>posterior</strong> corresponded to the updated distribution of our credibility across the different possible <strong><em>x</em></strong> values after observing the data (coin tosses).</li>
-</ul></li>
-</ul>
-</div>
-</div>
-</section>
-<section id="the-likelihood-as-a-model-with-probabilistic-parameters" class="slide level2">
-<h2>The “Likelihood” as a model with <em>probabilistic</em> parameters</h2>
-<div class="columns">
-<div class="column" style="width:65%;">
-<ul>
-<li class="fragment">We often have general beliefs about probabilistic models.
-<ul>
-<li class="fragment"><em>What are the odds that more type of coints exist?</em></li>
-<li class="fragment"><em>What are the odds that my model of the coin is True</em></li>
-<li class="fragment">…</li>
-</ul></li>
-<li class="fragment">In practice, the model’s likelihood depends on uncertain parameter over which we have other priors, or a combination of priors (e.g., Intercept + Slope)</li>
-</ul>
-</div><div class="column" style="width:35%;">
-<p><img data-src="img/likelihood2.png"></p>
-</div>
-</div>
-<ul>
-<li class="fragment">The “likelihood”, as well as the “hypothesis”, can represent different things (a statistical model, beliefs about whether a general hypothesis is True, etc.)</li>
-<li class="fragment">Problems can be specified in different ways (it is flexible framework)</li>
-<li class="fragment">In typical real-life statistical scenarios, the <strong>likelihood</strong> term <span class="math inline">\(P(data|H)\)</span> is very complex to establish mathematically (i.e., it is hard to compute/approximate it)</li>
-<li class="fragment">But it is not impossible. And accessing the likelihood is very useful…</li>
-</ul>
-</section>
-<section id="the-likelihood-summary" class="slide level2">
-<h2>The “Likelihood”: Summary</h2>
-<ul>
-<li class="fragment">The likelihood <span class="math inline">\(P(data|H)\)</span> represents “the probability of the data given a hypothesis”</li>
-<li class="fragment">This hypothesis can be:
-<ul>
-<li class="fragment">A statistical model with fixed and known parameters (e.g., <span class="math inline">\(y = 2x + 3\)</span>)</li>
-<li class="fragment">A statistical model with unknown (probabilistic) parameters (e.g., <span class="math inline">\(y = \beta x + Intercept\)</span> with <span class="math inline">\(\beta \sim Normal(0, 1)\)</span> and <span class="math inline">\(Intercept \sim Normal(3, 2)\)</span>)</li>
-<li class="fragment">Any other statement about the world (e.g., a hypothesis like “this model is <em>true</em>”)</li>
-</ul></li>
-<li class="fragment">Mathematically computing the value of <span class="math inline">\(P(data|H)\)</span> is hard (aside from the first case)</li>
-</ul>
-</section>
-<section id="bayes-factor-bf" class="slide level2">
-<h2>Bayes Factor (BF)</h2>
-<ul>
-<li class="fragment">Bayes’ theorem provides a natural way to test hypotheses and compare models. Suppose we have two competing hypotheses: <strong>H1</strong> and an alternative hypothesis <strong>H0</strong></li>
-<li class="fragment">What if we compared the likelihood of the data given two competing hypotheses (i.e., models)?
-<ul>
-<li class="fragment"><span class="math inline">\(P(data|H_{0})\)</span> / <span class="math inline">\(P(data|H_{1})\)</span></li>
-</ul></li>
-<li class="fragment">This ratio of likelihoods is known as the <strong>Bayes Factor</strong> (BF)
-<ul>
-<li class="fragment">It quantifies the relative strength of evidence in favor of <strong>one hypothesis over another</strong> based on the observed evidence (data)</li>
-<li class="fragment">It tells us how much more likely the data (evidence) is under one hypothesis compared to another (often taking into account prior probabilities in the definition of the likelihood model)</li>
-</ul></li>
-<li class="fragment"><span class="math inline">\(BF_{10} = \frac{P(data|H_{1})}{P(data|H_{0})}\)</span></li>
-<li class="fragment"><span class="math inline">\(BF_{01} = \frac{P(data|H_{0})}{P(data|H_{1})}\)</span>
-<ul>
-<li class="fragment">Note the convention of writing what is the numerator</li>
-</ul></li>
-</ul>
-<!-- - From Bayes' theorem, it follows that:  -->
-<!-- - $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior~odds} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior~odds}$ -->
-</section>
-<section id="bfs-with-bic-approximation" class="slide level2 scrollable">
-<h2>BFs with BIC approximation</h2>
-<ul>
-<li class="fragment">The Bayes Factor is a ratio of likelihoods, which is often difficult to compute, especially for Bayesian models where parameters are themselves probabilistic</li>
-<li class="fragment">Wagenmakers (2007)<sup>1</sup> <sub><sup><em>(one of the principal proponent of Bayes factors)</em></sup></sub> proposed an approximation of the Bayes Factor based on the <strong>Bayesian Information Criterion</strong> (BIC), that can easily be computed for traditional Frequentist models (e.g., linear models)</li>
-<li class="fragment"><span class="math inline">\(BF_{01} \approx exp(\frac{BIC_{1} - BIC_{0}}{2})\)</span></li>
-</ul>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>Wagenmakers, E. J. (2007). A practical solution to the pervasive problems of p values. Psychonomic bulletin &amp; review, 14(5), 779-804.</p></li></ol></aside></section>
-<section id="model-0-qsec-mpg" class="slide level2">
-<h2>Model 0: qsec ~ mpg</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars[<span class="fu">c</span>(<span class="st">"mpg"</span>, <span class="st">"qsec"</span>, <span class="st">"wt"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                   mpg  qsec    wt
-Mazda RX4         21.0 16.46 2.620
-Mazda RX4 Wag     21.0 17.02 2.875
-Datsun 710        22.8 18.61 2.320
-Hornet 4 Drive    21.4 19.44 3.215
-Hornet Sportabout 18.7 17.02 3.440
-Valiant           18.1 20.22 3.460</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>qsec)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb4-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">"y ~ x"</span>) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="3000"></p>
-</figure>
-</div>
-</div>
-</div>
-</div><div class="column">
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>model0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars)</span>
-<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = qsec ~ mpg, data = mtcars)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--2.8161 -1.0287  0.0954  0.8623  4.7149 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 15.35477    1.02978  14.911 2.05e-15 ***
-mpg          0.12414    0.04916   2.525   0.0171 *  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.65 on 30 degrees of freedom
-Multiple R-squared:  0.1753,    Adjusted R-squared:  0.1478 
-F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment"><code>mpg</code> is a significant predictor of <code>qsec</code> (<span class="math inline">\(\beta\)</span> = 0.12, <em>p</em> &lt; .05)</li>
-<li class="fragment">Is it worth it to add another predictor? Does it improve the model?</li>
-</ul>
-</div>
-</div>
-</section>
-<section id="model-1-qsec-mpg-wt" class="slide level2">
-<h2>Model 1: qsec ~ mpg + wt</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>wt, <span class="at">y=</span>qsec)) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb7-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">"y ~ x"</span>) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="3000"></p>
-</figure>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Do you think adding <code>wt</code> will improve the model?</li>
-</ul>
-</div><div class="column">
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
-<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = qsec ~ mpg + wt, data = mtcars)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--2.1092 -0.9617 -0.2343  0.8399  4.2769 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)   
-(Intercept)  6.92949    3.53431   1.961   0.0596 . 
-mpg          0.32039    0.09138   3.506   0.0015 **
-wt           1.39324    0.56286   2.475   0.0194 * 
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.524 on 29 degrees of freedom
-Multiple R-squared:  0.3191,    Adjusted R-squared:  0.2722 
-F-statistic: 6.797 on 2 and 29 DF,  p-value: 0.003796</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Be careful! A model with multiple predictors is different from individual models taken separately (because variables interact with each other)</li>
-</ul>
-</div>
-</div>
-<ul>
-<li class="fragment">Is <strong>model1</strong> better than <strong>model0</strong>?</li>
-<li class="fragment">Higher R2, but more parameters (more complex model). Comparing BICs is an alternative that takes into account the number of parameters</li>
-</ul>
-</section>
-<section id="extract-bics" class="slide level2">
-<h2>Extract BICs</h2>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a>perf0 <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">performance</span>(model0)</span>
-<span id="cb10-2"><a href="" aria-hidden="true" tabindex="-1"></a>perf0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># Indices of model performance
-
-AIC     |    AICc |     BIC |    R2 | R2 (adj.) |  RMSE | Sigma
----------------------------------------------------------------
-126.781 | 127.638 | 131.178 | 0.175 |     0.148 | 1.597 | 1.650</code></pre>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a>bic0 <span class="ot">&lt;-</span> perf0<span class="sc">$</span>BIC</span>
-<span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a>bic0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 131.1783</code></pre>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a>bic1 <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">performance</span>(model1)<span class="sc">$</span>BIC</span>
-<span id="cb14-2"><a href="" aria-hidden="true" tabindex="-1"></a>bic1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 128.5105</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Normally, the lower the BIC, the better the model</li>
-<li class="fragment">Hard to interpret in absolute terms (the unit is meaningless), but we can compare models (if they are related to the same data)</li>
-</ul>
-</section>
-<section id="compare-bics" class="slide level2">
-<h2>Compare BICs</h2>
-<ul>
-<li class="fragment"><span class="math inline">\(BF_{10} \approx exp(\frac{BIC_{0} - BIC_{1}}{2})\)</span></li>
-<li class="fragment">We can apply the formula to <code>bic1</code> and <code>bic0</code></li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>bf10 <span class="ot">&lt;-</span> <span class="fu">exp</span>((bic0 <span class="sc">-</span> bic1) <span class="sc">/</span> <span class="dv">2</span>)</span>
-<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>bf10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.795896</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">You computed an approximation of the Bayes Factor “by hand”!</li>
-</ul>
-</section>
-<section id="using-bayestestr" class="slide level2">
-<h2>Using <code>bayestestR</code></h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model1, <span class="at">denominator=</span>model0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Bayes Factors for Model Comparison
-
-         Model      BF
-[model1] mpg + wt 3.80
-
-* Against Denominator: [model0] mpg
-*   Bayes Factor Type: BIC approximation</code></pre>
-</div>
-</div>
-</section>
-<section id="bf10-vs.-bf01" class="slide level2">
-<h2>BF10 vs.&nbsp;BF01</h2>
-<ul>
-<li class="fragment">Bayes factors are a <strong>ratio</strong> of likelihood of data under some hypothesis</li>
-<li class="fragment">They quantify “how much” the data is more likely under one model compared to another</li>
-<li class="fragment"><span class="math inline">\(BF_{10} = 3.80\)</span> means the data is 3.80 times more likely under <strong>model1</strong> than <strong>model0</strong></li>
-<li class="fragment"><strong>Importantly</strong>, BFs are “reversable”:</li>
-<li class="fragment"><span class="math inline">\(BF_{01} = \frac{1}{BF_{10}} = 1 / 3.80 = 0.263\)</span></li>
-<li class="fragment">The data is 0.26 times more likely under <strong>model0</strong> than <strong>model1</strong></li>
-<li class="fragment">We gather evidence <strong>both ways</strong> (in <em>favour</em> or <em>against</em> a hypothesis)</li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model0, <span class="at">denominator=</span>model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Bayes Factors for Model Comparison
-
-         Model    BF
-[model0] mpg   0.263
-
-* Against Denominator: [model1] mpg + wt
-*   Bayes Factor Type: BIC approximation</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Is this “big”? How to interpret BFs?</li>
-</ul>
-</section>
-<section id="bayes-factor-interpretation" class="slide level2">
-<h2>Bayes Factor Interpretation</h2>
-<div style="font-size: 90%">
-<ul>
-<li class="fragment">The standard threshold for a “significant” BF is 3 or 10
-<ul>
-<li class="fragment"><em>Jeffreys, H. (1961), Theory of Probability, 3rd ed., Oxford University Press, Oxford</em></li>
-</ul></li>
-</ul>
-<div class="fragment">
-<table>
-<thead>
-<tr class="header">
-<th>Bayes Factor (<span class="math inline">\(BF_{10}\)</span>)</th>
-<th>Interpretation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&gt; 100</td>
-<td>Extreme evidence for H1</td>
-</tr>
-<tr class="even">
-<td>30 – 100</td>
-<td>Very strong evidence for H1</td>
-</tr>
-<tr class="odd">
-<td>10 – 30</td>
-<td>Strong evidence for H1</td>
-</tr>
-<tr class="even">
-<td>3 – 10</td>
-<td>Moderate evidence for H1</td>
-</tr>
-<tr class="odd">
-<td>1 – 3</td>
-<td>Anecdotal evidence for H1</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>No evidence</td>
-</tr>
-<tr class="odd">
-<td>1/3 – 1</td>
-<td>Anecdotal evidence for H0</td>
-</tr>
-<tr class="even">
-<td>1/3 – 1/10</td>
-<td>Moderate evidence for null H0</td>
-</tr>
-<tr class="odd">
-<td>1/10 – 1/30</td>
-<td>Strong evidence for null H0</td>
-</tr>
-<tr class="even">
-<td>1/30 – 1/100</td>
-<td>Very strong evidence for H0</td>
-</tr>
-<tr class="odd">
-<td>&lt; 1/100</td>
-<td>Extreme evidence for H0</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-<section id="bayes-factor-interpretation-1" class="slide level2">
-<h2>Bayes Factor Interpretation</h2>
-<ul>
-<li class="fragment">The <code>effectsize</code> package provides many automated interpretation functions</li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>effectsize<span class="sc">::</span><span class="fu">interpret_bf</span>(bf10)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "moderate evidence in favour of"
-(Rules: jeffreys1961)</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Note that because BFs can be very big or very small, they are sometimes presented on the log scale (<span class="math inline">\(log~BF_{10}\)</span>), in which case <strong>numbers smaller than 1 become negative</strong></li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="fl">3.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.335001</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">1</span><span class="sc">/</span><span class="fl">3.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -1.335001</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">To “unlog” a logged BF, use <code>exp()</code></li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="fl">3.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.335001</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">1.335001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.8</code></pre>
-</div>
-</div>
-</div>
-</section>
-<section id="exercice" class="slide level2" data-background-color="#FFAB91">
-<h2>Exercice</h2>
-<ul>
-<li class="fragment">Compute the Bayes Factor for the following models: <code>qsec ~ wt</code> vs.&nbsp;a <strong>constant model</strong></li>
-<li class="fragment">A constant model, aka an “intercept-only” model, is a model with no predictors (only an intercept)</li>
-<li class="fragment">A constant model basically predicts the mean of the outcome variable for all observations</li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(mtcars<span class="sc">$</span>qsec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 17.84875</code></pre>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a>model0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> mtcars)</span>
-<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a>model0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = qsec ~ 1, data = mtcars)
-
-Coefficients:
-(Intercept)  
-      17.85  </code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Compute the BF and interpret it. Make a conclusion</li>
-</ul>
-</section>
-<section id="solution" class="slide level2">
-<h2>Solution</h2>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> wt, <span class="at">data =</span> mtcars)</span>
-<span id="cb36-2"><a href="" aria-hidden="true" tabindex="-1"></a>model1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = qsec ~ wt, data = mtcars)
-
-Coefficients:
-(Intercept)           wt  
-    18.8753      -0.3191  </code></pre>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model1, <span class="at">denominator=</span>model0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Bayes Factors for Model Comparison
-
-         Model    BF
-[model1] wt    0.290
-
-* Against Denominator: [model0] (Intercept only)
-*   Bayes Factor Type: BIC approximation</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">BF &lt; 1/3 (0.3333)</li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a>effectsize<span class="sc">::</span><span class="fu">interpret_bf</span>(<span class="fl">0.290</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "moderate evidence against"
-(Rules: jeffreys1961)</code></pre>
-</div>
-</div>
-</div>
-</section>
-<section id="exercice-2" class="slide level2" data-background-color="#FFAB91">
-<h2>Exercice 2</h2>
-<ul>
-<li class="fragment">“I try to analyze the linear relationship between the sepal length and the sepal width of the iris flowers (<code>iris</code> built in dataset). Should I control for <em>Species</em>?”</li>
-</ul>
-<div class="fragment">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris)</span>
-<span id="cb42-2"><a href="" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width <span class="sc">+</span> Species, <span class="at">data =</span> iris)</span>
-<span id="cb42-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-4"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(m1, <span class="at">denominator=</span>m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Bayes Factors for Model Comparison
-
-     Model             BF
-[m1] Sepal.Width 2.96e-40
-
-* Against Denominator: [m2] Sepal.Width + Species
-*   Bayes Factor Type: BIC approximation</code></pre>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Pizzas can help us get a intuitive feeling for BFs</li>
-</ul>
-</section>
-<section id="section" class="slide level2" data-background-image="img/LetsPokeAPizza1.jpg" data-background-size="contain">
-<h2>1</h2>
-</section>
-<section id="section-1" class="slide level2" data-background-image="img/LetsPokeAPizza2.jpg" data-background-size="contain">
-<h2>2</h2>
-</section>
-<section id="pizza-plot" class="slide level2">
-<h2>Pizza plot</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model1, <span class="at">denominator=</span>model0)) <span class="sc">+</span></span>
-<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"yellow"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-</div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-23-1.png" width="3000" class="r-stretch"></section>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Some people might still argue that this approach is not good</p></li></ol></aside></section>
 <section id="t-tests" class="slide level2">
 <h2><em>t</em>-Tests</h2>
 <div class="columns">
@@ -1040,8 +426,8 @@ Coefficients:
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># `am` is a binary variable (0 and 1)</span></span>
-<span id="cb45-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(mtcars<span class="sc">$</span>mpg <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># `am` is a binary variable (0 and 1)</span></span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(mtcars<span class="sc">$</span>mpg <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -1060,13 +446,13 @@ mean in group 0 mean in group 1
 </div><div class="column" style="width:50%;">
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb47-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">as.factor</span>(am), <span class="at">y=</span>mpg)) <span class="sc">+</span></span>
-<span id="cb47-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width=</span><span class="fl">0.1</span>, <span class="at">size=</span><span class="dv">3</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">as.factor</span>(am), <span class="at">y=</span>mpg)) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width=</span><span class="fl">0.1</span>, <span class="at">size=</span><span class="dv">3</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-25-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1088,10 +474,10 @@ mean in group 0 mean in group 1
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BayesFactor)  <span class="co"># Case sensitive!</span></span>
-<span id="cb48-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Note the use of `formula` and `data` arguments</span></span>
-<span id="cb48-4"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(<span class="at">formula=</span>mpg <span class="sc">~</span> am, <span class="at">data=</span>mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BayesFactor)  <span class="co"># Case sensitive!</span></span>
+<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Note the use of `formula` and `data` arguments</span></span>
+<span id="cb4-4"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">ttestBF</span>(<span class="at">formula=</span>mpg <span class="sc">~</span> am, <span class="at">data=</span>mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factor analysis
 --------------
@@ -1125,9 +511,9 @@ Bayes factor type: BFindepSample, JZS</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BayesFactor)  <span class="co"># Case sensitive!</span></span>
-<span id="cb50-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-3"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BayesFactor)  <span class="co"># Case sensitive!</span></span>
+<span id="cb6-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factor analysis
 --------------
@@ -1176,7 +562,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-28-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1196,18 +582,18 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="" aria-hidden="true" tabindex="-1"></a>xspace <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="at">by=</span><span class="fl">0.01</span>)</span>
-<span id="cb52-2"><a href="" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(xspace, <span class="at">mean=</span><span class="fl">0.42</span>, <span class="at">sd=</span><span class="fl">0.333</span>)</span>
-<span id="cb52-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-4"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> xspace, <span class="at">y =</span> prob) </span>
-<span id="cb52-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-6"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb52-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span></span>
-<span id="cb52-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>xspace <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="at">by=</span><span class="fl">0.01</span>)</span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(xspace, <span class="at">mean=</span><span class="fl">0.42</span>, <span class="at">sd=</span><span class="fl">0.333</span>)</span>
+<span id="cb8-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> xspace, <span class="at">y =</span> prob) </span>
+<span id="cb8-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb8-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-29-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1216,7 +602,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </div>
 </div>
 </section>
-<section id="exercice-1" class="slide level2" data-background-color="#FFAB91">
+<section id="exercice" class="slide level2" data-background-color="#FFAB91">
 <h2>Exercice</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
@@ -1230,7 +616,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-30-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1238,7 +624,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </div>
 </div>
 </section>
-<section id="solution-1" class="slide level2" data-background-color="#80DEEA">
+<section id="solution" class="slide level2" data-background-color="#80DEEA">
 <h2>Solution</h2>
 <div class="columns">
 <div class="column" style="font-size: 80%;">
@@ -1263,15 +649,15 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(xspace, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.5</span>) </span>
-<span id="cb53-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-3"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb53-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span></span>
-<span id="cb53-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(xspace, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.5</span>) </span>
+<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb9-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-31-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1312,17 +698,17 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the uniform distribution</span></span>
-<span id="cb54-2"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">dunif</span>(xspace, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) </span>
-<span id="cb54-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb54-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span>y)) <span class="sc">+</span></span>
-<span id="cb54-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x), <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb54-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the uniform distribution</span></span>
+<span id="cb10-2"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">dunif</span>(xspace, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) </span>
+<span id="cb10-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x), <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-32-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1377,21 +763,21 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </div><div class="column" style="width:50%;">
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the beta distribution</span></span>
-<span id="cb55-2"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(xspace, <span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
-<span id="cb55-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Rescale its x-axis</span></span>
-<span id="cb55-4"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>x2 <span class="ot">&lt;-</span> (data<span class="sc">$</span>x <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb55-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-6"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb55-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span>y)) <span class="sc">+</span></span>
-<span id="cb55-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x), <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb55-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x2), <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">linewidth=</span><span class="dv">2</span>, <span class="at">alpha=</span><span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb55-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="fl">1.2</span>)) <span class="sc">+</span></span>
-<span id="cb55-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the beta distribution</span></span>
+<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(xspace, <span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
+<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Rescale its x-axis</span></span>
+<span id="cb11-4"><a href="" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>x2 <span class="ot">&lt;-</span> (data<span class="sc">$</span>x <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb11-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb11-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x), <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">linewidth=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x2), <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">linewidth=</span><span class="dv">2</span>, <span class="at">alpha=</span><span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="fl">1.2</span>)) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-33-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1406,7 +792,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <section id="meaning" class="slide level2">
 <h2>Meaning</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-34-1.png" width="3000" class="r-stretch"><ul>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000" class="r-stretch"><ul>
 <li class="fragment">This means that we think that the correlation coefficient is more likely to be 0, and then “gradually” less likely as we move away from 0, with very low likelihood for values close to -1 or 1</li>
 </ul>
 </section>
@@ -1418,7 +804,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="" aria-hidden="true" tabindex="-1"></a>?BayesFactor<span class="sc">::</span>correlationBF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a>?BayesFactor<span class="sc">::</span>correlationBF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
@@ -1438,32 +824,32 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <div class="column" style="width:50%;">
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># List of rscales</span></span>
-<span id="cb57-2"><a href="" aria-hidden="true" tabindex="-1"></a>rscales <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb57-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"medium.narrow"</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">27</span>),</span>
-<span id="cb57-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"medium"</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>,</span>
-<span id="cb57-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"wide"</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">3</span>),</span>
-<span id="cb57-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ultrawide"</span> <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb57-7"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># List of rscales</span></span>
+<span id="cb13-2"><a href="" aria-hidden="true" tabindex="-1"></a>rscales <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb13-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"medium.narrow"</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">27</span>),</span>
+<span id="cb13-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"medium"</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>,</span>
+<span id="cb13-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"wide"</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">3</span>),</span>
+<span id="cb13-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ultrawide"</span> <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb13-7"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the beta distribution following the formula </span></span>
-<span id="cb58-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># And store in the same dataframe</span></span>
-<span id="cb58-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-4"><a href="" aria-hidden="true" tabindex="-1"></a>xspace <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by=</span><span class="fl">0.01</span>)  <span class="co"># Original beta is ]0, 1[</span></span>
-<span id="cb58-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-6"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()  <span class="co"># Inititalize empty dataframe</span></span>
-<span id="cb58-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(scale <span class="cf">in</span> <span class="fu">names</span>(rscales)) {</span>
-<span id="cb58-8"><a href="" aria-hidden="true" tabindex="-1"></a>  rscale <span class="ot">&lt;-</span> rscales[[scale]]</span>
-<span id="cb58-9"><a href="" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb58-10"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">dbeta</span>(xspace, <span class="dv">1</span><span class="sc">/</span>rscale, <span class="dv">1</span><span class="sc">/</span>rscale),</span>
-<span id="cb58-11"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> (xspace <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">2</span>, <span class="co"># Rescale its x-axis</span></span>
-<span id="cb58-12"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">scale =</span> scale</span>
-<span id="cb58-13"><a href="" aria-hidden="true" tabindex="-1"></a>  ) </span>
-<span id="cb58-14"><a href="" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data, dat)</span>
-<span id="cb58-15"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the beta distribution following the formula </span></span>
+<span id="cb14-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># And store in the same dataframe</span></span>
+<span id="cb14-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="" aria-hidden="true" tabindex="-1"></a>xspace <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by=</span><span class="fl">0.01</span>)  <span class="co"># Original beta is ]0, 1[</span></span>
+<span id="cb14-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()  <span class="co"># Inititalize empty dataframe</span></span>
+<span id="cb14-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(scale <span class="cf">in</span> <span class="fu">names</span>(rscales)) {</span>
+<span id="cb14-8"><a href="" aria-hidden="true" tabindex="-1"></a>  rscale <span class="ot">&lt;-</span> rscales[[scale]]</span>
+<span id="cb14-9"><a href="" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb14-10"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">dbeta</span>(xspace, <span class="dv">1</span><span class="sc">/</span>rscale, <span class="dv">1</span><span class="sc">/</span>rscale),</span>
+<span id="cb14-11"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> (xspace <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">2</span>, <span class="co"># Rescale its x-axis</span></span>
+<span id="cb14-12"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">scale =</span> scale</span>
+<span id="cb14-13"><a href="" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb14-14"><a href="" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data, dat)</span>
+<span id="cb14-15"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
@@ -1472,14 +858,14 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb59-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span></span>
-<span id="cb59-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color=</span>scale), <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb59-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="fl">1.2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color=</span>scale), <span class="at">linewidth=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="fl">1.2</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-38-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1497,8 +883,8 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
-<span id="cb60-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"medium.narrow"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
+<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"medium.narrow"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factor analysis
 --------------
@@ -1513,8 +899,8 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
-<span id="cb62-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"medium"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
+<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"medium"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factor analysis
 --------------
@@ -1530,8 +916,8 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </div><div class="column" style="width:50%;">
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
-<span id="cb64-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"wide"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
+<span id="cb20-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"wide"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factor analysis
 --------------
@@ -1546,8 +932,8 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
-<span id="cb66-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"ultrawide"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>BayesFactor<span class="sc">::</span><span class="fu">correlationBF</span>(mtcars<span class="sc">$</span>drat, mtcars<span class="sc">$</span>qsec, </span>
+<span id="cb22-2"><a href="" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rscale=</span><span class="st">"ultrawide"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bayes factor analysis
 --------------
@@ -1611,13 +997,13 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </ul>
 </div>
 </section>
-<section id="exercice-3" class="slide level2" data-background-color="#FFAB91">
+<section id="exercice-1" class="slide level2" data-background-color="#FFAB91">
 <h2>Exercice</h2>
 <ul>
 <li class="fragment">Compute and report the Bayes Factor for the correlation between <code>Sepal.Length</code> and <code>Sepal.Width</code> from the <code>iris</code> dataset.</li>
 </ul>
 </section>
-<section id="recap-1" class="slide level2">
+<section id="recap" class="slide level2">
 <h2>Recap</h2>
 <ul>
 <li class="fragment"><span class="math inline">\(\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior}\)</span></li>
