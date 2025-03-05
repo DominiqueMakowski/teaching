@@ -1,6 +1,6 @@
 ---
 title: "Bayesian Statistics"
-subtitle: "**5. Bayes Factors**"
+subtitle: "**6. Bayes Factors**"
 author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
 # institute: "University of Sussex"
 title-slide-attributes:
@@ -140,14 +140,15 @@ BayesFactor::correlationBF(mtcars$drat, mtcars$qsec)
 
 ## Priors
 
-- Remember: the Bayes Factor is a ratio of the likelihood of the data under the two models
+- Remember: the Bayes Factor is a ratio of the likelihood of the data under two models
 - $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior~odds} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior~odds}$
 - The likelhood can be interpreted as an **updating factor**: how much the data updated our prior beliefs
   - In other words, how much did we move from Prior to Posterior
 - The stronger the BF, the stronger the "difference" between the **prior** and the **posterior**
 - But what is the prior?
-  - Remember, we are trying to estimate the correlation coefficient rho $\rho$ after seeing the data
-  - But we need to have a prior idea of what $\rho$ could be
+  - In this case, we are testing whether the correlation $\rho$ is different from 0
+  - Different ways of specifying a problem, but in this case, let's say that our parameter of focus is $\rho$ 
+  - This means that we need to have a *prior* idea of what $\rho$ could be
 - How to specify a prior for $\rho$?
 
 ## Prior Distribution
@@ -286,7 +287,7 @@ data |>
 ## What about *Uniform*?
 
 ::: {.columns}
-:::: {.column width="50%" }
+:::: {.column width="40%" }
 
 - $Uniform(-1, 1)$ means that all values between -1 and 1 are equally likely
 
@@ -305,7 +306,7 @@ data |>
 :::::
 
 ::::
-:::: {.column width="50%" }
+:::: {.column width="60%" }
 
 - This is a **non-informative prior**
   - i.e., we don't introduce any prior knowledge about the correlation coefficient (other than domain knowledge about what a correlation coefficient is)
@@ -339,13 +340,20 @@ data |>
 ## Shifted and Scaled Beta
 
 ::: {.columns}
+
 :::: {.column width="50%"}
 
 - We can have a shifted & scaled beta distribution that is defined on the interval [-1, 1] with a peak at 0 
 - E.g., How about $Beta(1.5, 1.5)$ rescaled and shifted to [-1, 1]?
 
+::::: {.callout-tip .fragment}
+
+You don't need to be able to know how to shifting and rescale distributions, just keep in mind that it is possible.
+
+:::::
 
 ::::
+
 :::: {.column width="50%"}
 
 ::::: {.fragment}
@@ -370,6 +378,7 @@ data |>
 - Original distribution in blue and shifted and scaled in orange   
 
 ::::
+
 :::
 
 ## Meaning
@@ -573,12 +582,13 @@ BayesFactor::correlationBF(mtcars$drat, mtcars$qsec,
 
 ## Bayes Factors: Summary
 
-::: {style="font-size: 90%"}
+::: {style="font-size: 80%"}
 
 - Bayes factor are **intuitive** indices measuring of the strength of evidence for one hypothesis over another
   - They have a natural interpretation in terms of odds (e.g., 3:1 odds), and have wide applications (comparing models, null-hypothesis testing, ...)
   - They have well established interpretation guidelines (> 3; > 10; > 30; > 100)
 - They are "easy" to compute for simple statistical tests, but for more complex models, they are notoriously hard to compute
+  - The Bayes Factors for *t*-tests and correlations from the `BayesFactor` package are based on the work of Jeffreys (1961), and is quite authoritative and accepted despite using some assumptions <sup><sub>(which is what allows for its straightforward computation)</sub></sup>
 - The fact that they are highly sensitive to the choice of priors + the fact that finding an "alternative" model is not at all trivial + that computing them is often very hard have been seen as **limitations** and made them the focal point of debates (even between Bayesians)
 - There are different schools: 
   - Some Bayesians believe that BFs are the best indices ever (assuming one understands them) and the Graal of Bayesian statistics

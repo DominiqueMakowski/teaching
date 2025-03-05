@@ -395,7 +395,7 @@
 
 <section id="title-slide" data-background-color="black" data-background-image="https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true" data-background-opacity="0.2" class="quarto-title-block center">
   <h1 class="title">Bayesian Statistics</h1>
-  <p class="subtitle"><strong>5. Bayes Factors</strong></p>
+  <p class="subtitle"><strong>6. Bayes Factors</strong></p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -535,7 +535,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <section id="priors" class="slide level2">
 <h2>Priors</h2>
 <ul>
-<li class="fragment">Remember: the Bayes Factor is a ratio of the likelihood of the data under the two models</li>
+<li class="fragment">Remember: the Bayes Factor is a ratio of the likelihood of the data under two models</li>
 <li class="fragment"><span class="math inline">\(\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior~odds} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior~odds}\)</span></li>
 <li class="fragment">The likelhood can be interpreted as an <strong>updating factor</strong>: how much the data updated our prior beliefs
 <ul>
@@ -544,8 +544,9 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <li class="fragment">The stronger the BF, the stronger the “difference” between the <strong>prior</strong> and the <strong>posterior</strong></li>
 <li class="fragment">But what is the prior?
 <ul>
-<li class="fragment">Remember, we are trying to estimate the correlation coefficient rho <span class="math inline">\(\rho\)</span> after seeing the data</li>
-<li class="fragment">But we need to have a prior idea of what <span class="math inline">\(\rho\)</span> could be</li>
+<li class="fragment">In this case, we are testing whether the correlation <span class="math inline">\(\rho\)</span> is different from 0</li>
+<li class="fragment">Different ways of specifying a problem, but in this case, let’s say that our parameter of focus is <span class="math inline">\(\rho\)</span></li>
+<li class="fragment">This means that we need to have a <em>prior</em> idea of what <span class="math inline">\(\rho\)</span> could be</li>
 </ul></li>
 <li class="fragment">How to specify a prior for <span class="math inline">\(\rho\)</span>?</li>
 </ul>
@@ -692,7 +693,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <section id="what-about-uniform" class="slide level2">
 <h2>What about <em>Uniform</em>?</h2>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:40%;">
 <ul>
 <li class="fragment"><span class="math inline">\(Uniform(-1, 1)\)</span> means that all values between -1 and 1 are equally likely</li>
 </ul>
@@ -714,7 +715,7 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </div>
 </div>
 </div>
-</div><div class="column" style="width:50%;">
+</div><div class="column" style="width:60%;">
 <ul>
 <li class="fragment">This is a <strong>non-informative prior</strong>
 <ul>
@@ -760,6 +761,21 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <li class="fragment">We can have a shifted &amp; scaled beta distribution that is defined on the interval [-1, 1] with a peak at 0</li>
 <li class="fragment">E.g., How about <span class="math inline">\(Beta(1.5, 1.5)\)</span> rescaled and shifted to [-1, 1]?</li>
 </ul>
+<div class="fragment">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>You don’t need to be able to know how to shifting and rescale distributions, just keep in mind that it is possible.</p>
+</div>
+</div>
+</div>
+</div>
 </div><div class="column" style="width:50%;">
 <div class="fragment">
 <div class="cell">
@@ -979,14 +995,17 @@ Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 </section>
 <section id="bayes-factors-summary" class="slide level2">
 <h2>Bayes Factors: Summary</h2>
-<div style="font-size: 90%">
+<div style="font-size: 80%">
 <ul>
 <li class="fragment">Bayes factor are <strong>intuitive</strong> indices measuring of the strength of evidence for one hypothesis over another
 <ul>
 <li class="fragment">They have a natural interpretation in terms of odds (e.g., 3:1 odds), and have wide applications (comparing models, null-hypothesis testing, …)</li>
 <li class="fragment">They have well established interpretation guidelines (&gt; 3; &gt; 10; &gt; 30; &gt; 100)</li>
 </ul></li>
-<li class="fragment">They are “easy” to compute for simple statistical tests, but for more complex models, they are notoriously hard to compute</li>
+<li class="fragment">They are “easy” to compute for simple statistical tests, but for more complex models, they are notoriously hard to compute
+<ul>
+<li class="fragment">The Bayes Factors for <em>t</em>-tests and correlations from the <code>BayesFactor</code> package are based on the work of Jeffreys (1961), and is quite authoritative and accepted despite using some assumptions <sup><sub>(which is what allows for its straightforward computation)</sub></sup></li>
+</ul></li>
 <li class="fragment">The fact that they are highly sensitive to the choice of priors + the fact that finding an “alternative” model is not at all trivial + that computing them is often very hard have been seen as <strong>limitations</strong> and made them the focal point of debates (even between Bayesians)</li>
 <li class="fragment">There are different schools:
 <ul>
