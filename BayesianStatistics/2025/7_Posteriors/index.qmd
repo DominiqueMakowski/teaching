@@ -1,0 +1,1307 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**7. Posteriors**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # theme: blood
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+
+set.seed(333)
+```
+
+## Installing `brms`
+
+::: {.nonincremental}
+
+- Restart R (`Session` -> `Restart R`)
+
+```{r}
+#| echo: true
+#| eval: false
+
+# In a NEW session:
+# 1.
+install.packages("brms")
+
+# 2.
+library(brms)
+
+# 3.
+brm(mpg ~ wt, data=mtcars)
+```
+
+
+- It should prompt you with installing additional tools. Say **yes**. It should start downloading, and then installing automatically
+- **If prompted again, say no.**
+- During or after the installation, it might throw an error. Just wait until the installation is complete
+- Close R and RStudio
+- Reopen, and run 🤞
+
+```{r}
+#| echo: true
+#| eval: false
+
+# 4.
+library(brms)
+brm(mpg ~ wt, data=mtcars)
+```
+
+:::
+
+## Installing `brms` (option 2 - `cmdstanr` backend)
+
+::: {.nonincremental}
+
+```{r}
+#| echo: true
+#| eval: false
+
+# In a NEW session:
+# 1.
+if (!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("paul-buerkner/brms")
+
+# 2. 
+remotes::install_github("stan-dev/cmdstanr")
+
+# 3. 
+cmdstanr::check_cmdstan_toolchain()
+```
+
+- If this does **not** say that the C++ toolchain is setup properly, install the toolchain ([Linux](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux), [Windows](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows), [Mac](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Mac))
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Once the toolchain is installed and setup:  
+cmdstanr::install_cmdstan()
+```
+
+- Test if it works
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+library(brms)
+
+options(brms.backend="cmdstanr")
+
+brm(mpg ~ wt, data=mtcars)
+```
+
+
+:::
+
+
+## Recap {background-color="#003B49"}
+
+
+- We understood how Bayes' Theorem can be used to update beliefs in light of new evidence
+- How it can be used to compare models using Bayes Factors (BF) and use it in basic hypothesis tests (e.g., correlation)
+- How we can set priors over parameters of interest (e.g., correlation coefficients) using distributions
+
+
+
+## Recap of Differences (1)
+
+::: {.columns .nonincremental}
+
+:::: {.column width="50%"}
+
+- **Frequentist Statistics** 😢
+  - Generate a sampling distribution of the test statistic assuming $H0$
+  - Compare observed value of the test statistic with the sampling distribution 
+  - Reject $H0$ if  probability of observed  value (or more extreme values) is less than $\alpha$
+  - What we get: $p(data|Null Hypothesis)$
+  - What we want to know: $p(Hypothesis|data)$
+  
+  
+<!-- TODO: retrive quote that illustrates this -->
+::::
+
+:::: {.column}
+
+
+- **Bayesian Statistics** 🥰️
+  - Directly test hypotheses of interest: $p(H|data)$
+  - Define prior over hypotheses $p(H)$
+  - Compute likelihood of the data for each hypothesis $p(data|H)$
+  - Use Bayes' rule to infer the posterior over hypotheses given the data $p(H|data)$
+
+::::
+
+:::
+
+
+## Recap of Differences (2)
+
+- Main difference is that it doesn't rely on complicated assumptions and algorithms to estimate parameters
+- Instead, it relies on **Bayes' theorem** to compute the **posterior distribution** of the parameters of interest
+- Frequentist estimation: Data * Model * Optimization Algorithm -> result (best fitting parameters) -> inference relies on further assumptions
+- Bayesian estimation does not rely on assumptions, but instead, starts with initial "results" (priors), and then updates these results based on the data
+- Every statistical parameter that we want to estimate has to start with a prior distribution
+
+## History of Statistics
+
+::: {.columns style="font-size: 90%;"}
+
+:::: {.column width="50%"}
+
+- **Frequentism**
+  - 1900: Karl Pearson develops the chi-squared and correlation test
+  - 1913: Ronald Fisher introduces the concept of likelihood
+  - 1920s: Fisher develops maximum likelihood estimation (MLE) and analysis of variance (ANOVA)
+  - 1927: Jerzy Neyman and Egon Pearson (son of Karl Pearson) introduce hypothesis testing and confidence intervals
+  - 1950s: Frequentism becomes the dominant statistical approach in most scientific disciplines
+
+::::
+:::: {.column width="50%"}
+
+- **Bayesianism**
+  - 1763: Thomas Bayes' essay "An Essay towards solving a Problem in the Doctrine of Chances" published posthumously
+  - 1812: Pierre-Simon Laplace, a French mathematician and physicist, extended and formalized Bayesian probability theory
+  - ... Not much happening ...
+  - 1950s: Leonard Jimmie Savage lays the foundation for modern Bayesian statistics
+  - 1960s: Work by Jeffrey explores the philosophical and practical aspects of Bayesian inference
+  - 1980s: Bayesian statistics becomes increasingly applicable thanks to advancements in computing power and algorithms (MCMC)
+  
+::::
+:::
+
+## Why such a gap?
+
+
+::: {.columns}
+
+:::: {.column width="70%"}
+
+- We know the Bayes' theorem since the 18th century (actually predates Frequentist statistics)
+- But Bayesian statistics really didn't appear until the 1960's, with a real boom in the 2000's
+- Why did it take 250 years to take off?
+- Because performing Bayesian inference for real data (not just estimating Bayes factors) is hard, and could only be achieved with the advent of modern computers
+
+::::
+:::: {.column width="30%"}
+
+![](img/Thomas_Bayes.gif)
+::::
+:::
+
+## Correlation
+
+
+- The `BayesFactor` package allows us to compute Bayes factors using a mathematical trick without performing "full" Bayesian inference
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+result <- BayesFactor::correlationBF(mtcars$mpg, mtcars$qsec)
+result
+```
+
+::: 
+
+- $BF_{10} = 4.42$ is moderate evidence for the existence of a correlation...
+  - But in what direction? Of what magnitude?
+- What if we want to describe the correlation coefficient? 
+- In a Bayesian context, this means to analyze our beliefs about the correlation coefficient after observing the data. [**Bayes' Theorem**: $\underbrace{P(H|data)}_{Posterior} = \underbrace{P(H)}_{Prior}~\underbrace{P(data|H)}_{Likelihood}$]{.fragment}
+- This is called the **Posterior**, and is the last ingredient of Bayesian inference   - Priors \* (model + data) = Posterior
+
+## Posterior Description
+
+- The results obtained by `BayesFactor` don't contain the posterior, because it is not computed by default (the package focuses on estimating Bayes Factors in the most efficient way possible)
+- We can compute it using the `posterior()` function and specifying the number of iterations (i.e., the number of "draws")
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+posterior <- BayesFactor::posterior(result, iterations=500)
+head(posterior)
+```
+
+:::
+
+## MCMC
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- It performs the sampling using a technique called **Markov Chain Monte Carlo (MCMC)**, which is a family of algorithms that allow to sample from a distribution without knowing its exact shape.
+- This is because, while we can calculate the exact Bayesian posterior of simple known distributions, it becomes very hard for **empirical distributions** (i.e., distributions that don't have a formula, such as that of the data).
+- We say that the posterior is **intractable** (i.e., we can't compute it analytically using formulas).
+
+
+::::
+
+:::: {.column}
+
+```{r}
+#| echo: true
+
+head(posterior)
+```
+
+- While the exact posterior distribution is intractable, we can approximate it by **drawing *n* random samples** from it
+- This is what MCMC does, and this is why computational power is typically needed to perform Bayesian inference
+
+::::
+
+:::
+
+## MCMC
+
+- MCMC is a key milestone in the history of Bayesian statistics, because it allows us to perform Bayesian inference for complex models
+- In general, "Bayesian sampling" is a hot area of research with lots of improvements and developments over the past & next couple of years
+- MCMC is a family of algorithms^[https://chi-feng.github.io/mcmc-demo/app.html?algorithm=RandomWalkMH&target=banana], and the core idea is that we obtain a random sample from the (inaccessible) posterior distribution
+- The more samples we have, the better the approximation of the posterior distribution is
+- But sampling takes time: **often a tradeoff between accuracy and speed**
+
+
+## Quizz {background-color="#FFAB91"}
+
+- Doing Bayesian Statistics often involves describing the posterior distribution (the updated beliefs about some statistical parameters, e.g., the correlation value)
+- Computing the posterior distribution is easy and can be done with formulas
+- In real-world problems, the exact posterior distribution is *intractable* (i.e., we can't compute it analytically using formulas)
+- Not being able to compute the posterior analytically means that we cannot draw random samples from this distribution
+- Drawing many samples from the posterior allows us to get an empirical approximation of the posterior distribution
+- The process of random sampling is called **York Chain Monte Altro (YMCA)**
+- The process of random sampling is called **Markov Chain Monte Carlo (MCMC)**
+
+
+
+## MCMC Chains Inspection
+
+::: {.columns style="font-size: 90%;"}
+:::: {.column width="50%"}
+
+- MCMC is a process that should be inspected to ensure that it is working properly
+- It can go wrong (e.g., not converged)
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+head(posterior)
+```
+
+:::::
+
+- In the example above, we have drawn 500 samples from the posterior distribution
+- The returned object shows us the values of 2 variables, the correlation coefficient `rho` and `zeta` (a transformed version of the correlation coefficient that is not important)
+
+::::
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+plot(posterior)
+```
+
+:::::
+
+- The plot on the right is the density plot of the parameter, and on the left it shows the **"trace plots"** of the MCMC chain
+- Trace plots should look like "Hairy Caterpillars", i.e., stationary (overall flat) and "random" (noisy)
+- **Put a pin in that**: We will come back to "model diagnostic" in the future
+
+::::
+:::
+
+
+## Posterior Description
+
+- Once we **assessed our sampling process** and made sure the posterior has been correctly explored and sampled from, we can proceed to **visualize and describe** the posterior distribution
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| fig-height: 3
+
+data <- as.data.frame(posterior)
+
+p <- data |> 
+  ggplot(aes(x=rho)) +
+  geom_density(fill="purple") +
+  geom_vline(xintercept=0, linetype="dashed") +
+  theme_bw() +
+  labs(x="Correlation Coefficient", y="Probability") +
+  coord_cartesian(xlim=c(-1, 1))
+p
+```
+
+:::
+
+## Add Prior
+
+```{r}
+#| echo: true
+
+rscale <- 1/3
+
+prior <- data.frame(
+  y = dbeta(seq(0, 1, length.out=100), 1/rscale, 1/rscale),
+  x = seq(-1, 1, length.out=100)
+)
+
+p + 
+  geom_area(data=prior, aes(x=x, y=y), fill="orange", alpha=.4) +
+  labs(title="Beliefs about rho before (orange) and after (purple) seeing the data")
+```
+
+
+
+## Impact of Prior on Posterior
+
+::: {.nonincremental style="font-size: 90%;"}
+- As we have seen, priors and models specification have a strong influence on Bayes Factors
+- But they also have an impact on the posterior distribution
+
+```{r}
+#| echo: true
+#| code-fold: true
+
+simulate_results <-  function(V1, V2) {
+  
+  # Initialize dataframes
+  data_priors <- data.frame()
+  data_posteriors <- data.frame()
+  
+  for(rscale in c(0.05, 0.1, 1/sqrt(27), 1/3, 1/sqrt(3), 1)) {
+    # Prior
+    prior <- data.frame(
+      y = dbeta(seq(0, 1, length.out=100), 1/rscale, 1/rscale),
+      x = seq(-1, 1, length.out=100),
+      rscale = insight::format_value(rscale)
+    )
+    # prior$y <- prior$y / max(prior$y)  # Normalize y (for visualization)
+    data_priors <- rbind(data_priors, prior)
+    
+    # Compute results
+    result <- BayesFactor::correlationBF(V1, V2, rscale=rscale)
+    
+    # Sample posterior
+    posterior <- as.data.frame(BayesFactor::posterior(result, iterations=2000))
+    posterior$rscale <- insight::format_value(rscale)
+    data_posteriors <- rbind(data_posteriors, posterior)
+  }
+  
+  # Make plot
+  ggplot(data_priors, aes(color=rscale)) +
+    geom_line(aes(x=x, y=y), linewidth=1, linetype="dashed") +
+    geom_density(data=data_posteriors, aes(x=rho), alpha=.2, linewidth=2) +
+    theme_bw() +
+    labs(x="Correlation Coefficient", y="Probability") +
+    coord_cartesian(xlim=c(-1, 1))
+}
+```
+
+```{r}
+#| echo: true
+#| fig-height: 4
+
+simulate_results(mtcars$mpg, mtcars$qsec)
+```
+
+:::
+
+
+## Impact of Prior on Posterior
+
+::: {.columns}
+:::: {.column width="50%" .nonincremental} 
+
+- What if we have even less data (current sample size is 32)?
+
+```{r}
+#| echo: true
+#| eval: false
+
+simulate_results(mtcars$mpg[1:5], mtcars$qsec[1:5])
+```
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: false
+
+simulate_results(mtcars$mpg[1:5], mtcars$qsec[1:5])
+```
+
+:::::
+::::
+:::: {.column width="50%" } 
+
+::::: {.fragment .nonincremental}
+
+- What if we have more data?
+
+```{r}
+#| echo: true
+#| eval: false
+
+idx <- sample(1:32, 250, replace=TRUE)
+simulate_results(mtcars$mpg[idx], mtcars$qsec[idx])
+```
+
+:::::
+
+::::: {.fragment}
+
+```{r}
+#| echo: false
+
+idx <- sample(1:32, 250, replace=TRUE)
+simulate_results(mtcars$mpg[idx], mtcars$qsec[idx])
+```
+
+:::::
+
+::::
+::: 
+
+## Priors and Posteriors
+
+- Priors have an effect, especially when evidence from data is weak (e.g., small sample size)
+- This is why we say that "Bayesian statistics are useful when we have little data"
+  - This is because we can set informative priors based on our knowledge that can help us make better inferences
+  - But if there is clear evidence from the data, the prior doesn't matter that much
+<!-- - **"If the data speaks clearly, Bayes will hear it"** -->
+- The more data, the higher our posterior precision (narrower posterior = lower **uncertainty**)
+- This is where Bayesian statistics shine: they allow us to quantify the uncertainty associated with our estimates by describing the posterior distribution (in particular, its width)
+
+## Priors and Posteriors
+
+::: {.columns}
+ 
+:::: {.column width="50%" style="font-size: 90%;"}
+
+- Bayesian inference is often intuitively conceptualized as a **mixture** between a prior distribution (**expectations**) and a "likelihood" distribution (representing the **evidence**, i.e., the data given a model), which result in the posterior distribution
+- This posterior is seen as a compromise between the prior and the likelihood (i.e., the data)
+- In neuroscience, this is often used in the context of the "Bayesian brain" hypothesis, which posits that the brain is a Bayesian inference machine that has prior expectations (e.g., about what it's going to hear), that gets confronted to sensory evidence (the noisy data coming from the ears), and resolves this: what we consciously hear is the "posterior" distribution that combines the prior and the evidence
+
+::::
+
+:::: {.column}
+
+![](img/BayesianInferenceMixture.png)
+
+
+::::: {.fragment}
+
+![](img/predictivecoding.png){width=100%}
+
+:::::
+
+
+::::
+
+:::
+
+## Game: beware of your intuitions! (1/4) {background-color="#FFAB91"}
+
+::: {.columns}
+:::: {.column width="50%"}
+
+![](img/intuitionGame1a.png)
+
+- Normal prior, normal likelihood
+  - $y \sim Normal(\mu,1)$
+  - $\mu \sim Normal(10,1)$
+- Can you guess the shape of the posterior?
+
+
+::::
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+![](img/intuitionGame1b.png)
+
+:::::
+
+- The classic flavor of Bayesian updating: the posterior is a compromise between the prior and likelihood
+
+::::
+:::
+
+
+## Game: beware of your intuitions! (2/4) {background-color="#FFAB91"} 
+
+::: {.columns}
+:::: {.column width="50%"}
+
+![](img/intuitionGame2a.png)
+
+- Student prior (df=2), normal likelihood
+  - $y \sim Normal(\mu, 1)$
+  - $\mu \sim Student(2, 10, 1)$
+  
+
+::::
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+![](img/intuitionGame2b.png)
+
+:::::
+
+- Now the likelihood dominates: it's thin tails are very skeptical of the prior, but the prior's thick tails are not surprised by the likelihood
+- Note: the mass in the tails can make a big difference! 
+
+::::
+:::
+
+
+## Game: beware of your intuitions! (3/4) {background-color="#FFAB91"} 
+
+::: {.columns}
+:::: {.column width="50%"}
+
+![](img/intuitionGame3a.png)
+
+- Normal prior, Student likelihood (df=2)
+  - $y \sim Student(2, \mu, 1)$
+  - $\mu \sim Normal(10, 1)$
+  
+
+::::
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+![](img/intuitionGame3b.png)
+
+:::::
+
+- Now the prior dominates, so reason as previous example but in reverse
+
+::::
+:::
+
+
+
+## Game: beware of your intuitions! (4/4) {background-color="#FFAB91"}
+
+::: {.columns}
+:::: {.column width="50%"}
+
+![](img/intuitionGame4a.png)
+
+- Student prior, student likelihood (df=2)
+  - $y \sim Student(2, \mu, 1)$
+  - $\mu \sim Student(2, 10, 1)$
+  
+::::
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+![](img/intuitionGame4b.png)
+
+:::::
+
+- The two modes persist: the extra mass in the tails means each distribution finds the other's mode more plausible and so the average isn't the best "compromise"
+
+::::
+:::
+
+
+## Posterior Description
+
+```{r}
+#| echo: false
+
+p + 
+  geom_area(data=prior, aes(x=x, y=y), fill="orange", alpha=.4) +
+  labs(title="Beliefs about rho before (orange) and after (purple) seeing the data")
+```
+
+- How can we describe and report this correlation test?
+- We can report the posterior distribution of the correlation coefficient
+- We could (and should) visualize it, but we also often need to report it with numbers (e.g., in a paper)
+- Because it is "just" a distribution, we can re-use the concepts that we have seen for **bootstrapping**
+- We need to report various indices to convey as much information as we can about this distribution
+
+## Indices of Centrality
+
+::: {style="font-size: 90%"}
+
+- We want to describe the "center" / "typical" value of the posterior distribution
+- What indices to you know?
+- **Mean**
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Extract the vector of rho values
+rvals <- as.data.frame(posterior)$rho
+
+mean(rvals)
+```
+
+::::
+
+  - **Median**
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+median(rvals)
+```
+
+::::
+
+  - (Mode) **MAP** (Maximum A *Posteriori*)
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+as.numeric(bayestestR::map_estimate(rvals))
+```
+
+::::
+
+- Which one to pick?
+  - **Up to you!** But be mindful.
+- I recommend the median because it is less jittery and has a probabilistic meaning (the effect has 50% to be lower and 50% to be higher)
+
+:::
+
+## Point-estimates - Note
+
+
+- The index of centrality that we reported is often referred to as a "point-estimate" of the parameter's central tendency (e.g., "the" correlation coefficient)
+  - *Note that we can also talk about "point-estimates of dispersion" etc., point-estimate just means "single value" summary*
+- When re-used (in other analyses, meta-analyses, ...), it inevitably carries a loss of information (e.g., uncertainty).
+  - E.g., computing the Bayesian correlation within each participant between RT and number of errors, and then using the "point-estimate" to further relate it to personality traits
+- Unfortunately, *propagating uncertainty* is not common practice (and is technically challenging)
+
+
+## Indices of Uncertainty - Deviation
+
+- We want to describe the "uncertainty" / "variability" of the posterior distribution
+- This informs us about the "precision" of our estimate
+- **What index?**
+- **Standard deviation**: the SD of the posterior is the "equivalent"\*\* of the standard error (SE) in Frequentist models. But its interpretation is more straightforward: it is the average distance of the values from the mean. Whereas the Frequentist SE is the deviation of sample means if we drew infinite samples from the parent population (which is a bit more abstract).
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+sd(rvals)
+```
+
+:::
+
+
+
+- **MAD**: the Median Absolute Deviation is the median of the absolute deviations from the median. It is more robust to outliers than the SD.
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mad(rvals)
+```
+
+:::
+
+## Indices of Uncertainty - Intervals (Range)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- One can also communicate uncertainty by reporting "credibility" (i.e., certainty) intervals
+- What bounds? 95%? 90%? 89%?
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+ci <- bayestestR::eti(rvals, ci=c(0.50, 0.89, 0.90, 0.95))
+plot(ci)
+```
+
+:::::
+
+::::
+
+:::: {.column}
+
+- 95% is the most common (because it has been used in Frequentist statistics), but it is ultimately **arbitrary**^[Even though one can find reasons to prefer this]
+- 89% has been advocated by Richard McElreath as an iconoclast move to break the 95% tradition
+- Some people report multiple intervals (especially via plots), to help conveying the shape of the distribution
+- (I recommend 95%)
+
+::::
+
+:::
+
+## Indices of Uncertainty - Intervals (Type)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- **What type of interval?**
+- **Equal-tailed intervals (ETI)**: Quantiles are values that split the distribution into equal parts (e.g., the 2.5% quantile is the value below which 2.5% of the distribution lies). Quantile-based intervals are commonly used to report the 95% most "central" values of the posterior distribution (i.e., the 95% quantile interval). They are called "equal-tailed" because they contain the same amount of probability mass on each side of the distribution.
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::eti(rvals)
+```
+
+:::::
+
+
+::::
+
+:::: {.column}
+
+- Caveat: While easy to compute and to interpret, it is possible that values outside the ETI range are more probable than values inside (if the distribution is highly skewed)
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+x <- rgamma(10000, 1, 1000) * 10000
+
+ci <- bayestestR::eti(x, ci=0.50)
+plot(ci)
+```
+
+:::::
+
+::::
+
+:::
+
+## Indices of Uncertainty - Intervals (Type)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- **Highest Density Interval (HDI)**: the HDI is the Bayesian equivalent of the Confidence Interval (CI). It is the interval that contains the specified probability mass (e.g., 95%) and has the highest density (i.e., is the narrowest). It is the most common interval reported in Bayesian analyses.
+- The HDI is not straightforward to compute (is based on density estimation which is not a trivial issue)
+- But is has the advantage of showing the most "credible" values: the values in the range are the most probable
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+ci <- bayestestR::hdi(x, ci=0.50)
+plot(ci)
+```
+
+:::::
+
+- It is the most "intuitive" interval, and people often interpret Freqentist CIs as HDIs, which is not correct
+
+::::
+
+:::
+
+## Indices of Effect "Significance"
+
+- Indices useful to make a decision about the effect (whether it is worth mentioning and discussing or not)
+  - This can mean either an effect being *big* enough ("significant")
+    - Relates to the concept of effect size
+  - Or an effect being *certain* enough (e.g., "a positive correlation *exists* for sure, even if very very small")
+- **Bayes Factor (BF)**
+- **Probability of Direction** (pd)
+- Probability of being in the **Region Of Practical Equivalence** (ROPE)
+- The two latter are "posterior-based indices", as they only require the posterior distribution to be computed (although the ROPE requires the specification of a "practical equivalence" range). They are often opposed to Bayes Factors, which requires the specification of an alternative models and cannot be computed from the posterior.
+
+## Probability of Direction (pd)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- The probability that the effect is positive or negative
+- It is a Bayesian equivalent usually strongly correlated with the *p*-value
+
+  
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+rez <- bayestestR::pd(rvals)
+plot(rez)
+rez
+```
+
+:::::
+
+::::
+
+:::: {.column}
+
+- Interpretation rules of thumb^[Makowski et al., (2019). *Indices of effect existence and significance in the Bayesian framework*. Frontiers in psychology, 10, 2767.]
+  - **pd <= 95%** ~ *p* > .1: uncertain
+  - **pd > 95%** ~ *p* < .1: possibly existing
+  - **pd > 97%** ~ *p* < .06: likely existing
+  - **pd > 99%** ~ *p* < .02: probably existing
+  - **pd > 99.9%** ~ *p* < .002: certainly existing
+- The *pd* is a good index because of its simplicity and its intuitive interpretation 
+
+::::
+
+:::
+
+## ROPE (Region Of Practical Equivalence)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- The ROPE is a range of values that are considered as "practically equivalent" to zero (or to any other value)
+- It is used to make a decision about the effect being "big" enough (i.e., "significant")
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+rez <- bayestestR::rope(rvals, rope=c(-0.1, 0.1))
+rez
+```
+
+:::::
+
+- Often we use $P_{~in~rope}< .05$ (= $5\%$) as a threshold
+
+:::: 
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+plot(rez)
+```
+
+:::::
+
+- Be careful, by default we consider some \% of CI that is in the ROPE, so your p-ROPE highly depends on the CI bounds you choose
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::rope(rvals, rope=c(-0.1, 0.1), ci=0.90)
+bayestestR::rope(rvals, rope=c(-0.1, 0.1), ci=0.89)
+```
+
+:::::
+
+::::
+
+:::
+
+## Decision Fatigue
+
+- *"I hate Bayesian stats because there is so many things to decide / pay attention to"*
+- There is even more things we ***should*** care about in Frequentist estimation
+- The things we care about in Bayesian statistics are much more transparently accessible and interpretable (e.g., priors, MCMC diagnostics, posterior description, ...)
+- Because applied Bayesian stats are a new field, there is not yet a very strong "standard" way to do things
+- It is a moving and rapidly evolving field
+- For now, best way to deal with this is to 1) understand the main concepts and indices, 2) be transparent about the choices you make
+- Rest assured: if a result is really there, details of the approach shouldn't matter as much, the effect should show regardless of small variations in the analysis
+
+## Reporting a Bayesian Correlation
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- [x] A scatter plot (regardless of Bayesian or not)
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+mtcars |> 
+  ggplot(aes(x=mpg, y=qsec)) +
+  geom_point() +
+  geom_smooth(method="lm")
+```
+
+:::::
+
+- [x] A mention of the priors
+  - "a shifted, scaled $Beta(3, 3)$ prior distribution was used for the correlation coefficient"
+  - "Default priors from the BayesFactor package (Morey \& Rouder, 2023) *correlationBF()* function were used (with the *rscale* parameter being set to medium)"
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+library(BayesFactor)
+
+report::cite_packages()
+```
+
+:::::
+
+::::: {.fragment .nonincremental style="font-size: 35%"}
+
+
+```{r}
+#| echo: false
+#| message: false
+#| results: "asis"
+
+library(BayesFactor)
+
+report::cite_packages()
+```
+
+:::::
+
+::::
+
+:::
+
+## Sampling Information
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- [x] Mention what algorithm and how many samples
+  - *"We drew 500 samples using MCMC"*
+  - *"The sampling algorithm (MCMC; 500 iterations) converged."*
+- [x] Trace plots are mostly for you to assess convergence, but should not necessarily be reported
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+plot(posterior)
+```
+
+:::::
+
+:::: 
+
+:::: {.column}
+
+- Make trace plot with `ggplot`
+  - Plot the iterations "in order" of their sampling (from 1 to *i*)
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+data.frame(r=rvals, i=1:length(rvals)) |> 
+  ggplot(aes(x=i, y=r)) +
+  geom_line() +
+  labs(title="Trace Plot of the Posterior Distribution")
+```
+
+:::::
+
+::::
+
+:::
+
+## Posterior Distribution
+
+- [x] If possible, show the posterior distribution
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+data.frame(r=rvals) |> 
+  ggplot(aes(x=r)) +
+  geom_density(fill="orange") +
+  labs(title="Correlation Posterior Distribution")
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+plot(hdi(rvals))
+```
+
+:::
+
+## Centrality and Direction
+
+- [x] Index of centrality
+  - Mean, median, MAP
+  - *"The median of the correlation coefficient's posterior distribution is `r insight::format_value(median(rvals))`"*
+  - *"We will report the median of the posterior distributions"* + *"The correlation was positive and significant (r = `r insight::format_value(median(rvals))`, ...)"*
+- [x] Report correlation direction
+  - Of the centrality point-estimate
+  - "*The median of the correlation coefficient's posterior distribution is positive (r = `r insight::format_value(median(rvals))`)*
+  - Using the *Probability of Direction* (**pd**) index
+  - "*The probability of the correlation coefficient being positive (pd) is `r insight::format_pd(as.numeric(bayestestR::pd(rvals)), name=NULL)`*"
+  
+## Precision
+
+- [x] Index of dispersion
+  - SD, MAD
+  - *"(MAD = `r insight::format_value(mad(rvals))`)"*
+- [x] Credible Interval
+  - HDI, ETI
+  - *"95% HDI = [..., ...]"*
+  - *"Credible intervals were computed as Highest Density Intervals (HDI)"* + *"95% CI = [..., ...]"*
+
+## Effect significance
+
+- [x] Probability of direction (pd)
+  - *"There is a significant probability that the correlation is positive (pd > 99%)"*
+- [x] ROPE
+  - *"The ROPE was set as [-0.10, 0.10] following Cohen's (1988) effect size recommendations for correlations and we computed the portion of the 95% CI lying inside as an index of effect significance"* + *"(p-ROPE=...)"*
+  - *"The proportion of the posterior falling in the region of practical null equivalence (ROPE = [-0.10, 0.10]) is ..."*
+- [x] Bayes Factor
+  - *"There is strong evidence against the null hypothesis that the correlation is null (BF10 = ...)"*
+
+## Effect size
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+```{r}
+#| echo: true
+
+effectsize::interpret_r(median(rvals), rules="cohen1988")
+```
+
+
+- [x] Effect size interpretation
+  - Mention rules: *"We labelled the correlation effect sizes using Cohen's (1988) rules of thumb set"*
+  - Of the point-estimate
+  - "*The median of the correlation coefficient's posterior distribution is positive and moderate"* 
+
+:::: 
+
+:::: {.column}
+
+- Of the posterior distribution
+
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+effsizes_alldraws <- effectsize::interpret_r(rvals, rules="cohen1988") 
+head(effsizes_alldraws)
+length(effsizes_alldraws)
+```
+
+:::::
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+table(effsizes_alldraws) / length(effsizes_alldraws)
+```
+
+:::::
+
+- *"The correlation has a 13.6% probability of being large, 51.8% of being moderate, 29.2% of being small and 5.40% of being very small"*
+  - Can become verbose (especially if many correlations to report): **find good balance between detail and conciseness**
+
+::::
+
+:::
+
+## Minimal Template Sentence
+
+- "The Bayesian Pearson correlation between X and Y was estimated to be r = *median* (95% CI [..., ...]), with a probability of ***pd*** of being negative and can be considered as significant ($p_{-rope}$=...)"
+- "There was moderate evidence ($BF_{10}=~...$) in favour of a non-null correlation between X and Y that has a probability of ***pd*** of being negative (Median = median, 89% CI [..., ...]) and can be considered as significant and moderate  ($p_{-rope}$=...)"
+
+## Spearman Correlation
+
+- What are the benefits of Spearman correlations?
+  - More "robust" to outliers
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+y <- c(0.53, 0.67, 0.70, 0.86, 0.92, 0.94, 0)
+x <- c(100, 101, 102, 103, 104, 105, 115)
+
+ggplot(data.frame(x=x, y=y), aes(x=x, y=y)) +
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+
+cor.test(x, y, method="pearson")
+```
+
+:::
+
+## Rank-Transformations
+
+- Why is it more robust? What are Spearman correlations?
+- Spearman Correlation are Pearson correlation on **"rank-transformed"** data
+
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+xrank <- datawizard::ranktransform(x)
+xrank
+yrank <- datawizard::ranktransform(y)
+
+ggplot(data.frame(x=xrank, y=yrank), aes(x=x, y=y)) +
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+
+cor.test(x, y, method="spearman")
+```
+
+:::
+
+
+## Spearman Bayesian Correlations
+
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+cor.test(x, y, method="spearman")
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+cor.test(xrank, yrank, method="pearson")
+```
+
+:::
+
+1. Rank-transform variables
+2. Compute Bayesian Pearson correlation
+
+## Exercice {background-color="#FFAB91"}
+
+::: {.nonincremental}
+
+- In the `iris` in-built dataset, report the Spearman correlation between `Petal.Length` and `Petal.Width` for the `setosa` species only
+- Desired output^[Note that your exact values might slightly differ due to the *stochastic* (i.e., random) nature of the MCMC algorithm]:
+
+```{r}
+#| echo: false
+
+data <- dplyr::filter(iris, Species=="setosa")
+
+rez <- BayesFactor::correlationBF(data$Petal.Length, data$Petal.Width)
+bayestestR::describe_posterior(rez)
+```
+
+
+:::
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+
+

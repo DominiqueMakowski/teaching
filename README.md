@@ -24,6 +24,9 @@ I also offer workshops to external universities (see [here for details](https://
     - [Bayes Factors (BIC approximation)](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/5_BayesFactorsBIC)
 - **Lecture 6:**
     - [Bayes Factors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/6_BayesFactors)
+- **Lecture 7:**
+    - [Posteriors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/7_Posteriors)
+
 
 *12/2024* - University of Paris-Cité (LaPsyDé Workshop)
 

@@ -109,44 +109,6 @@ df |>
 ```
 
 
-## Installing `brms`
-
-::: {.nonincremental}
-
-- Restart R (Environment should be empty)
-
-```{r}
-#| echo: true
-#| eval: false
-
-# In a FRESH session:
-# 1.
-install.packages("brms")
-
-# 2.
-library(brms)
-
-# 3.
-brm(mpg ~ wt, data=mtcars)
-```
-
-
-- It should prompt you with installing additional tools. Say yes. It should start downloading, and then installing automatically
-- **If prompted again, say no.**
-- During or after the installation, it might throw an error. Just wait until the installation is complete
-- Close R and RStudio
-- Reopen, and run 🤞
-
-```{r}
-#| echo: true
-#| eval: false
-
-# 4.
-library(brms)
-brm(mpg ~ wt, data=mtcars)
-```
-
-:::
 
 ## Recap {background-color="#1A237E"}
 
