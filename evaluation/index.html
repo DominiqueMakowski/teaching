@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Title shown in tab -->
+        <title>Module Evaluation</title>
+
+        <!-- Load JsPsych -->
+        <script src="https://unpkg.com/jspsych@8.2.1"></script>
+        <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+        <script src="https://unpkg.com/@jspsych/plugin-browser-check@2.1.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.1.0"></script>
+        <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe@0.5.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey@1.0.1"></script>
+        <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@1.0.1/css/survey.css" />
+    </head>
+
+    <body></body>
+
+    <script>
+        // Initialize experiment =================================================
+        var timeline = []
+
+        var jsPsych = initJsPsych({
+            show_progress_bar: false,
+            on_finish: function () {
+                window.location = "https://realitybending.github.io/"
+                // jsPsych.data.displayData("json") // Display data in browser
+            },
+        })
+
+        // Info -------------------------------------------------------------------
+        timeline.push({
+            type: jsPsychBrowserCheck,
+            data: {
+                screen: "browser_info",
+                date: new Date().toLocaleDateString("fr-FR"),
+                time: new Date().toLocaleTimeString("fr-FR"),
+            },
+            on_finish: function (data) {
+                // Add URL variables - ?mod=bayesian
+                let urlvars = jsPsych.data.urlVariables()
+                data["module"] = urlvars["mod"]
+            },
+        })
+
+        timeline.push({
+            type: jsPsychSurvey,
+            survey_json: {
+                title: "Feedback",
+                description:
+                    "Thanks so much for taking a bit of time to provide feedback (~2min). Your responses are very important for improving the module as well as for the lecturer. Don't hesitate to mention what didn't work, but also what was positive. Your responses are completely anonymous.",
+                // completeText: "Complete the experiment",
+                showQuestionNumbers: false,
+                showProgressBar: "aboveHeader",
+                pages: [
+                    {
+                        elements: [
+                            {
+                                title: "To what program/position do you belong to?",
+                                name: "Occupation",
+                                type: "radiogroup",
+                                choices: ["Undergrad", "MSc", "MRes", "PhD (Psychology)", "PhD (Neuroscience)", "Postdoc", "Lecturer"],
+                                showOtherItem: true,
+                                otherText: "Other",
+                                isRequired: false,
+                                colCount: 1,
+                            },
+                            {
+                                type: "comment",
+                                name: "WhatDidYouLike",
+                                title: "What did you like best about this module?",
+                                isRequired: false,
+                            },
+                            {
+                                type: "comment",
+                                name: "WhatWouldYouChange",
+                                title: "What would you change about this module?",
+                                isRequired: false,
+                            },
+                        ],
+                    },
+                    {
+                        elements: [
+                            {
+                                type: "rating",
+                                name: "Quality",
+                                title: "Compared to other modules I had, the quality of this module was",
+                                isRequired: false,
+                                rateValues: ["One of the worse", "Less than average", "Average", "Above average", "Exceptional"],
+                            },
+                            {
+                                type: "rating",
+                                name: "Learned",
+                                title: "I learned a lot in this module",
+                                isRequired: false,
+                                rateMin: 0,
+                                rateMax: 4,
+                                rateType: "stars",
+                            },
+                            {
+                                type: "rating",
+                                name: "Teaching",
+                                title: "This module was well taught (clearly presented, engaging, ...)",
+                                isRequired: false,
+                                rateMin: 0,
+                                rateMax: 4,
+                                rateType: "stars",
+                            },
+                            {
+                                type: "rating",
+                                name: "Enjoyed",
+                                title: "In general, I enjoyed this module",
+                                isRequired: false,
+                                rateMin: 0,
+                                rateMax: 4,
+                                rateType: "stars",
+                            },
+                        ],
+                    },
+                ],
+            },
+            data: {
+                screen: "feedback",
+            },
+        })
+
+        // Save Data
+        timeline.push({
+            type: jsPsychHtmlButtonResponse,
+            stimulus:
+                "<p>Done! now click on 'Continue' and <b>wait until your responses have been successfully saved</b> before closing the tab.</p> ",
+            choices: ["Continue"],
+            data: { screen: "waitdatasaving" },
+        })
+
+        // Save data via DataPipe
+        timeline.push({
+            type: jsPsychPipe,
+            action: "save",
+            experiment_id: "CwHDReojAFY7", // This in generated in the DataPipe interface
+            filename: `${jsPsych.randomization.randomID(10)}.csv`,
+            data_string: () => jsPsych.data.get().csv(),
+        })
+
+        timeline.push({
+            type: jsPsychHtmlButtonResponse,
+            css_classes: ["narrow-text"],
+            stimulus: "<h1>Thank you for your feedback</h1>" + "<p>You can now close the tab.</p>",
+            choices: ["End"],
+            data: { screen: "endscreen" },
+        })
+
+        //  Run the timeline =====================================================
+        jsPsych.run(timeline)
+    </script>
+</html>
