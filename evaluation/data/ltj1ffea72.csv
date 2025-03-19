@@ -1,0 +1,6 @@
+"rt","response","screen","trial_type","trial_index","time_elapsed","internal_node_id","question_order","stimulus"
+"118253","{""Occupation"":""MRes"",""WhatDidYouLike"":""Everything's really clearly explained"",""WhatWouldYouChange"":""Maybe more tasks to practice/consolidate what we're learning (e.g., canvas quizzes or mini tasks to complete in R outside of workshops)""}","freetext","survey-text","0","118287","0.0-0.0","",""
+"5654","{""Interactive"":2,""Interesting"":2,""Engaging"":2,""Clear"":2}","likert1","survey-likert","1","123948","0.0-1.0","[0,3,2,1]",""
+"8994","{""Career"":3,""Understanding"":4,""Application"":3,""Enjoyed"":4}","likert2","survey-likert","2","132945","0.0-2.0","[0,1,2,3]",""
+"579629","{""Feedback"":""so far so good👍""}","feedback","survey-text","3","712581","0.0-3.0","",""
+"4833","0","waitdatasaving","html-button-response","4","717416","0.0-4.0","","<p>Done! now click on 'Continue' and <b>wait until your responses have been successfully saved</b> before closing the tab.</p> "

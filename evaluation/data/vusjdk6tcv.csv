@@ -1,0 +1,6 @@
+"rt","response","screen","trial_type","trial_index","time_elapsed","internal_node_id","question_order","stimulus"
+"83540","{""Occupation"":""MRes"",""WhatDidYouLike"":""Dom keeps things light and is very thorough"",""WhatWouldYouChange"":""The pace in the first 5 or so weeks was quite slow and entirely covered content we'd already covered in modules last semester.""}","freetext","survey-text","0","83580","0.0-0.0","",""
+"80309","{""Engaging"":2,""Interactive"":2,""Interesting"":1,""Clear"":2}","likert1","survey-likert","1","163890","0.0-1.0","[2,0,3,1]",""
+"20531","{""Career"":2,""Understanding"":1,""Application"":2,""Enjoyed"":2}","likert2","survey-likert","2","184428","0.0-2.0","[0,1,2,3]",""
+"30586","{""Feedback"":""I love getting rick roll'd every week ^-^""}","feedback","survey-text","3","215019","0.0-3.0","",""
+"2957","0","waitdatasaving","html-button-response","4","217980","0.0-4.0","","<p>Done! now click on 'Continue' and <b>wait until your responses have been successfully saved</b> before closing the tab.</p> "

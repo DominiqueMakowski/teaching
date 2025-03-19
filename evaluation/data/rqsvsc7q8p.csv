@@ -1,0 +1,6 @@
+"rt","response","screen","trial_type","trial_index","time_elapsed","internal_node_id","question_order","stimulus"
+"3568226","{""Occupation"":""MRes Psychological Methods"",""WhatDidYouLike"":""The detailed explanations and creativity in explaining both basic and complicated concepts"",""WhatWouldYouChange"":""Needs more exercises, more workshop like""}","freetext","survey-text","0","3568251","0.0-0.0","",""
+"36066","{""Clear"":2,""Interactive"":1,""Interesting"":2,""Engaging"":2}","likert1","survey-likert","1","3604320","0.0-1.0","[1,0,3,2]",""
+"21024","{""Career"":3,""Understanding"":3,""Application"":2,""Enjoyed"":3}","likert2","survey-likert","2","3625347","0.0-2.0","[0,1,2,3]",""
+"176671","{""Feedback"":""Would have liked if it was more intimate and we mostly masters students""}","feedback","survey-text","3","3802022","0.0-3.0","",""
+"4612","0","waitdatasaving","html-button-response","4","3806636","0.0-4.0","","<p>Done! now click on 'Continue' and <b>wait until your responses have been successfully saved</b> before closing the tab.</p> "

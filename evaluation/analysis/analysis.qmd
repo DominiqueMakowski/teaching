@@ -19,33 +19,37 @@ format:
 library(tidyverse)
 library(easystats)
 library(patchwork)
+library(jsonlite)
 library(ggside)
 ```
 
 
 
 ```{r}
-df <- read.csv("../data/data.csv") |> 
-  arrange(Occupation) |> 
-  mutate_at(vars(c("Understanding", "Application", "Career", "Enjoyed")), \(x) {
-    case_when(
-      x == 0 ~ "Not at all",
-      x == 1 ~ "Slighly",
-      x == 2 ~ "Moderately",
-      x == 3 ~ "Very much",
-      .default = "Absolutely"
-    ) |> 
-    factor(levels=c("Not at all", "Slighly", "Moderately", "Very much", "Absolutely"))
-    }) |> 
-  mutate_at(vars("Engaging", "Interesting", "Clear", "Interactive"), \(x) {
-    case_when(
-    x == 0 ~ "Not at all",
-    x == 1 ~ "Not enough",
-    x == 2 ~ "The right amount",
-    .default = "Too much"
-  ) |> 
-    factor(levels=c("Not at all", "Not enough", "The right amount", "Too much"))
-  })
+df <- data.frame()
+for (file in list.files("../data/", full.names = TRUE, pattern = "*.csv")) {
+  rawdata <- read.csv(file)
+
+  if(!"browser_info" %in% rawdata$screen) {
+    next
+  }
+
+  resp <- jsonlite::fromJSON(rawdata[rawdata$screen == "feedback", "response"])
+  data <- data.frame(
+    Date = rawdata[rawdata$screen == "browser_info", "date"],
+    Module = rawdata[rawdata$screen == "browser_info", "module"],
+    Occupation = resp$Occupation,
+    WhatDidYouLike = resp$WhatDidYouLike,
+    WhatWouldYouChange = resp$WhatWouldYouChange,
+    Quality = ifelse(is.null(resp$Quality), NA, resp$Quality),
+    Learned = resp$Learned,
+    Teaching = resp$Teaching,
+    Enjoyed = resp$Enjoyed
+  )
+
+
+  df <- rbind(df, data)
+}
 ```
 
 
@@ -54,19 +58,14 @@ df <- read.csv("../data/data.csv") |>
 ```{r}
 make_table <- function(df, what="Feedback") {
   df |> 
-    select(all_of(c("Occupation", what))) |>
+    select(all_of(c("Date", "Occupation", what))) |>
     data_rename(what, "Feedback") |> 
     filter(Feedback != "") |> 
     gt::gt() |> 
-    gt::cols_width(
-      Occupation ~ pct(30),
-      ) |>  
-    gt::opt_stylize() |> 
-    gt::opt_interactive(use_compact_mode=TRUE) 
+    gt::opt_stylize() 
 }
 
-make_table(df, "Feedback") |> 
-    gt::tab_header("General Comments")
+
 make_table(df, "WhatDidYouLike") |> 
     gt::tab_header("What did you like?")
 make_table(df, "WhatWouldYouChange") |> 

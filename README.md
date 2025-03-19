@@ -27,7 +27,9 @@ I also offer workshops to external universities (see [here for details](https://
 - **Lecture 7:**
     - [Posteriors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/7_Posteriors)
     - [Module evaluation](https://dominiquemakowski.github.io/teaching/evaluation?mod=Bayesian)
-
+- **Lecture 8:**
+    - [Priors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/8_Priors)
+    - [Exam answers](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 *12/2024* - University of Paris-Cité (LaPsyDé Workshop)
 

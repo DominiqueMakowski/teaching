@@ -1,0 +1,6 @@
+"rt","response","screen","trial_type","trial_index","time_elapsed","internal_node_id","question_order","stimulus"
+"55814","{""Occupation"":""PhD Sussex Neuroscience"",""WhatDidYouLike"":""how streamlined and neat the presentations were"",""WhatWouldYouChange"":""apart from the lectures, one/two full-on practicals would be nice""}","freetext","survey-text","0","55836","0.0-0.0","",""
+"16075","{""Interactive"":2,""Interesting"":2,""Clear"":2,""Engaging"":2}","likert1","survey-likert","1","71916","0.0-1.0","[0,3,1,2]",""
+"14199","{""Career"":4,""Understanding"":4,""Application"":3,""Enjoyed"":4}","likert2","survey-likert","2","86119","0.0-2.0","[0,1,2,3]",""
+"11490","{""Feedback"":""it's a very good course!""}","feedback","survey-text","3","97615","0.0-3.0","",""
+"2886","0","waitdatasaving","html-button-response","4","100506","0.0-4.0","","<p>Done! now click on 'Continue' and <b>wait until your responses have been successfully saved</b> before closing the tab.</p> "

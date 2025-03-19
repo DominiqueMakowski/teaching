@@ -1,0 +1,6 @@
+"rt","response","screen","trial_type","trial_index","time_elapsed","internal_node_id","question_order","stimulus"
+"304804","{""Occupation"":""Technician and PhD in Psychology"",""WhatDidYouLike"":""Charismatic teacher"",""WhatWouldYouChange"":""More depth on calculations, but not much""}","freetext","survey-text","0","304822","0.0-0.0","",""
+"82708","{""Interesting"":2,""Engaging"":2,""Clear"":2,""Interactive"":2}","likert1","survey-likert","1","387533","0.0-1.0","[3,2,1,0]",""
+"9588","{""Career"":4,""Understanding"":4,""Application"":4,""Enjoyed"":4}","likert2","survey-likert","2","397125","0.0-2.0","[0,1,2,3]",""
+"63763","{""Feedback"":""Very interesting! I needed to know most of this for my viva - a further course on the maths (if possible) would be an interesting follow up""}","feedback","survey-text","3","460893","0.0-3.0","",""
+"3615","0","waitdatasaving","html-button-response","4","464510","0.0-4.0","","<p>Done! now click on 'Continue' and <b>wait until your responses have been successfully saved</b> before closing the tab.</p> "
