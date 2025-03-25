@@ -916,7 +916,7 @@ newdata
 ```{r}
 #| echo: true
 
-pred <- get_predicted(model_priors, data=newdata, iterations=250) |> 
+pred <- insight::get_predicted(model_priors, data=newdata, iterations=250) |> 
   as.data.frame() |> 
   cbind(newdata)
 ```
@@ -1038,9 +1038,9 @@ p +
 ```{r}
 #| echo: true
 
-pred <- get_predicted(model_priors, data=mtcars, iterations=250) |> 
+pred <- insight::get_predicted(model_priors, data=mtcars, iterations=250) |> 
   as.data.frame() |> 
-  reshape_iterations()
+  modelbased::reshape_iterations()
 
 head(pred)
 ```
@@ -1078,9 +1078,9 @@ priors <- c(
 
 model_priors2 <- update(model_priors, prior=priors, refresh=0)
 
-get_predicted(model_priors2, data=newdata, iterations=250) |> 
+insight::get_predicted(model_priors2, data=newdata, iterations=250) |> 
   as.data.frame() |> 
-  reshape_iterations() |> 
+  modelbased::reshape_iterations() |> 
   cbind(newdata) |> 
   ggplot(aes(x=mpg)) +
   geom_point(data=mtcars, aes(y=qsec), size=3) +
@@ -1100,9 +1100,9 @@ priors <- c(
 
 model_priors2 <- update(model_priors, prior=priors, refresh=0)
 
-get_predicted(model_priors2, data=newdata, iterations=250) |> 
+insight::get_predicted(model_priors2, data=newdata, iterations=250) |> 
   as.data.frame() |> 
-  reshape_iterations() |> 
+  modelbased::reshape_iterations() |> 
   cbind(newdata) |> 
   ggplot(aes(x=mpg)) +
   geom_point(data=mtcars, aes(y=qsec), size=3) +
