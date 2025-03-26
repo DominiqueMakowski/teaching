@@ -117,18 +117,82 @@ model <- brms::brm(f,
 
 :::
 
-## MCMC
+## MCMC - NUTS
+
+::: {.columns}
+
+:::: {.column width=50%}
 
 - By default, `brms` uses MCMC
-  - In particular, the **No-U-Turn Sampler (NUTS)** algorithm, which is a variant of **Hamiltonian Monte Carlo (HMC)**
+  - In particular, the **No-U-Turn Sampler (NUTS)** algorithm, which is a self-adjusting variant of **Hamiltonian Monte Carlo (HMC)**
+  - The key idea behind HMC is that it treats sampling as a physics problem, where we imagine the posterior distribution space as a hilly landscape and use momentum to explore it efficiently
+  - Instead of setting a fixed number of steps, NUTS keeps "rolling the ball" until it detects a U-turn (where the trajectory starts going back toward its starting point)
+  
+:::: 
+
+:::: {.column}
+
+![](img/hmc.gif)
+
+::::
+
+:::
+
+## MCMC vs. Variational Inference (VI)
+
+::: {.columns}
+
+:::: {.column width=70% style="font-size: 70%;"}
+
 - Stan (the language used by `brms` in the background) also implements **variational inference** algorithms that sample from an approximation of the posterior, which are faster but less accurate
-  - You can use them by specifying `algorithm = "meanfield"` or `algorithm = "fullrank"`
+  - You can use them by specifying `algorithm = "meanfield"`, `algorithm = "fullrank"`, or `algorithm = "pathfinder"`
+  - Unlike MCMC, which samples from the true posterior, Variational Inference (VI) approximates it using simpler distribution (e.g., Gaussian) and minimizes the difference between the two (e.g., optimizing the Kullback-Leibler KL divergence)
+- **Pros:**
   - Can be useful for "quick" checks and adjustments but should not necessarily be used for final results
-  - Interestingly, some neuroscientific theories suggest that variational inference approximation is what the brain actually does
-- For this module we will focus on MCMC, which is slowest but the "true" Bayesian solution
+  - If the uncertainty estimation is not the main goal but speed is
+- **Cons:**
+  - Less accurate
+  - VI posteriors may be overconfident (narrower CI)
+
+:::: 
+
+:::: {.column width=30%}
+
+![](img/KullbackLeibler.png)
+
+::::
+
+:::
+
+## VI in the Brain
+
+::: {.columns}
+
+:::: {.column width=70% style="font-size: 70%;"}
+
+
+- The brain is thought to be a Bayesian inference machine, constantly predicting sensory input and updating beliefs based on errors
+- **Prediction errors** (mismatch between expectation and reality) drive learning and perception
+- Computing exact posteriors would be too  computationally expensive for the brain
+- Instead, it might approximates the posterior in a way similar to VI:
+  - The brain represents beliefs with simpler distributions (e.g., Gaussian-like approximations).
+  - Instead of exploring all possibilities, it minimizes a function ("Free Energy") to find the best fit
+- The brain minimizes Free Energy to improve its model could be mathematically similar to VI minimizing the Kullback-Leibler (KL) divergence between an approximate posterior and the true posterior
+- Cognitive and neural processing could be optimized for **efficiency** rather than exactness, much like how VI trades accuracy for speed
+
+:::: 
+
+:::: {.column width=30%}
+
+![](img/PredictiveProcessing.jpg)
+
+::::
+
+:::
 
 ## MCMC parameters
 
+- For this module we will focus on MCMC, which is slowest but the "true" Bayesian solution
 - MCMC can be tuned
   - Number of **chains**, number of **iterations**
   - **Warm-up**: the number of initial samples that are discarded (burn-in phase)

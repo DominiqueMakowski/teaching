@@ -8,7 +8,7 @@
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.549">
+  <meta name="generator" content="quarto-1.5.57">
 
   <meta name="author" content="Dominique MakowskiD.Makowski@sussex.ac.uk">
   <title>Bayesian Statistics</title>
@@ -42,7 +42,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -482,25 +482,71 @@
 </div>
 </div>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>See the function documentation for the massive list of options</p></li></ol></aside></section>
-<section id="mcmc" class="slide level2">
-<h2>MCMC</h2>
+<section id="mcmc---nuts" class="slide level2">
+<h2>MCMC - NUTS</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li class="fragment">By default, <code>brms</code> uses MCMC
 <ul>
-<li class="fragment">In particular, the <strong>No-U-Turn Sampler (NUTS)</strong> algorithm, which is a variant of <strong>Hamiltonian Monte Carlo (HMC)</strong></li>
+<li class="fragment">In particular, the <strong>No-U-Turn Sampler (NUTS)</strong> algorithm, which is a self-adjusting variant of <strong>Hamiltonian Monte Carlo (HMC)</strong></li>
+<li class="fragment">The key idea behind HMC is that it treats sampling as a physics problem, where we imagine the posterior distribution space as a hilly landscape and use momentum to explore it efficiently</li>
+<li class="fragment">Instead of setting a fixed number of steps, NUTS keeps “rolling the ball” until it detects a U-turn (where the trajectory starts going back toward its starting point)</li>
 </ul></li>
+</ul>
+</div><div class="column">
+<p><img data-src="img/hmc.gif"></p>
+</div></div>
+</section>
+<section id="mcmc-vs.-variational-inference-vi" class="slide level2">
+<h2>MCMC vs.&nbsp;Variational Inference (VI)</h2>
+<div class="columns">
+<div class="column" style="font-size: 70%;">
+<ul>
 <li class="fragment">Stan (the language used by <code>brms</code> in the background) also implements <strong>variational inference</strong> algorithms that sample from an approximation of the posterior, which are faster but less accurate
 <ul>
-<li class="fragment">You can use them by specifying <code>algorithm = "meanfield"</code> or <code>algorithm = "fullrank"</code></li>
-<li class="fragment">Can be useful for “quick” checks and adjustments but should not necessarily be used for final results</li>
-<li class="fragment">Interestingly, some neuroscientific theories suggest that variational inference approximation is what the brain actually does</li>
+<li class="fragment">You can use them by specifying <code>algorithm = "meanfield"</code>, <code>algorithm = "fullrank"</code>, or <code>algorithm = "pathfinder"</code></li>
+<li class="fragment">Unlike MCMC, which samples from the true posterior, Variational Inference (VI) approximates it using simpler distribution (e.g., Gaussian) and minimizes the difference between the two (e.g., optimizing the Kullback-Leibler KL divergence)</li>
 </ul></li>
-<li class="fragment">For this module we will focus on MCMC, which is slowest but the “true” Bayesian solution</li>
+<li class="fragment"><strong>Pros:</strong>
+<ul>
+<li class="fragment">Can be useful for “quick” checks and adjustments but should not necessarily be used for final results</li>
+<li class="fragment">If the uncertainty estimation is not the main goal but speed is</li>
+</ul></li>
+<li class="fragment"><strong>Cons:</strong>
+<ul>
+<li class="fragment">Less accurate</li>
+<li class="fragment">VI posteriors may be overconfident (narrower CI)</li>
+</ul></li>
 </ul>
+</div><div class="column" style="width:30%;">
+<p><img data-src="img/KullbackLeibler.png"></p>
+</div></div>
+</section>
+<section id="vi-in-the-brain" class="slide level2">
+<h2>VI in the Brain</h2>
+<div class="columns">
+<div class="column" style="font-size: 70%;">
+<ul>
+<li class="fragment">The brain is thought to be a Bayesian inference machine, constantly predicting sensory input and updating beliefs based on errors</li>
+<li class="fragment"><strong>Prediction errors</strong> (mismatch between expectation and reality) drive learning and perception</li>
+<li class="fragment">Computing exact posteriors would be too computationally expensive for the brain</li>
+<li class="fragment">Instead, it might approximates the posterior in a way similar to VI:
+<ul>
+<li class="fragment">The brain represents beliefs with simpler distributions (e.g., Gaussian-like approximations).</li>
+<li class="fragment">Instead of exploring all possibilities, it minimizes a function (“Free Energy”) to find the best fit</li>
+</ul></li>
+<li class="fragment">The brain minimizes Free Energy to improve its model could be mathematically similar to VI minimizing the Kullback-Leibler (KL) divergence between an approximate posterior and the true posterior</li>
+<li class="fragment">Cognitive and neural processing could be optimized for <strong>efficiency</strong> rather than exactness, much like how VI trades accuracy for speed</li>
+</ul>
+</div><div class="column" style="width:30%;">
+<p><img data-src="img/PredictiveProcessing.jpg"></p>
+</div></div>
 </section>
 <section id="mcmc-parameters" class="slide level2">
 <h2>MCMC parameters</h2>
 <ul>
+<li class="fragment">For this module we will focus on MCMC, which is slowest but the “true” Bayesian solution</li>
 <li class="fragment">MCMC can be tuned
 <ul>
 <li class="fragment">Number of <strong>chains</strong>, number of <strong>iterations</strong></li>
@@ -528,8 +574,7 @@
 </ul>
 </div><div class="column" style="width:30%;">
 <p><img data-src="img/colin.webp"></p>
-</div>
-</div>
+</div></div>
 <div class="fragment">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1302,42 +1347,80 @@ ELPD    | ELPD_SE |   LOOIC | LOOIC_SE |    WAIC |    R2 | R2 (adj.) |  RMSE | S
       });
     </script>
     
+
     <script>
+
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
       // slide changes (different for each slide format).
+
       (function () {
+
         // dispatch for htmlwidgets
+
         function fireSlideEnter() {
+
           const event = window.document.createEvent("Event");
+
           event.initEvent("slideenter", true, true);
+
           window.document.dispatchEvent(event);
+
         }
+
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
+
           fireSlideEnter();
 
+    
+
           // dispatch for shiny
+
           if (window.jQuery) {
+
             if (previousSlide) {
+
               window.jQuery(previousSlide).trigger("hidden");
+
             }
+
             if (currentSlide) {
+
               window.jQuery(currentSlide).trigger("shown");
+
             }
+
           }
+
         }
+
+    
 
         // hookup for slidy
+
         if (window.w3c_slidy) {
+
           window.w3c_slidy.add_observer(function (slide_num) {
+
             // slide_num starts at position 1
+
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
           });
+
         }
 
+    
+
       })();
+
     </script>
+
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -1371,18 +1454,7 @@ ELPD    | ELPD_SE |   LOOIC | LOOIC_SE |    WAIC |    R2 | R2 (adj.) |  RMSE | S
         }
         return false;
       }
-      const clipboard = new window.ClipboardJS('.code-copy-button', {
-        text: function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
-        }
-      });
-      clipboard.on('success', function(e) {
+      const onCopySuccess = function(e) {
         // button target
         const button = e.trigger;
         // don't keep focus
@@ -1414,7 +1486,47 @@ ELPD    | ELPD_SE |   LOOIC | LOOIC_SE |    WAIC |    R2 | R2 (adj.) |  RMSE | S
         }, 1000);
         // clear code selection
         e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
       });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
       function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
@@ -1451,7 +1563,11 @@ ELPD    | ELPD_SE |   LOOIC | LOOIC_SE |    WAIC |    R2 | R2 (adj.) |  RMSE | S
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
-          return note.innerHTML;
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
         });
       }
       const findCites = (el) => {
