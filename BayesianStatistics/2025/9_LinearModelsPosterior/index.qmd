@@ -145,7 +145,7 @@ model <- brms::brm(f,
 :::: {.column width=70% style="font-size: 70%;"}
 
 - Stan (the language used by `brms` in the background) also implements **variational inference** algorithms that sample from an approximation of the posterior, which are faster but less accurate
-  - You can use them by specifying `algorithm = "meanfield"`, `algorithm = "fullrank"`, or `algorithm = "pathfinder"`
+  - You can use them by specifying: `brm(..., algorithm = "meanfield")` (or`"fullrank"` or `"pathfinder"`)
   - Unlike MCMC, which samples from the true posterior, Variational Inference (VI) approximates it using simpler distribution (e.g., Gaussian) and minimizes the difference between the two (e.g., optimizing the Kullback-Leibler KL divergence)
 - **Pros:**
   - Can be useful for "quick" checks and adjustments but should not necessarily be used for final results
@@ -171,9 +171,9 @@ model <- brms::brm(f,
 :::: {.column width=70% style="font-size: 70%;"}
 
 
-- The brain is thought to be a Bayesian inference machine, constantly predicting sensory input and updating beliefs based on errors
-- **Prediction errors** (mismatch between expectation and reality) drive learning and perception
-- Computing exact posteriors would be too  computationally expensive for the brain
+- The brain is thought to be a Bayesian inference machine (Friston et al.), constantly predicting sensory input and updating beliefs based on errors
+- **Prediction errors** (mismatch between expectation and reality) drive learning, perception, and action
+- Computing exact posteriors would be too computationally expensive for the brain
 - Instead, it might approximates the posterior in a way similar to VI:
   - The brain represents beliefs with simpler distributions (e.g., Gaussian-like approximations).
   - Instead of exploring all possibilities, it minimizes a function ("Free Energy") to find the best fit

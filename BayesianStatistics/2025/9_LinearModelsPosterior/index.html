@@ -505,7 +505,7 @@
 <ul>
 <li class="fragment">Stan (the language used by <code>brms</code> in the background) also implements <strong>variational inference</strong> algorithms that sample from an approximation of the posterior, which are faster but less accurate
 <ul>
-<li class="fragment">You can use them by specifying <code>algorithm = "meanfield"</code>, <code>algorithm = "fullrank"</code>, or <code>algorithm = "pathfinder"</code></li>
+<li class="fragment">You can use them by specifying: <code>brm(..., algorithm = "meanfield")</code> (or<code>"fullrank"</code> or <code>"pathfinder"</code>)</li>
 <li class="fragment">Unlike MCMC, which samples from the true posterior, Variational Inference (VI) approximates it using simpler distribution (e.g., Gaussian) and minimizes the difference between the two (e.g., optimizing the Kullback-Leibler KL divergence)</li>
 </ul></li>
 <li class="fragment"><strong>Pros:</strong>
@@ -528,8 +528,8 @@
 <div class="columns">
 <div class="column" style="font-size: 70%;">
 <ul>
-<li class="fragment">The brain is thought to be a Bayesian inference machine, constantly predicting sensory input and updating beliefs based on errors</li>
-<li class="fragment"><strong>Prediction errors</strong> (mismatch between expectation and reality) drive learning and perception</li>
+<li class="fragment">The brain is thought to be a Bayesian inference machine (Friston et al.), constantly predicting sensory input and updating beliefs based on errors</li>
+<li class="fragment"><strong>Prediction errors</strong> (mismatch between expectation and reality) drive learning, perception, and action</li>
 <li class="fragment">Computing exact posteriors would be too computationally expensive for the brain</li>
 <li class="fragment">Instead, it might approximates the posterior in a way similar to VI:
 <ul>

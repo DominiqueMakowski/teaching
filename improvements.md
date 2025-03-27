@@ -14,3 +14,4 @@
 - Assignment: Make TAP 1 in-person (during week 6) + final TAP (make it report) at the end (**AFTER** the last lecture, not week 9)
 - https://github.com/benjamin-rosenbaum/bayesian-intro
 - Lecture 8 is too much for one (need to introduce data grids, posterior predictive checks, intercept-only models etc)
+- Lecture 8/9: change PP checks to use modelbased's estimate_predictions and estimate_relation() 
