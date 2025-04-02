@@ -31,7 +31,10 @@ I also offer workshops to external universities (see [here for details](https://
     - [brms - Priors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/8_LinearModelsPriors)
 - **Lecture 9:**
     - [brms - Posteriors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/9_LinearModelsPosterior)
-    - [TAP 2 [DO NOT PUBLISH YET]](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+- **Lecture 10:**
+    - [Model Comparison](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/10_ModelComparison)
+    - [might or might not be a rickroll](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+
 
 *12/2024* - University of Paris-Cité (LaPsyDé Workshop)
 

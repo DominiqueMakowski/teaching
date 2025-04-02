@@ -40,7 +40,7 @@ library(easystats)
 set.seed(333)
 ```
 
-## Recap
+## Recap {background-color="#003B49"}
 
 1. Formula specification
 
@@ -282,7 +282,7 @@ parameters::parameters(model)
 
 parameters::parameters(model,
                        centrality="mean", 
-                       dipsersion=TRUE,
+                       dispersion=TRUE,
                        ci=0.89)
 ```
 

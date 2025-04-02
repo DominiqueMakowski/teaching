@@ -15,3 +15,4 @@
 - https://github.com/benjamin-rosenbaum/bayesian-intro
 - Lecture 8 is too much for one (need to introduce data grids, posterior predictive checks, intercept-only models etc)
 - Lecture 8/9: change PP checks to use modelbased's estimate_predictions and estimate_relation() 
+- ROPEs don't like Defaults
