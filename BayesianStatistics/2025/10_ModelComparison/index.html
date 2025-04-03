@@ -547,6 +547,8 @@ sigma     |   0.43 | [0.38, 0.49] | 100% | 1.002 | 2913.00</code></pre>
 </section>
 <section id="marginal-means" class="slide level2">
 <h2>Marginal Means</h2>
+<div class="columns" style="font-size: 90%;">
+<div class="column" style="width:45%;">
 <ul>
 <li class="fragment">A statistical model defines a relationship between the outcome and any predictor values</li>
 <li class="fragment">It is straightforward to compute the model-based value (i.e., the <strong>prediction</strong>) of the outcome at each level of a factor</li>
@@ -569,7 +571,10 @@ Predictors modulated: Species</code></pre>
 </div>
 </div>
 <ul>
-<li class="fragment">A related concept is that of <strong>marginal means</strong> (see <a href="https://github.com/easystats/modelbased/blob/main/paper/paper.pdf">Makowski et al., <em>under review</em></a> for a walkthrough)</li>
+<li class="fragment">A related concept is that of <strong>marginal means</strong> <sup><sub>(see <a href="https://github.com/easystats/modelbased/blob/main/paper/paper.pdf">Makowski et al., <em>under review</em></a> for a walkthrough)</sub></sup></li>
+</ul>
+</div><div class="column" style="width:55%;">
+<ul>
 <li class="fragment">Marginal means are the average predicted values of the outcome at each level of a factor, <strong>averaged over all other predictors / random effects</strong> (i.e., <em>marginalized</em> for other stuff)</li>
 </ul>
 <div class="fragment">
@@ -590,8 +595,11 @@ Predictors modulated: Species</code></pre>
 </div>
 </div>
 <ul>
+<li class="fragment"><em>Why are they the same?</em></li>
+<li class="fragment">Marginal means are conceptually (and in practice) different from <strong>empirical means</strong> (i.e., direct average of the observed values) because they are based on a model (and thus can better generalize or extrapolate)</li>
 <li class="fragment">Marginal means are a powerful tool to estimate any quantities of interest in a statistical model</li>
 </ul>
+</div></div>
 </section>
 <section id="marginal-contrasts" class="slide level2">
 <h2>Marginal Contrasts</h2>
@@ -662,17 +670,17 @@ sigma     |   0.36 | [0.33, 0.41] | 100% | 1.002 | 2436.00</code></pre>
 <li class="fragment">Interaction parameters shows how much the effect of <code>Petal.Width</code> on <code>Petal.Length</code> changes when the species changes</li>
 </ul>
 </section>
-<section id="visualization" class="slide level2">
-<h2>Visualization</h2>
+<section id="visualization-1" class="slide level2">
+<h2>Visualization (1)</h2>
 <div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Petal.Width, <span class="at">y =</span> Petal.Length, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() </span>
+<span id="cb23-3"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
 </div>
-</div>
-</div>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000" class="r-stretch"></section>
+<section id="visualization-2" class="slide level2">
+<h2>Visualization (2)</h2>
 <ul>
 <li class="fragment"><code>modelbased::estimate_relation()</code> is a convenient function to create a datagrid and make predictions
 <ul>
@@ -682,6 +690,13 @@ sigma     |   0.36 | [0.33, 0.41] | 100% | 1.002 | 2436.00</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> modelbased<span class="sc">::</span><span class="fu">estimate_relation</span>(model3, <span class="at">length=</span><span class="dv">20</span>, <span class="at">keep_iterations=</span><span class="dv">15</span>)</span>
+<span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a>reshaped_iters <span class="ot">&lt;-</span> <span class="fu">reshape_iterations</span>(pred)</span>
+<span id="cb24-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> reshaped_iters, </span>
+<span id="cb24-5"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">y =</span> iter_value, <span class="at">group =</span> <span class="fu">interaction</span>(Species, iter_group)), </span>
+<span id="cb24-6"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> <span class="fl">0.5</span>)</span>
+<span id="cb24-7"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -691,8 +706,16 @@ sigma     |   0.36 | [0.33, 0.41] | 100% | 1.002 | 2436.00</code></pre>
 </div>
 </div>
 </div>
+</section>
+<section id="visualization-3" class="slide level2">
+<h2>Visualization (3)</h2>
+<ul>
+<li class="fragment">Add the “median” prediction</li>
+</ul>
 <div class="fragment">
 <div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred, <span class="fu">aes</span>(<span class="at">y =</span> Predicted), </span>
+<span id="cb25-2"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="at">linewidth=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -703,10 +726,10 @@ sigma     |   0.36 | [0.33, 0.41] | 100% | 1.002 | 2436.00</code></pre>
 </div>
 </div>
 </section>
-<section id="effect-of-species-marginal-means-and-contrasts" class="slide level2">
-<h2>Effect of Species (Marginal Means and Contrasts)</h2>
+<section id="effect-of-species-marginal-means" class="slide level2">
+<h2>Effect of Species (Marginal Means)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_means</span>(model2, <span class="at">by=</span><span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_means</span>(model2, <span class="at">by=</span><span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Estimated Marginal Means
 
@@ -719,7 +742,7 @@ virginica  |   5.55 | [5.44, 5.67] | 100% | [-0.10, 0.10] |        0%
 Variable predicted: Petal.Length
 Predictors modulated: Species</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_means</span>(model3, <span class="at">by=</span><span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_means</span>(model3, <span class="at">by=</span><span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Estimated Marginal Means
 
@@ -738,41 +761,39 @@ Predictors averaged: Petal.Width (1.2)</code></pre>
 <li class="fragment">The means at every level are different between the two levels. <strong>why?</strong></li>
 <li class="fragment">Because the second model averages over the effect of <code>Petal.Width</code> (takes more information into account)</li>
 </ul>
+</section>
+<section id="effect-of-species-along-petal.width-marginal-contrasts" class="slide level2">
+<h2>Effect of Species <em>along</em> Petal.Width (Marginal Contrasts)</h2>
+<ul>
+<li class="fragment">Marginal contrasts can be computed at any levels of other predictors</li>
+</ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_contrasts</span>(model3, <span class="at">contrast=</span><span class="st">"Species"</span>, <span class="at">by =</span> <span class="st">"Petal.Width"</span>, <span class="at">length =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_contrasts</span>(model3, <span class="at">contrast=</span><span class="st">"Species"</span>, <span class="at">by =</span> <span class="st">"Petal.Width"</span>, <span class="at">length =</span> <span class="dv">3</span>, </span>
+<span id="cb30-2"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">test =</span> <span class="st">"pd"</span>, <span class="at">centrality =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Marginal Contrasts Analysis
 
-Level1     | Level2     | Petal.Width | Median |        95% CI |     pd
------------------------------------------------------------------------
-versicolor | setosa     |        0.10 |   0.58 | [-0.09, 1.30] | 95.25%
-virginica  | setosa     |        0.10 |   2.91 | [ 2.19, 3.68] |   100%
-virginica  | versicolor |        0.10 |   2.33 | [ 1.37, 3.34] |   100%
-versicolor | setosa     |        1.30 |   2.16 | [ 1.10, 3.21] |   100%
-virginica  | setosa     |        1.30 |   3.02 | [ 1.94, 4.14] |   100%
-virginica  | versicolor |        1.30 |   0.87 | [ 0.58, 1.18] |   100%
-versicolor | setosa     |        2.50 |   3.74 | [ 1.43, 6.05] | 99.78%
-virginica  | setosa     |        2.50 |   3.13 | [ 0.85, 5.42] | 99.55%
-virginica  | versicolor |        2.50 |  -0.59 | [-1.25, 0.10] | 95.47%
-
-Level1     |          ROPE | % in ROPE
---------------------------------------
-versicolor | [-0.10, 0.10] |     6.42%
-virginica  | [-0.10, 0.10] |        0%
-virginica  | [-0.10, 0.10] |        0%
-versicolor | [-0.10, 0.10] |        0%
-virginica  | [-0.10, 0.10] |        0%
-virginica  | [-0.10, 0.10] |        0%
-versicolor | [-0.10, 0.10] |        0%
-virginica  | [-0.10, 0.10] |        0%
-virginica  | [-0.10, 0.10] |     5.32%
+Level1     | Level2     | Petal.Width |  Mean |        95% CI |     pd
+----------------------------------------------------------------------
+versicolor | setosa     |        0.10 |  0.59 | [-0.09, 1.30] | 95.25%
+virginica  | setosa     |        0.10 |  2.92 | [ 2.19, 3.68] |   100%
+virginica  | versicolor |        0.10 |  2.33 | [ 1.37, 3.34] |   100%
+versicolor | setosa     |        1.30 |  2.17 | [ 1.10, 3.21] |   100%
+virginica  | setosa     |        1.30 |  3.03 | [ 1.94, 4.14] |   100%
+virginica  | versicolor |        1.30 |  0.87 | [ 0.58, 1.18] |   100%
+versicolor | setosa     |        2.50 |  3.74 | [ 1.43, 6.05] | 99.78%
+virginica  | setosa     |        2.50 |  3.15 | [ 0.85, 5.42] | 99.55%
+virginica  | versicolor |        2.50 | -0.59 | [-1.25, 0.10] | 95.47%
 
 Variable predicted: Petal.Length
 Predictors contrasted: Species</code></pre>
 </div>
 </div>
 </div>
+<ul>
+<li class="fragment">Useful to understand interactions</li>
+</ul>
 </section>
 <section id="effect-of-petal-width-marginal-effects" class="slide level2">
 <h2>Effect of Petal Width (Marginal Effects)</h2>
@@ -782,7 +803,7 @@ Predictors contrasted: Species</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_slopes</span>(model3, <span class="at">trend=</span><span class="st">"Petal.Width"</span>, <span class="at">by =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a>modelbased<span class="sc">::</span><span class="fu">estimate_slopes</span>(model3, <span class="at">trend=</span><span class="st">"Petal.Width"</span>, <span class="at">by =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Estimated Marginal Effects
 
@@ -836,19 +857,19 @@ Type of slope was dY/dX</code></pre>
 </div><div class="column">
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Bayesian R2 with Compatibility Interval
 
   Conditional R2: 0.927 (95% CI [0.920, 0.932])</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Bayesian R2 with Compatibility Interval
 
   Conditional R2: 0.941 (95% CI [0.936, 0.945])</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Bayesian R2 with Compatibility Interval
 
@@ -884,7 +905,7 @@ Type of slope was dY/dX</code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Computed from 4000 by 150 log-likelihood matrix.
@@ -894,7 +915,7 @@ elpd_waic   -104.3  9.5
 p_waic         3.2  0.5
 waic         208.6 19.0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Computed from 4000 by 150 log-likelihood matrix.
@@ -906,7 +927,7 @@ waic         178.5 21.3
 
 1 (0.7%) p_waic estimates greater than 0.4. We recommend trying loo instead. </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">waic</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Computed from 4000 by 150 log-likelihood matrix.
@@ -929,7 +950,7 @@ waic         129.0 23.0
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">waic</span>(model), loo<span class="sc">::</span><span class="fu">waic</span>(model2), loo<span class="sc">::</span><span class="fu">waic</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">waic</span>(model), loo<span class="sc">::</span><span class="fu">waic</span>(model2), loo<span class="sc">::</span><span class="fu">waic</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       elpd_diff se_diff
 model3   0.0       0.0  
@@ -951,7 +972,7 @@ model  -39.8      10.3  </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Computed from 4000 by 150 log-likelihood matrix.
@@ -967,7 +988,7 @@ MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.2]).
 All Pareto k estimates are good (k &lt; 0.7).
 See help('pareto-k-diagnostic') for details.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Computed from 4000 by 150 log-likelihood matrix.
@@ -983,7 +1004,7 @@ MCSE and ESS estimates assume MCMC draws (r_eff in [0.4, 1.1]).
 All Pareto k estimates are good (k &lt; 0.7).
 See help('pareto-k-diagnostic') for details.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Computed from 4000 by 150 log-likelihood matrix.
@@ -1003,7 +1024,7 @@ See help('pareto-k-diagnostic') for details.</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">loo</span>(model), loo<span class="sc">::</span><span class="fu">loo</span>(model2), loo<span class="sc">::</span><span class="fu">loo</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">loo</span>(model), loo<span class="sc">::</span><span class="fu">loo</span>(model2), loo<span class="sc">::</span><span class="fu">loo</span>(model3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       elpd_diff se_diff
 model3   0.0       0.0  
@@ -1031,8 +1052,8 @@ model  -39.8      10.3  </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">loo</span>(model), loo<span class="sc">::</span><span class="fu">loo</span>(model2), loo<span class="sc">::</span><span class="fu">loo</span>(model3)) <span class="sc">|&gt;</span> </span>
-<span id="cb53-2"><a href="" aria-hidden="true" tabindex="-1"></a>  report<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="" aria-hidden="true" tabindex="-1"></a>loo<span class="sc">::</span><span class="fu">loo_compare</span>(loo<span class="sc">::</span><span class="fu">loo</span>(model), loo<span class="sc">::</span><span class="fu">loo</span>(model2), loo<span class="sc">::</span><span class="fu">loo</span>(model3)) <span class="sc">|&gt;</span> </span>
+<span id="cb56-2"><a href="" aria-hidden="true" tabindex="-1"></a>  report<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The difference in predictive accuracy, as indexed by Expected Log Predictive
 Density (ELPD-LOO), suggests that 'model3' is the best model (ELPD = -64.54),
@@ -1057,8 +1078,8 @@ followed by 'model2' (diff-ELPD = -24.75 +- 6.63, p &lt; .001) and 'model'
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> psych<span class="sc">::</span>sat.act</span>
-<span id="cb55-2"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>gender)  <span class="co"># gender=1: males, 2: females</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> psych<span class="sc">::</span>sat.act</span>
+<span id="cb58-2"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>gender)  <span class="co"># gender=1: males, 2: females</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <!-- - Polynomial and Derivatives -->

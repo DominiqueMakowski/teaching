@@ -139,10 +139,14 @@ parameters::parameters(model2)
 
 ## Marginal Means
 
+::: {.columns style="font-size: 90%;"}
+
+:::: {.column width=45%}
+
 - A statistical model defines a relationship between the outcome and any predictor values
 - It is straightforward to compute the model-based value (i.e., the **prediction**) of the outcome at each level of a factor
 
-::: {.fragment}
+::::: {.fragment}
 
 ```{r}
 #| echo: true
@@ -150,12 +154,18 @@ parameters::parameters(model2)
 modelbased::estimate_relation(model2, by="Species")
 ```
 
-::: 
+:::::
 
-- A related concept is that of **marginal means** (see [Makowski et al., *under review*](https://github.com/easystats/modelbased/blob/main/paper/paper.pdf) for a walkthrough)
+- A related concept is that of **marginal means** <sup><sub>(see [Makowski et al., *under review*](https://github.com/easystats/modelbased/blob/main/paper/paper.pdf) for a walkthrough)</sub></sup>
+
+
+::::
+
+:::: {.column width=55%}
+
 - Marginal means are the average predicted values of the outcome at each level of a factor, **averaged over all other predictors / random effects** (i.e., *marginalized* for other stuff)
 
-::: {.fragment}
+::::: {.fragment}
 
 ```{r}
 #| echo: true
@@ -163,9 +173,16 @@ modelbased::estimate_relation(model2, by="Species")
 modelbased::estimate_means(model2, by="Species")
 ```
 
-:::
+:::::
 
+- *Why are they the same?*
+- Marginal means are conceptually (and in practice) different from **empirical means** (i.e., direct average of the observed values) because they are based on a model (and thus can better generalize or extrapolate)
 - Marginal means are a powerful tool to estimate any quantities of interest in a statistical model
+
+
+::::
+
+:::
 
 ## Marginal Contrasts
 
@@ -201,17 +218,18 @@ parameters::parameters(model3)
 - Interaction parameters shows how much the effect of `Petal.Width` on `Petal.Length` changes when the species changes
 
 
-## Visualization
+## Visualization (1)
 
 
 ```{r}
-#| echo: false
+#| echo: true
 
 p <- ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) +
   geom_point() 
 p
 ```
 
+## Visualization (2)
 
 - `modelbased::estimate_relation()` is a convenient function to create a datagrid and make predictions
   - `keep_iterations` to add individual predicted iterations
@@ -221,7 +239,7 @@ p
 ::: {.fragment}
 
 ```{r}
-#| echo: false
+#| echo: true
 
 pred <- modelbased::estimate_relation(model3, length=20, keep_iterations=15)
 reshaped_iters <- reshape_iterations(pred)
@@ -234,11 +252,14 @@ p
 
 :::
 
+## Visualization (3)
+
+- Add the "median" prediction 
 
 ::: {.fragment}
 
 ```{r}
-#| echo: false
+#| echo: true
 
 p + geom_line(data = pred, aes(y = Predicted), 
               linewidth=2)
@@ -247,7 +268,7 @@ p + geom_line(data = pred, aes(y = Predicted),
 :::
 
 
-## Effect of Species (Marginal Means and Contrasts)
+## Effect of Species (Marginal Means)
 
 ```{r}
 #| echo: true
@@ -259,15 +280,23 @@ modelbased::estimate_means(model3, by="Species")
 - The means at every level are different between the two levels. **why?**
 - Because the second model averages over the effect of `Petal.Width` (takes more information into account)
 
+## Effect of Species *along* Petal.Width (Marginal Contrasts)
+
+- Marginal contrasts can be computed at any levels of other predictors
+
 ::: {.fragment}
 
 ```{r}
 #| echo: true
 
-modelbased::estimate_contrasts(model3, contrast="Species", by = "Petal.Width", length = 3)
+modelbased::estimate_contrasts(model3, contrast="Species", by = "Petal.Width", length = 3, 
+                               test = "pd", centrality = "mean")
 ```
 
 :::
+
+- Useful to understand interactions
+
 
 ## Effect of Petal Width (Marginal Effects)
 
