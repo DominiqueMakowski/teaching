@@ -54,7 +54,11 @@ I also offer workshops to external universities (see [here for details](https://
 
 ## Physiology
 
-*11/2024* - University of Sussex
+*2025* - University of Sussex
+
+- [Topics in Neuroscience (Master)](https://dominiquemakowski.github.io/teaching/Physiology/2025_PG_TopicsNeuroscience)
+
+*2024* - University of Sussex
 
 - [Topics in Neuroscience (Master)](https://dominiquemakowski.github.io/teaching/Physiology/2024_PG_TopicsNeuroscience)
 - [Cognitive Neuroscience (Undergrad)](https://dominiquemakowski.github.io/teaching/Physiology/2024_UG_CognitiveNeuroscience)
