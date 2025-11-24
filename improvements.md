@@ -1,17 +1,23 @@
+
+
 # Physiology
 
+- Timing 2025: 2h topics: had to rush through HRV part
+  - Remove ANS part
+  - OR Focus on ECG + Cardiac phase (skip ANS + HRV)
 - On Respiratory Cycles:
   - The respiratory cycle modulates distinct dynamics of affective and perceptual decision-making: https://www.researchgate.net/publication/379401636_The_respiratory_cycle_modulates_distinct_dynamics_of_affective_and_perceptual_decision-making
+- HEPs:
 - Pupil dilation and prediction error: https://www.researchgate.net/publication/385429455_Pupil_dilation_offers_a_time-window_on_prediction_error
 
-  
+
 # Bayesian
 
 - 2025: did everything in 10 weeks, but semester is 11.
 - Make R refresher either a full 2 hours / an online video pre-course
 - Introduce Marginal distributions as part of the distribution lecture, with exercices on "guess the shape" (banana, doughnut, ...)
 - Part on OLS vs. MLE very confusing. Revise OLS vs MLE
-  - Introduce MLE first. Present the case where "y" is uniformly distributed (marginally), but when taking into account the effect of 'x', it is actually Normal (at each point of 'x'). 
+  - Introduce MLE first. Present the case where "y" is uniformly distributed (marginally), but when taking into account the effect of 'x', it is actually Normal (at each point of 'x').
   - Introduce the idea of the sliding Normal this way, and of sigma (mention that it is important to compute SE).
   - After introducing MLE, just say that the same result to find sigma is achievable via simple equations, and that is OLs.
   - Alternatively, Introduce OLS directly using formulas, make example for correlation / regression. Mention sigma, and only after present MLE idea and what this sigma represents.
