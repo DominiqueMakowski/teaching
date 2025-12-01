@@ -3,9 +3,27 @@
 I teach Bayesian statistics in R and psychophysiology at the University of Sussex.
 I also offer workshops to external universities (see [here for details](https://dominiquemakowski.github.io/services/))
 
-## Bayesian Statistics
 
-*2025* - University of Sussex (Masters & PhDs)
+## 2025-26
+
+### Workshops
+
+- [**GitHub Workshop** *(MRes - 12/25)*](https://dominiquemakowski.github.io/teaching/GitHub/2025_MRes)
+
+### Psychophysiology
+
+- **Cognitive Neuroscience** *(Undergrad)*
+  - [The Embodied Brain](https://dominiquemakowski.github.io/teaching/Physiology/2025_UG_CognitiveNeuroscience)
+- **Topics in Neuroscience** *(CogNeuro MSc)*
+  - [Interoception](https://dominiquemakowski.github.io/teaching/Physiology/2025_PG_TopicsNeuroscience)
+
+## 2024-25
+
+### Workshops
+
+- [**Intro to Bayesian Statistics** *(University of Paris-Cité - 12/24)*](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025_ParisCite)
+
+### Bayesian Statistics
 
 - **Lecture 1:**
     - [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/0_RefreshR): R basics
@@ -35,12 +53,23 @@ I also offer workshops to external universities (see [here for details](https://
     - [Model Comparison](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/10_ModelComparison)
     - [might or might not be a rickroll](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
+### Psychophysiology
 
-*12/2024* - University of Paris-Cité (LaPsyDé Workshop)
+- **Cognitive Neuroscience** *(Undergrad)*
+  - [The Embodied Brain](https://dominiquemakowski.github.io/teaching/Physiology/2024_UG_CognitiveNeuroscience)
+- **Topics in Neuroscience** *(CogNeuro MSc)*
+  - [Interoception](https://dominiquemakowski.github.io/teaching/Physiology/2024_PG_TopicsNeuroscience)
 
-- [Slides](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024_LaPsyDe)
+## 2023-24
 
-*2024* - University of Sussex (Masters & PhDs)
+
+### Workshops
+
+- **Physiology** *(University of Basel - 04/24)*
+  - [Slides](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel)
+  - [Experiment](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/experiment)
+
+### Bayesian Statistics
 
 - [Lecture 1](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/1_Distributions)
 - [Lecture 2](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/2_MLE)
@@ -52,19 +81,8 @@ I also offer workshops to external universities (see [here for details](https://
 - [Lecture 10](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/9_LinearModelsPosterior)
 - [Lecture 11](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/10_Models)
 
-## Physiology
 
-*2025* - University of Sussex
 
-- [Cognitive Neuroscience (Undergrad)](https://dominiquemakowski.github.io/teaching/Physiology/2025_UG_CognitiveNeuroscience)
-- [Topics in Neuroscience (Master)](https://dominiquemakowski.github.io/teaching/Physiology/2025_PG_TopicsNeuroscience)
 
-*2024* - University of Sussex
 
-- [Topics in Neuroscience (Master)](https://dominiquemakowski.github.io/teaching/Physiology/2024_PG_TopicsNeuroscience)
-- [Cognitive Neuroscience (Undergrad)](https://dominiquemakowski.github.io/teaching/Physiology/2024_UG_CognitiveNeuroscience)
 
-*04/2024* - University of Basel (Workshop)
-
-- [Slides](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel)
-- [Experiment](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/experiment)
