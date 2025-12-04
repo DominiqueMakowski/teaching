@@ -1,7 +1,11 @@
+# GitHub
 
+- Timing MRes workshop: 1h30 for part 1 and 2 (relatively fast paced).
 
 # Physiology
 
+- Timing "Embodied Brain" (UG)
+  - 50 min till the the how would you measure interoception break. Good how it was.
 - Timing 2025: 2h topics: had to rush through HRV part
   - Remove ANS part
   - OR Focus on ECG + Cardiac phase (skip ANS + HRV)

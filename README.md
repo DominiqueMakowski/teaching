@@ -8,7 +8,7 @@ I also offer workshops to external universities (see [here for details](https://
 
 ### Workshops
 
-- [**GitHub Workshop** *(MRes - 12/25)*](https://dominiquemakowski.github.io/teaching/GitHub/2025_MRes)
+- [**GitHub Workshop** *(MRes - 12/25)*](https://dominiquemakowski.github.io/teaching/Github/2025_MRes)
 
 ### Psychophysiology
 
