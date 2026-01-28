@@ -907,7 +907,7 @@ iris |>
   - `weight` : with a vector from 40 to 70
   - The dataframe should have 30 rows
 - 2. Visualize:
-  - "Values of age as a function of height. The size of the points should reflect weight. Make the points green. Add a "minimal" theme.
+  - "Values of age as a function of height. The size of the points should reflect weight. Make the points green. Add a minimal theme."
 
 ::: {.fragment}
 
@@ -917,6 +917,14 @@ iris |>
 df <- data.frame(age=seq(0, 10, length.out=30),
                  height=seq(150, 170, length.out=30),
                  weight=seq(40, 70, length.out=30))
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
 
 ggplot(df, aes(x=height, y=age, size=weight)) +
   geom_point(color = "green") +
@@ -924,6 +932,7 @@ ggplot(df, aes(x=height, y=age, size=weight)) +
 ```
 
 :::
+
 
 ## For loops
 
@@ -1047,7 +1056,7 @@ do_a_multiplication <- function(numbers) {
 
 
 a_cool_function <- function(v1, v2) {
-    v1 + v2
+    return(v1 + v2)
 }
 
 the_answer_is_42 <- c()

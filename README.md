@@ -8,8 +8,8 @@ I also offer workshops to external universities (see [here for details](https://
 
 ### Bayesian Statistics
 
-- **Lecture 1:**: [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/0_RefreshR)
-- **Lecture 2:**: [Distributions](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+- **Lecture 1:** [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/0_RefreshR)
+- **Lecture 2:** [Distributions](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 ### Workshops
 
