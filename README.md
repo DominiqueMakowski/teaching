@@ -6,6 +6,11 @@ I also offer workshops to external universities (see [here for details](https://
 
 ## 2025-26
 
+### Bayesian Statistics
+
+- **Lecture 1:**: [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/0_RefreshR)
+- **Lecture 2:**: [Distributions](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+
 ### Workshops
 
 - [**GitHub Workshop** *(MRes - 12/25)*](https://dominiquemakowski.github.io/teaching/Github/2025_MRes)
@@ -51,7 +56,6 @@ I also offer workshops to external universities (see [here for details](https://
     - [brms - Posteriors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/9_LinearModelsPosterior)
 - **Lecture 10:**
     - [Model Comparison](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/10_ModelComparison)
-    - [might or might not be a rickroll](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 ### Psychophysiology
 

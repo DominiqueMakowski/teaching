@@ -1,0 +1,1069 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**0. RefreshR**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    code-line-numbers: false
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    fontsize: "170%"
+editor_options:
+  chunk_output_type: console
+execute:
+  cache: false
+fig-dpi: 300
+---
+
+
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
+## How to do Bayesian Correlations
+
+
+::::: {.columns}
+:::: {.column width="50%" .nonincremental}
+
+- Frequentist Pearson Correlation Matrix
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+df <- iris # A dataframe available in base R
+
+correlation::correlation(df) |>
+    summary()
+```
+
+:::
+::::
+:::: {.column}
+
+- **Bayesian** Pearson Correlation Matrix
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+df <- iris # A dataframe available in base R
+
+correlation::correlation(df, bayesian = TRUE) |>
+    summary()
+```
+
+:::
+::::
+:::::
+
+
+
+## Bayesian stats are easy\* to *do* {.center background-color="#1A237E"}
+
+This module is about understanding *what* we are doing, and *why* we are doing it.
+
+
+<sub>\* *Easy as in "not too hard"*</sub>
+
+
+## Why Bayesian Statistics?
+
+The Bayesian framework for statistics has quickly gained popularity among scientists, associated with the general shift towards open, transparent, and more rigorous science. Reasons to prefer this approach are:
+
+- Reliability and **flexibility** <sub><sup>(Kruschke, Aguinis, & Joo, 2012; Etz & Vandekerckhove, 2016)</sup></sub>
+- The possibility of introducing **prior knowledge** into the analysis <sub><sup>(Andrews & Baguley, 2013; Kruschke et al., 2012)</sup></sub>
+- **Intuitive results** and their **straightforward interpretation** <sub><sup>(Kruschke, 2010; Wagenmakers et al., 2018)</sup></sub>
+
+## Learning Bayes? Back to the *Bayesics* first
+
+- This module adopts a slightly unorthodox approach: instead of starting with Bayesian theory and equations, we will first consolidate various concepts and notions that are present in Frequentist statistics, that will help us to understand and apply the Bayesian framework
+- We **won't** be talking about Bayes until a few sessions in ("awww 😞")
+  - But *everything* we do until then will be in preparation for it
+- Understanding Bayes painlessly requires to be very clear about some fundamental concepts, in particular, probability distributions and model parameters
+
+<!-- 1. R refresher and Distributions -->
+<!-- 2. Statistics based on Analytical Distributions (Frequentist MLE) -->
+<!-- 3. Statistics based on Empirical Distributions (Frequentist Bootstrapping) -->
+<!-- 4. Bayes theorem, concept of priors and posterior -->
+<!-- 5. Bayes Factors: Bayesian correlations and t-tests -->
+<!-- 6. Posterior description -->
+<!-- 7. Regression models -->
+<!-- 8. MCMC and Model Diagnostics -->
+<!-- 9. Model performance and comparison -->
+<!-- 10. Advanced regressions -->
+<!-- 11. More advanced models -->
+
+## Differences from Previous Sussex Stats Course
+
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- No self-paced "tutorials", all is workshop style
+- Less emphasis on "THE ONLY WAY", focus on understanding concepts and applying them critically
+- No imposed organization, templates, model response, code functions to follow etc.
+- But paradoxically we now actually ***care*** about the code
+- Assessments involve understanding what we discuss in class (and at the end being able to do a Bayesian analysis), no more no less
+
+
+::::
+
+:::: {.column}
+
+![](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHlmbzN1eGxhdWgzcWlvNW5qbmk4enFoczdhcHBzb2x1ZWY0a2MydCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vLOVgH5FABgt2/giphy.gif){width=100%}
+
+
+> *"There will be no foolish tutorial-reading or silly puppets in this class. As such, I don't expect many of you to appreciate the subtle science and exact art that is Bayesian Statistics."* Snape (allegedly)
+
+::::
+
+:::
+
+## How to successfuly attend this module
+
+::: {style="font-size: 95%"}
+
+- Goal: **Becomes master\* of Bayesian statistics**
+  - Master *User*: be comfortable using and reading Bayesian statistics
+  - $\neq$ becoming a master mathematician
+  - Right level of understanding: not too superficial, not too deep
+<!-- - Learn, Understand, Apply -->
+- Code shown in the slides should in general be *understood*
+  - But you don't need to *memorize* it
+  - Best to follow along by trying and **running the code** on your own system
+  - (If you need me to slow down, *let me know!*)
+  - **DO NOT READ AHEAD LOOK UP THE ANSWERS**
+- Ideally, make an Quarto file and write there info and code examples
+  - Slides will be available online 
+- Equations are not generally important
+  - No need to memorize it, but you should understand the *concepts*
+  - Memorizing a few Greek symbols will be useful
+    - In particular [**beta**]{.fragment} $\beta$, [**sigma**]{.fragment} $\sigma$, [**mu**]{.fragment} $\mu$
+- Please engage (don't leave me hanging 😢)
+
+
+:::
+
+## Follow the slides
+
+- https://github.com/DominiqueMakowski/teaching
+  - 👉 *Lecture 0*
+
+## The Environment {.center background-color="#1A237E"}
+
+## Setup
+
+- Make sure you have **R** and **RStudio** on your computer
+  - Why local installation? *Independence, flexibility, and power*
+- Follow the instruction on Canvas (in **/Module Information**)
+- If you have any problem, let me know
+
+![](img/prerequisites.png){.r-stretch}
+
+
+<!-- ## Why R? -->
+
+<!-- - Why not SPSS? Matlab? Python? -->
+
+<!--   - The best for **statistics** (by far) -->
+<!--   - The best for **visualization** -->
+<!--   - **Free** (independence) -->
+<!--   - **Flexible** (packages) -->
+<!--   - **Powerful** (create websites, presentations, ...) -->
+<!--   - **Demanded** (💰) -->
+<!--   - Gold standard across science -->
+<!--   - Cutting-edge statistics and methods (e.g., Bayesian statistics) -->
+  
+## Vocabulary
+
+- **R** = programming language
+- **RStudio** = the "editor" that we use to work with R
+- **Posit** = The company that created R Studio and that provides cloud services (used to be called *RStudio*)
+- **Posit cloud** = The online version of RStudio
+- **Quarto** = Used to be called R Markdown. A system to combine code, text, and code output into nice documents (similar to *Jupyter*)
+- **Markdown** = A simple syntax to \**format*\* text used on \*\***internet**\*\*
+
+## Panels
+
+![](img/rstudio_panels.png){.r-stretch}
+
+1. Source (text editor)
+2. Console (interactive)
+3. Environment (objects)
+4. Files (navigate)
+
+## Creating New Document
+
+![](img/newdoc.png){.r-stretch}
+
+- You can interact with code inside code chunks
+
+## Options
+
+![](img/options.png){.r-stretch}
+
+- Remove "editor" (or replace `visual` with `source`)
+  - `editor: source`
+- Select **"Chunk Output in Console"**
+
+
+## Interacting
+
+::::: {.columns}
+:::: {.column width="50%"}
+
+1. Create a new document (file)
+    - `.R` (R script) or `.qmd` (quarto document)
+2. Write some code in the script
+3. Run the code
+    - Click somewhere on the same line that you want to execute
+    - Or select the code that you want to execute
+    - Hit `Ctrl+Enter`
+
+::::
+:::: {.column}
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+2 + 2
+```
+
+:::
+
+::::
+:::::
+
+## Programming Concepts {.center background-color="#1A237E"}
+
+
+## Classes
+
+::::: {.columns}
+
+:::: {.column width="75%"}
+
+- In R, each thing has a **class** (type)
+  - **Numeric** (aka *integers* and *floats*; numbers)
+  - **Character** (aka *string*; text)
+  - **Logical** (aka *booleans*; `TRUE`/`FALSE`)
+    - *Note:* TRUE and FALSE are equivalent to 1 and 0
+    - Try: `TRUE + TRUE`
+  - **Factors** (aka *categorical*; e.g. experimental conditions)
+  - **Comments** (with *hash* #, `CTRL + SHIFT + C`)
+  - **"Functions"** (ends with `()`; e.g. `mean()`)
+  - Many more...
+- You can access a function's documentation with `?mean` or clicking on the function and pressing `F1`
+- Functions can be "nested", e.g., `sqrt(sqrt(sqrt(2)))`
+- You can check the class of an object with `class()`
+
+::::
+
+:::: {.column width="25%"}
+
+Types
+```{r}
+#| eval: false
+#| echo: true
+# Number
+3
+# Character "quotations"
+"text"
+# Logical
+TRUE
+```
+
+::: {.fragment}
+
+Check class
+```{r}
+#| echo: true
+
+x <- 3
+class(x)
+```
+
+:::
+
+::::
+
+:::::
+
+
+## Printing
+
+- The content of something is only shown on demand, by **printing** it
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+x <- 3
+print(x)
+```
+
+:::
+
+- The last line of a code chunk, if not assigned to anything, is automatically printed by R
+
+```{r}
+#| echo: true
+
+x  # = print(x)
+```
+
+- Printing things don't modify ("save") things:
+
+```{r}
+#| echo: true
+
+x + 1
+x
+```
+
+
+## Exercice {background-color="#FFAB91"}
+
+- How many functions do we use in `sqrt(mean(c(1, 2, 3)))`?
+- What's the difference between `mean()` and `mean`?
+- A friend tells you to use `mad()` but you  don't know what it does. How do you find out?
+- What are the *arguments* of the function `mean()`?
+- What's the difference between `sqrt(2)` and `sqrt(x=2)`?
+- What is the output of `class(TRUE)`
+- What is the output of `class(class)`
+- What is the output of `class(class(class))`
+- What is the output of `class(class(class(class)))`
+
+## Assignment and Equality
+
+- Assign names to objects with `<-` (or `=`, but `<-` is preferred in R)
+- `=` is used for *arguments* inside functions (e.g., `sqrt(x = 2)`)
+- `==` is used to test for equality (e.g., `x == 3` returns `TRUE` if `x` is equal to 3, `FALSE` otherwise)
+
+## Exercice {background-color="#FFAB91"}
+
+- What is the output of `class(3 == 2 + 1)`
+- What is the output of `"a" <- 3`?
+- What's the difference between an *object* and a *variable*?
+  - Object = *anything that exists in R*
+  - Variable = The name assigned to an object OR a column in a data frame
+  - `x <- 3`. "x" is a variable. 
+
+## Vectors vs. Lists (1)
+
+- A **vector** is a "list" of elements of the **same class**, indexed by their **position**
+- In R, most operations are by default **vectorized** (i.e., applied to each element of the vector)
+- Create and concatenate vectors with the combine function `c()`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Vector
+x <- c(0, 1, 2)
+x + 3
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: false
+
+# Vector
+x <- c(0, 1, 2)
+x + 3
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+c(x, 3)
+```
+
+:::
+
+## Vectors vs. Lists (2)
+
+::: {.fragment}
+
+:::: {.callout-warning}
+
+- R starts counting at 1, not 0.
+
+```{r}
+#| echo: true
+x[2]
+```
+
+::::
+
+:::
+
+
+
+
+## Vectors vs. Lists (3)
+
+
+- A **list** is a container of named elements of **any kind**, indexed by their **name**
+- The order of things doesn't matter (unlike in a vector)
+- We can extract elements via their **names** (instead of via their index)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mylist <- list(var1 = "some text", var2 = 30, var3 = x)
+mylist$var3 # = mylist[["var3"]]
+```
+
+::: 
+
+::: {.fragment}
+
+:::: {.callout-warning}
+
+`mylist[]` returns a list, while `mylist[[]]` returns the element itself
+
+::::
+
+:::
+
+- You can also merge lists with `c()`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mylist2 <- list(var4 = "some other text")
+c(mylist, mylist2)
+```
+
+:::
+
+
+
+## Exercice {background-color="#FFAB91"}
+
+- What is the output?
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+it_is_a_character <- 3
+it_is_a_character <- c(it_is_a_character, 3)
+it_is_a_character <- c(it_is_a_character, 3)
+it_is_a_character + 3
+```
+
+- What is the output?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+mylist <- list(
+    numbers = c(1, 2, 3),
+    note = "hello"
+)
+
+a <- mylist["numbers"]
+b <- mylist[["numbers"]]
+
+class(a)
+class(b)
+```
+
+:::
+
+
+
+
+
+## Exercice {background-color="#FFAB91"}
+
+- What is the output?
+
+```{r}
+#| echo: true
+#| eval: false
+
+mylist2 <- list(
+    note = "new note",
+    extra = TRUE
+)
+
+merged <- c(mylist, mylist2)
+names(merged)
+merged
+```
+
+
+
+## Sequences 
+
+- You can create vectors with `:` operator, e.g., `1:10` creates a vector containing the sequence 1, 2, ..., 10
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+5:9
+```
+
+:::
+
+
+- The function `seq()` can be used to create vectors with more control, by specifying the **step size** OR the **length** of the output vector
+   
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+seq(0, 1, by = 0.2) # from 0 to 1, step 0.2
+seq(0, 1, length.out=3) 
+```
+
+:::
+
+
+## Pipes
+
+- Pipe: `|>`, with `CTRL + SHIFT + M`
+  - If old pipe `%>%`: Tools -> Global Options -> Code -> Native Pipe Operator
+- Puts the previous "stuff" as the **first** argument of the next function
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+4 |> sqrt() # equivalent to
+sqrt(4)
+```
+
+:::
+
+- Pipes are useful to chain operations in a **Human-readable** way ("do this then this then this")
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+result <- 4 |>
+    sqrt() |>
+    c(1, 0) |>
+    as.character()
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+result
+```
+
+:::
+
+- But if always **ends up at the start** (i.e., the end of the chain gets "stored" in the thing at the beginning of the statement)
+
+## DataFrames
+
+- A **data frame** is a collection of vectors of the **same length** (i.e., a table)
+- Each vector is a **column** of the data frame
+- Each column can have a **different class** (e.g., numeric, character, logical, etc.)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Create a data frame
+df <- data.frame(
+    var1 = c(1, 2, 3),
+    var2 = c("a", "b", "c"),
+    var3 = c(TRUE, FALSE, TRUE)
+)
+```
+
+::: 
+
+- A few "example" dataframes are directly available in base R, e.g., `mtcars`, `iris`
+
+::: {.fragment}
+
+:::: {.callout-tip}
+
+You can view the first rows of a data frame with `head()`
+
+```{r}
+#| echo: true
+
+head(iris)
+```
+
+::::
+
+:::
+
+
+## Data classes
+
+
+- Similarly to lists, you can access columns via their **names** with `[[]]`
+- Or with the `$` operator, which is a shorthand for `[[]]`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+df$var1
+```
+
+:::
+
+
+- Each column of a data frame has a **class**: the type
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+class(df$var1)
+class(df$var2)
+class(df$var3)
+```
+
+
+:::
+
+## Data Concatenation
+
+
+```{r}
+#| echo: true
+
+df1 <- data.frame(x = c(1, 2), y = c("a", "b"))
+df2 <- data.frame(x = c(3, 4), y = c("c", "d"))
+df3 <- data.frame(z = c(TRUE, FALSE))
+```
+
+- `c()` would be ambiguous for dataframes because tables can be combining vertically (by rows) or horizontally (by columns)
+- `rbind()` and `cbind()` are used to combine dataframes by rows or by columns
+
+::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+df4 <- rbind(df1, df2)
+df4
+
+df5 <- cbind(df1, df3)
+df5
+```
+
+:::
+
+## Packages
+
+::: {.columns}
+
+:::: {.column width="70%"}
+
+- Install packages with `install.packages()`
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+install.packages("tidyverse")
+install.packages("easystats")
+```
+
+:::::
+
+- `tidyverse`[^1] and `easystats`[^2] are actually *collections* of packages
+- *Load* packages with `library()`
+  - This simply makes the functions of the package available in the current session
+  - You can still call functions from packages that are not loaded by explicitly mentioning the package name `pkg::fun()`
+
+::::: {.fragment}
+
+:::::: {.callout-tip}
+
+It is good practice to explicitly mention a function's package when using it, e.g. `dplyr::select()`, especially when using less popular functions.
+
+::::::
+
+:::::
+
+
+[^1]: tidyverse: `ggplot2`, `dplyr`, `tidyr`, `readr`, `purrr`, `tibble`, `stringr`, `forcats`
+[^2]: easystats: `report`, `performance`, `parameters`, `insight`, `see`, `modelbased`, `correlation`, `effectsize`, `bayestestR`
+
+::::
+
+:::: {.column width="30%"}
+
+![](https://diytranscriptomics.com/images/tidyverse.png)
+
+![](https://easystats.github.io/easystats/reference/figures/logo_wall.png)
+
+::::
+
+:::
+
+## ggplot basics (1)
+
+::::: {.columns}
+:::: {.column width="50%" style="font-size: 90%"}
+
+- `ggplot2` is the main R package for data visualization
+- It is based on the **Grammar of Graphics** <sub><sup>(Wilkinson, 2005)</sup></sup>
+- The main function is `ggplot()`
+  1. Takes a data frame as **first** argument
+  2. Followed by a mapping of variables to **aesthetic** characteristics (x, y, color, shape, etc.)
+  3. We can then add layers to the plot with `+`
+- Note: In ggplot (and most tidyverse) packages, variables are **not** quoted (`x=Sepal.Length`, not `x="Sepal.Length"`)
+  - This is **not typically the case** (in other packages and languages)
+
+::::
+
+:::: {.column }
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| warning: false
+#| message: false
+
+library(tidyverse)
+
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+    geom_point() +
+    geom_density_2d() +
+    theme_classic()
+```
+
+:::
+::::
+:::::
+
+## ggplot basics (2)
+::: {.nonincremental .stretch}
+
+- The arguments passed to `ggplot()` are **inherited** by the layers
+- One can specify different data \& aesthetics for each layer
+
+```{r}
+#| echo: true
+
+ggplot() +
+    geom_point(data = iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+    geom_density_2d(data = iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+    theme_classic()
+```
+
+:::
+
+
+## ggplot basics (3)
+::: {.nonincremental .stretch}
+
+- Aside from aesthetics and data, other arguments can be used to customize the plot
+
+```{r}
+#| echo: true
+
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+    geom_point(color = "yellow", size = 4, shape = "triangle") +
+    geom_density_2d(color = "red") +
+    see::theme_abyss() # Package in easystats
+```
+
+:::
+
+## ggplot basics (4)
+
+::: {.stretch}
+
+:::: {.callout-warning}
+
+Misnomer: do **NOT** confuse arguments that are **"aesthetics"** in `aes()` (i.e., map variable names to aesthetic features) with arguments that control the **appearance** of the plot (not in `aes()`)
+
+::::
+
+:::: {.columns}
+
+::::: {.column width="50%"}
+
+:::::: {.fragment}
+
+```{r}
+#| echo: true
+
+ggplot(iris) +
+    geom_point(aes(x = Sepal.Length, y = Sepal.Width, color = "blue"))
+```
+
+::::::
+
+:::::
+
+::::: {.column}
+
+:::::: {.fragment}
+
+```{r}
+#| echo: true
+ggplot(iris) +
+    geom_point(aes(x = Sepal.Length, y = Sepal.Width), color = "blue")
+```
+
+::::::
+
+:::::
+
+::::
+
+:::
+
+## ggplot basics (5)
+
+::: {.stretch}
+
+- The **appearance** of **aesthetic mappings** can be controlled with `scale_*()`
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+iris |>
+    ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+    geom_point(size = 3) +
+    scale_color_manual(
+        values = list(
+            setosa = "orange",
+            versicolor = "purple",
+            virginica = "green"
+        )
+    ) +
+    see::theme_abyss()
+```
+
+::::
+
+:::
+
+## Exercice {background-color="#FFAB91"}
+
+- 1. Make a dataframe with 2 columns:
+  - `age`: with a vector from 0 to 10
+  - `height`: with a vector from 150 to 170
+  - `weight` : with a vector from 40 to 70
+  - The dataframe should have 30 rows
+- 2. Visualize:
+  - "Values of age as a function of height. The size of the points should reflect weight. Make the points green. Add a "minimal" theme.
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+df <- data.frame(age=seq(0, 10, length.out=30),
+                 height=seq(150, 170, length.out=30),
+                 weight=seq(40, 70, length.out=30))
+
+ggplot(df, aes(x=height, y=age, size=weight)) +
+  geom_point(color = "green") +
+  theme_minimal()
+```
+
+:::
+
+## For loops
+
+- For loops are used to **iterate** over a sequence of values
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+myvec <- c("Tom", "Dom", "Harry")
+for (x in myvec) {
+    print(x)
+}
+```
+
+::: 
+
+- It is convenient to iterate over sequences of numbers, e.g., `1:10` 
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+for (i in 1:10) {
+    print(i)
+}
+```
+
+:::
+
+- It is useful to **initialize** an empty list to then store some result at each iteration
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+myseq <- c() # Initialize empty vector
+for (i in 1:10) {
+    # Take 10 random elements from this list
+    newvector <- sample(c(1, 2, 3), 10, replace = TRUE)
+    # Compute mean
+    mu <- mean(newvector)
+    # Append to myseq
+    myseq <- c(myseq, mu)
+}
+myseq
+```
+
+:::
+
+
+## Functions
+
+- Functions are self-contained factories
+  - They take some variables in (through **arguments**)
+  - They **return** some output
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Define a new function
+do_an_addition <- function(x, y) {
+    result <- x + y
+    return(result)
+}
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Call the function
+result <- do_an_addition(x = 2, y = 3)
+result
+```
+
+:::
+
+## Quizz Time {background-color="#FFAB91"}
+
+- `1 + "1"` returns an error. Why?
+- What's the difference between `c()` and `list()`?
+- In ggplot, aesthetics refer to visual customization (e.g., change the color of all points)
+- A pipe takes the output of the previous function as the first argument of the next
+- What will `True * 3` return?
+- What will `TRUE / 10` return?
+- I do `ggplot(iris, aes(x="Sepal.Length", y="Petal.Length"))` but it throws an error. Why?
+- I do `ggplot(iris, aes(x=Sepal.Length, y=Petal.length))` but it throws an error. Why?
+- I am running `mutate(data, x = 3)` but it says `Error in mutate(x) : could not find function "mutate"`. Why?
+- What is the problem with the following:
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+do_a_multiplication <- function(numbers) {
+    result <- x * y
+    return(result)
+}
+```
+
+:::
+
+- What will the following return?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+a_cool_function <- function(v1, v2) {
+    v1 + v2
+}
+
+the_answer_is_42 <- c()
+for (t in 1:2) {
+  for (h in 3:4) {
+    v <- t |> 
+      a_cool_function(h) 
+    the_answer_is_42 <- c(the_answer_is_42, v)
+  }
+}
+the_answer_is_42
+```
+
+:::
+
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*

@@ -1,0 +1,1272 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**1. Distributions**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    code-line-numbers: false
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    fontsize: "170%"
+editor_options:
+  chunk_output_type: console
+execute:
+  cache: false
+fig-dpi: 300
+---
+
+
+## Distributions {.center background-color="#212121"}
+
+A fundamental concept in Bayesian statistics
+
+## On Normal Distributions {.center background-color="#003B49"}
+
+*Why do statisticians hate normal distributions? Because they are 'mean'!*
+
+## The "Bell" Curve
+
+
+:::::: {.columns}
+
+::::: {.column width="50%" style="font-size: 90%;"}
+
+- The **Normal Distribution** is one of the most important distribution in statistics <sub><sup>(spoiler alert: for reasons that we will see)</sup></sup>
+- *What variables are normally distributed?*
+- It is defined by **two parameters**:
+  - **Location** ($\mu$ <sub>*"mu"*</sub>)
+  - **Deviation**/spread ($\sigma$ <sub>*"sigma"*</sub>)
+- Properties:
+  - Symmetric
+  - **Location = mean** = median = mode
+  - **Deviation = standard deviation (SD)**
+  - \~68% of the data is within 1 SD of the mean, \~95% within 2 SD, \~99.7% within 3 SD
+
+:::::
+
+::::: {.column}
+
+![](https://analystprep.com/cfa-level-1-exam/wp-content/uploads/2019/10/page-123.jpg)
+
+:::: {.fragment}
+
+::: {.callout-note}
+A Normal distribution with $\mu = 0$ and $\sigma = 1$ is also called a **z-Distribution** (aka a **Standard** Normal Distribution)
+
+:::
+
+::::
+
+:::::
+
+::::::
+
+
+## What is a distribution?
+
+::: {style="font-size: 85%;"}
+
+- A **distribution** describes the **probability** of different outcomes
+  - E.g., the distribution of IQ represents the probability of encountering all the different IQ scores
+- Distributions are defined by a set of **parameters** (e.g., location, deviation)
+  - It is an abstract and convenient way of describing the probability of various events using a limited number of parameters
+- The area under the curve is equal to 1 (= describes all possible outcomes)
+  - The unit of the y-axis of a "density plot" is thus irrelevant (as it depends on the x-axis)
+- Statistical software implement a variety of distributions, which can be used to e.g., **randomly sample** from them
+  - In R, the `r*()` functions are used to draw random samples from distributions
+  - E.g., `rnorm()` = `random + normal`
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Randomly sample 500 values from a normal distribution
+myvar <- rnorm(500, mean = 0, sd = 1)
+```
+
+::::
+
+:::: {.fragment}
+
+::::: {.callout-tip}
+
+`report()` from the `report` package can be used to quickly describe various objects
+
+:::::
+
+```{r}
+#| echo: true
+
+report::report(myvar)
+```
+
+::::
+
+:::
+
+## Density Estimation
+
+
+- In practice, we rarely know the true distribution of our data
+- Density estimation is the process of estimating the **Probability Distribution** of a variable
+- This estimation is based on various assumptions that can be tweaked via arguments (e.g., method, kernel type, bandwidth etc.)
+- The resulting density **is just an estimation**, and sometimes can be off
+- **How to compute**
+  - The `estimate_density()` function returns a data frame with the estimated density
+  - Contains two columns, `x` (possible values of the variable) and `y` (its associated probability)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+d <- bayestestR::estimate_density(myvar)
+head(d)
+```
+
+:::
+
+## How to visualize a distribution? (1)
+::: {.nonincremental}
+
+:::: {.columns}
+::::: {.column width="50%"}
+
+- Plot the pre-computed density
+
+```{r}
+#| echo: true
+
+ggplot(d, aes(x = x, y = y)) +
+    geom_line()
+```
+
+:::::
+::::: {.column width="50%"}
+
+- Make the estimation using `ggplot`
+
+```{r}
+#| echo: true
+
+data.frame(x = myvar) |>
+    ggplot(aes(x = x)) + # No 'y' aesthetic is passed (we let ggplot compute it)
+    geom_density()
+```
+
+
+:::::
+::::
+:::
+
+
+## How to visualize a distribution? (2)
+::: {.nonincremental .stretch}
+
+- Empirical distributions (i.e., the distribution of the data at hand) is often represented using **histograms**
+  - Histograms also depends on some parameters, such as the number of bins or the bin width
+  - Like density estimates, it can be inaccurate and give a distorted view of the data
+
+:::: {.columns}
+::::: {.column width="50%"}
+
+```{r}
+#| echo: true
+
+data.frame(x = myvar) |>
+    ggplot(aes(x = x)) +
+    geom_histogram(binwidth = 0.35, color = "black")
+```
+
+:::::
+::::: {.column width="50%"}
+
+```{r}
+#| echo: true
+
+data.frame(x = myvar) |>
+    ggplot(aes(x = x)) +
+    geom_histogram(binwidth = 0.1, color = "black")
+```
+
+:::::
+::::
+:::
+
+## Probability Density Function (PDF)
+
+
+- As we have seen, we can **estimate** the **probability density** of a **random** variable (e.g., a sample of data) and visualize it using a **density plot** or a **histogram**
+- Most common distributions have an *analytical solution* (i.e., a formula) to compute the probability density over a range of values.
+- It is called the **Probability Density Function (PDF)** and can be obtained using the `d*()` functions
+  - E.g., `dnorm()` = `density + normal`
+  - It requires a vector of values (`x`), and the parameters of the distribution (e.g., `mean`, `sd`)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Get 7 evenly-spaced values between -4 and 4
+x <- seq(-4, 4, length.out = 7)
+x
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Compute the PDF at these values according to a normal distribution
+y <- dnorm(x, mean = 0, sd = 1)
+y
+```
+
+:::
+
+## Exercice! {background-color="#80DEEA"}
+
+::: {.nonincremental .stretch}
+
+- Visualize the distribution from the following data:
+
+```{r}
+#| echo: true
+
+x <- seq(-4, 4, length.out = 7)
+y <- dnorm(x, mean = 0, sd = 1)
+```
+
+
+:::
+
+## How to visualize a distribution? (3)
+
+::: {.nonincremental .stretch}
+
+- We can visualize the PDF using a **line plot** (as it is a continuous distribution)
+
+```{r}
+#| echo: true
+#| eval: false
+
+data.frame(x = x, y = y) |>
+    ggplot(aes(x = x, y = y)) +
+    geom_line()
+```
+
+:::: {.fragment}
+
+```{r}
+#| echo: false
+
+data.frame(x = x, y = y) |>
+    ggplot(aes(x = x, y = y)) +
+    geom_line()
+```
+
+::::
+:::
+
+## How to visualize a distribution? (4)
+
+::: {.nonincremental .stretch}
+
+- Add more points for a more fined-grained estimation plot
+
+```{r}
+#| echo: true
+#| eval: false
+
+x <- seq(-4, 4, length.out = 1000)
+y <- dnorm(x, mean = 0, sd = 1)
+
+data.frame(x = x, y = y) |>
+    ggplot(aes(x = x, y = y)) +
+    geom_line(color = "orange", linewidth = 2) +
+    see::theme_abyss() +
+    labs(y = "Density", x = "Values of x")
+```
+
+:::: {.fragment}
+
+```{r}
+#| echo: false
+#| out.width: "70%"
+
+x <- seq(-4, 4, length.out = 1000)
+y <- dnorm(x, mean = 0, sd = 1)
+
+data.frame(x = x, y = y) |>
+    ggplot(aes(x = x, y = y)) +
+    geom_line(color = "orange", linewidth = 2) +
+    see::theme_abyss() +
+    labs(y = "Density", x = "Values of x")
+```
+
+::::
+
+:::
+
+
+## Understand the parameters
+
+::: {.nonincremental .stretch style="font-size: 70%"}
+
+- Gain an intuitive sense of the parameters' impact
+  - Location changes the center of the distribution
+  - Scale changes the width of the distribution
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show code"
+
+df_norm <- data.frame()
+for (u in c(0, 2.5, 5)) {
+    for (sd in c(1, 2, 3)) {
+        dat <- data.frame(x = seq(-10, 10, length.out = 200))
+        dat$p <- dnorm(dat$x, mean = u, sd = sd)
+        dat$distribution <- "Normal"
+        dat$parameters <- paste0("mean = ", u, ", SD = ", sd)
+        df_norm <- rbind(dat, df_norm)
+    }
+}
+
+p <- df_norm |>
+    ggplot(aes(x = x, y = p, group = parameters)) +
+    geom_vline(xintercept = 0, linetype = "dashed") +
+    geom_line(aes(color = distribution), linewidth = 2, color = "#2196F3") +
+    theme_minimal() +
+    theme(
+        legend.position = "none",
+        axis.title.y = element_blank(),
+        plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+        plot.tag = element_text(size = 20, face = "bold", hjust = 0.5),
+        strip.text = element_text(size = 15, face = "bold")
+    )
+
+p + facet_wrap(~parameters)
+```
+
+
+:::
+
+## Quizz {background-color="#FFAB91"}
+
+- What are the parameters that govern a normal distribution?
+- What is the difference between `rnorm()` and `dnorm()`?
+- Density estimation and histograms always gives an accurate representation of the data
+- You cannot change the SD without changing the mean of a normal distribution
+- A variable is drawn from $Normal(\mu=3, \sigma=1)$:
+  - What is the most likely value?
+  - What is the probability that the value is lower than 3?
+  - The bulk of the values (~99.9%) will fall between which two values?
+
+::: {.fragment}
+
+```{r}
+data.frame(x = rnorm(2000, 14, 3)) |>
+    ggplot(aes(x = x)) +
+    geom_density() +
+    labs(x = "Scores")
+```
+
+:::
+
+- My friend does a test of attractiveness and gets a score of 10.
+  - He says "I am very attractive!" Is it true?
+  - What is the most plausible score you could give to a stranger that you never saw?
+
+## On Binomial Distributions {.center background-color="#003B49"}
+
+*Why did the binomial distribution break up with its partner? Because it found their relationship too binary*
+
+## Binomial Distribution
+
+::: {.nonincremental .stretch}
+
+- The **Binomial distribution** models the probability of a series of **binary** outcome trials (e.g., successes/failures, heads/tails, etc.)[^3]
+- It is defined by two parameters: `size` (number of trials) and `prob` (probability of "success")[^4]
+
+[^3]: The probability of a **single** binary event is related to the *Bernoulli* distribution. A **series** of Bernoulli trials is related to a *Binomial* distribution.
+[^4]: Ones vs. zeros
+
+:::
+
+## Random draws
+
+::: {.stretch}
+
+- Let's draw 10 times 1 trial with a probability of 0.5
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+y <- rbinom(10, size = 1, prob = 0.5)
+y
+```
+
+::::
+
+
+- The "probability" argument changes the ratio of 0s and 1s
+
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show plot code"
+#| fig-show: "animate"
+#| eval: false
+
+library(gganimate)
+
+df_binom <- data.frame()
+for (p in c(1 / 3, 1 / 2, 2 / 3)) {
+    dat <- data.frame()
+    for (i in 1:1000) {
+        rez <- rbinom(1, size = 1, prob = p)
+        dat2 <- data.frame(Zero = 0, One = 0, i = i)
+        dat2$Zero[rez == 0] <- 1
+        dat2$One[rez == 1] <- 1
+        dat2$distribution <- "Binomial"
+        dat2$parameters <- paste0("p = ", insight::format_value(p))
+        dat <- rbind(dat, dat2)
+    }
+    dat$Zeros <- cumsum(dat$Zero)
+    dat$Ones <- cumsum(dat$One)
+    df_binom <- rbind(df_binom, dat)
+}
+df_binom <- pivot_longer(
+    df_binom,
+    c("Zeros", "Ones"),
+    names_to = "Outcome",
+    values_to = "Count"
+) |>
+    mutate(Outcome = factor(Outcome, levels = c("Zeros", "Ones")))
+
+anim <- df_binom |>
+    ggplot(aes(x = Outcome, y = Count, group = parameters)) +
+    geom_bar(aes(fill = parameters), stat = "identity", position = "dodge") +
+    theme_minimal() +
+    labs(title = 'N events: {frame_time}', tag = "Binomial Distribution") +
+    transition_time(i)
+
+anim_save(
+    "img/binomial.gif",
+    animate(anim, height = 500, width = 1000, fps = 10)
+)
+```
+
+![](./img/binomial.gif)
+
+:::: 
+
+:::
+
+## Binomial = Sampling from a list of 0s and 1s
+
+- Another way of sampling from a binomial distribution is simply to randomly sample from a list of 0s and 1s
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+rbinom(10, size = 1, prob = 0.5)
+# Is equivalent to
+sample(c(0, 1), size = 10, replace = TRUE)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+rbinom(10, size = 1, prob = 1 / 3)
+# Is equivalent to
+sample(c(0, 0, 1), size = 10, replace = TRUE)
+```
+
+:::
+
+## Random Walk
+
+::: {.columns}
+
+:::: {.column width="70%"}
+
+- Mr. Brown^[Random walks are a type of "Brownian motion", named after the botanist Robert Brown who observed the random motion of pollen grains in water.] is walking through a crowd. Every second, he decides to move to the left or to the right to avoid bumping into random people
+- This type of trajectory can be modeled as a **random walk**. The probability of moving to the left or to the right at each step is 0.5 (50% left and 50% right)
+- We start at the location "0", then it can go to "1" (+1), "2" (+1), "1" (-1), etc.
+- In R, a random walk can be simulated by randomly **sampling** from from **1s** and **-1s** and then cumulatively summing them^[It is a special case of the **Binomial distribution** where `prob = 0.5`.]
+
+::::: {.fragment}
+
+```{r}
+#| include: false
+
+set.seed(1)
+```
+
+:::::
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Simulate random walk
+n_steps <- 7
+decisions <- sample(c(-1, 1), n_steps, replace = TRUE)
+decisions
+
+x <- c(0, cumsum(decisions)) # Add starting point at 0
+x
+```
+
+:::::
+
+:::: 
+
+:::: {.column width="30%"}
+
+![](img/randomwalk.jpg)
+
+::::
+
+:::
+
+
+
+## Visualize a random walk (1)
+
+
+- Creating function is very useful to avoid repeating code, and it is also good to think about your code in terms of encapsulated bits.
+- It is also useful for reproducibility and generalization (you can often re-use useful functions in other projects)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Create function
+random_walk <- function(n_steps) {
+    decisions <- sample(c(-1, 1), n_steps, replace = TRUE)
+    x <- c(0, cumsum(decisions)) # Add starting point at 0
+    return(x)
+}
+
+random_walk(10)
+```
+
+:::
+
+## Visualize a random walk (2)
+
+::: {.nonincremental .stretch}
+
+```{r}
+#| echo: true
+
+x <- random_walk(10)
+data <- data.frame(trajectory = x, time = seq(0, length(x) - 1))
+data
+
+ggplot(data, aes(x = time, y = trajectory)) +
+    geom_line() +
+    coord_flip() # Flip x and y axes
+```
+
+
+:::
+
+## Exercice! {background-color="#80DEEA"}
+
+::: {.nonincremental .stretch}
+
+- Can you simulate 20 different random walks and visualize them as different colors?
+
+
+:::: {.callout-tip}
+
+- You can **loop** over a sequence of iterations with `for(i in 1:20) {...}`
+- The `data.frame()` function can be used to initialize an empty data frame
+- The `rbind()` ("row-bind") function can be used to concatenate data frames vertically
+
+::::
+
+:::
+
+## Solution (1) {background-color="#80DEEA"}
+
+::: {.nonincremental .stretch}
+
+- Can you **simulate 20 different random walks** and visualize them as different colors?
+
+```{r}
+#| echo: true
+
+data <- data.frame() # Initialize empty data frame
+for (i in 1:20) {
+    walk_data <- data.frame(
+        trajectory = random_walk(10),
+        time = seq(0, 10),
+        iteration = i
+    )
+    data <- rbind(data, walk_data)
+}
+
+data
+```
+
+:::
+
+## Solution (2) {background-color="#80DEEA"}
+
+::: {.nonincremental .stretch}
+
+- Can you simulate 20 different random walks and **visualize them as different colors**?
+
+```{r}
+#| echo: true
+
+ggplot(data, aes(x = time, y = trajectory, color = iteration)) +
+    geom_line() +
+    coord_flip()
+```
+
+:::
+
+## Solution (3) {background-color="#80DEEA"}
+
+::: {.nonincremental .stretch}
+
+- The `color` aesthetic needs to be converted to a **factor** to be interpreted as a discrete variable
+
+```{r}
+#| echo: true
+
+data |>
+    mutate(iteration = as.factor(iteration)) |>
+    ggplot(aes(x = time, y = trajectory, color = iteration)) +
+    geom_line() +
+    coord_flip()
+```
+
+:::
+
+
+## Make it nicer
+
+::: {.nonincremental .stretch}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show plot code"
+#| fig.width: 10
+#| fig.height: 10
+
+data <- data.frame() # Initialize empty data frame
+for (i in 1:20) {
+    walk_data <- data.frame(
+        trajectory = random_walk(500),
+        time = seq(0, 500),
+        iteration = i
+    )
+    data <- rbind(data, walk_data)
+}
+
+data |>
+    mutate(iteration = as.factor(iteration)) |>
+    ggplot(aes(x = time, y = trajectory, color = iteration)) +
+    geom_line(linewidth = 0.5) +
+    labs(y = "Position", x = "Time") +
+    scale_color_viridis_d(option = "inferno", guide = "none") +
+    see::theme_blackboard() +
+    coord_flip()
+```
+
+:::
+
+
+## Quizz {background-color="#FFAB91"}
+
+- A Binomial distributions deals with discrete, binary outcomes
+- Tossing a coin (heads vs. tails) enacts a Binomial distribution
+- A Random Walk is the successive sum of random binary outcomes
+- **What is the distribution of the *result* (arrival position) of a Random Walk?**
+
+## Solution {background-color="#FFAB91"}
+
+::: {.nonincremental .stretch}
+
+- Select values at last step and compute histogram
+
+```{r}
+#| echo: true
+
+data |>
+    filter(time == max(time)) |>
+    ggplot(aes(x = trajectory)) +
+    geom_histogram()
+```
+
+:::
+
+## What happens with more trials?
+
+::: {.stretch}
+
+- Try increasing the number of walks
+
+:::: {.columns}
+
+::::: {.column width="65%" .stretch}
+
+:::::: {.fragment}
+
+```{r RandomWalkAnimation}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+#| fig-show: "animate"
+#| out-width: "80%"
+#| eval: false
+
+library(gganimate)
+
+set.seed(1)
+
+data <- data.frame()
+all_iter <- data.frame()
+distr <- data.frame()
+for (i in 1:100) {
+    walk_data <- data.frame(
+        trajectory = random_walk(99),
+        time = seq(0, 99),
+        group = i,
+        iteration = NA
+    )
+    data <- rbind(data, walk_data)
+    data$iteration <- i
+
+    max_t <- max(walk_data$time)
+    distr_data <- filter(data, time == max_t)$trajectory |>
+        bayestestR::estimate_density(precision = 256) |>
+        mutate(
+            y = datawizard::rescale(y, to = c(max_t, max_t + max_t / 3)),
+            iteration = i
+        )
+    distr <- rbind(distr, distr_data)
+
+    all_iter <- rbind(all_iter, data)
+}
+
+df <- all_iter |>
+    mutate(iteration = as.factor(iteration), group = as.factor(group))
+
+
+p <- df |>
+    # filter(iteration == 100) |>
+    ggplot() +
+    geom_line(
+        aes(x = time, y = trajectory, color = group),
+        alpha = 0.7,
+        linewidth = 1.3
+    ) +
+    geom_ribbon(
+        data = distr,
+        aes(xmin = max(all_iter$time), xmax = y, y = x),
+        fill = "#FF9800"
+    ) +
+    geom_point(
+        data = filter(df, time == max(time)),
+        aes(x = time, y = trajectory, color = group),
+        size = 5,
+        alpha = 0.2
+    ) +
+    labs(y = "Position", x = "Time", title = "N random walks: {frame}") +
+    scale_color_viridis_d(option = "turbo", guide = "none") +
+    see::theme_blackboard() +
+    theme(plot.title = element_text(hjust = 0.5, size = 15, face = "bold")) +
+    coord_flip()
+# p
+
+anim <- p + transition_manual(iteration)
+gganimate::anim_save(
+    "img/random.gif",
+    animate(
+        anim,
+        height = 1000,
+        width = 1000,
+        fps = 7,
+        end_pause = 7 * 4,
+        duration = 20
+    )
+)
+```
+
+![](img/random.gif)
+
+::::::
+
+:::::
+
+::::: {.column width="35%"}
+
+:::::: {.fragment}
+
+
+🤯🤯🤯🤯🤯🤯🤯🤯
+
+**A NORMAL DISTRIBUTION**
+
+🤯🤯🤯🤯🤯🤯🤯🤯
+
+
+::::::
+
+- How is it possible than a complex distribution emerges from such a simple process of random binary choices?
+
+:::::
+
+::::
+
+:::
+
+## Central Limit Theorem (1)
+
+::: {.columns}
+
+:::: {.column width="60%"}
+
+- Formula of the Normal Distribution:<br><br> $f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$
+- Despite its (relative) complexity, the Normal distribution naturally emerges from very simple processes!
+- This is known as the **Central Limit Theorem**, which states that the distribution of the sums/means of many random variables tends to a **Normal distribution**
+- This is why the Normal distribution is so ubiquitous in nature and statistics!
+  - Because many measurements are the amalgamation result of many random mechanisms
+
+::::
+:::: {.column width="40%"}
+
+![*A Galton Board*](img/galtonboard.gif){width=80% fig-align="left"}
+
+
+
+::::
+:::
+
+## On Uniform Distributions {.center background-color="#003B49"}
+
+*Why did the uniform distribution get hired as a referee? Because it always calls it fair and square, giving every player an equal chance!*
+
+## Uniform Distribution
+
+
+- The Uniform distribution is the simplest distribution
+- It is defined by two parameters: a **lower** and **upper** bound
+- All values between the bounds are **equally likely** (the PDF is **flat**)
+- **Exercice:** generate 50,000 random values between -10 and 10 and plot the histogram
+  - Tip: use `runif()`
+
+::: {.fragment .r-strecth}
+
+
+```{r}
+#| echo: true
+
+# Use runif(): random + uniform
+data.frame(x = runif(50000, min = -10, max = 10)) |>
+    ggplot(aes(x = x)) +
+    geom_histogram(bins = 50, color = "black") +
+    coord_cartesian(xlim = c(-15, 15))
+```
+
+:::
+
+
+## Uniform Distribution - Applications
+
+- [x] Often used in experimental designs
+  - E.g., to jitter the Inter-Stimulus Intervals, to randomly select between various conditions, etc.
+- [x] It is the least **informative** distribution
+  - Can be used when we want to make **no assumptions**[^7] about the distribution of the data
+
+[^7]: This is a bit of a lie. The Uniform distribution is actually an assumption: it assumes that all values are equally likely, which is in practice often not true.
+
+## On Beta Distributions {.center background-color="#003B49"}
+
+*Why do beta distributions love to go to the gym? So that they are not out of shape!*
+
+
+## Beta Distribution
+
+
+- The Beta distribution can be used to model probabilities
+- Defined by two shape parameters, **α** and **β** (`shape1` \& `shape2`)^[Note that other parameterizations exist, especially in Beta-regression models]
+- Only expressed in the range $]0, 1[$ (i.e., null outside of this range)
+
+::: {.fragment .r-stretch}
+
+
+```{r}
+#| echo: true
+#| out-width: "60%"
+
+data.frame(x = rbeta(10000, shape1 = 1.5, shape2 = 10)) |>
+    ggplot(aes(x = x)) +
+    geom_histogram(bins = 50, color = "black")
+```
+
+:::
+
+## Beta Distribution - Parameters
+
+::: {.nonincremental .stretch}
+- $\alpha$ (`shape1`) and $\beta$ (`shape2`) parameters control the shape of the distribution
+- $\alpha$ pushes the distribution to the right, $\beta$ to the left
+- When $\alpha = \beta$, the distribution is symmetric
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df_beta <- data.frame()
+for (shape1 in c(1, 2, 3, 6)) {
+    for (shape2 in c(1, 2, 3, 6)) {
+        dat <- data.frame(x = seq(-0.25, 1.25, 0.0001))
+        dat$p <- dbeta(dat$x, shape1 = shape1, shape2 = shape2)
+        dat$distribution <- "Beta"
+        dat$parameters <- paste0("alpha = ", shape1, ", beta = ", shape2)
+        df_beta <- rbind(dat, df_beta)
+    }
+}
+
+p <- df_beta |>
+    ggplot(aes(x = x, y = p, group = parameters)) +
+    geom_vline(xintercept = c(0, 1), linetype = "dashed") +
+    geom_line(aes(color = distribution), linewidth = 2, color = "#4CAF50") +
+    theme_minimal() +
+    theme(
+        legend.position = "none",
+        axis.title.y = element_blank(),
+        plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+        plot.tag = element_text(size = 20, face = "bold", hjust = 0.5),
+        strip.text = element_text(size = 15, face = "bold")
+    ) +
+    facet_wrap(~parameters, scales = "free_y")
+p
+```
+
+:::
+
+
+## Beta Distribution - Applications
+
+- [x] Ideal for modeling proportions and probabilities in psychological data
+  - E.g., proportion of time a patient exhibits a certain behavior
+- [x] Used in modeling attitudes and opinions on a bounded scale (e.g., analog scale)
+- [x] Useful when we know that a given parameters cannot be outside of 0-1
+
+
+## On Gamma Distributions {.center background-color="#003B49"}
+
+*Gamma distributions receive many compliments about their long tail. That's why there are always positive!*
+
+
+## Gamma Distribution
+
+::: {.stretch}
+
+- Defined by a shape parameter **k** and a scale parameter **θ** (theta)
+- Only expressed in the range $[0, +\infty [$ (i.e., non-negative)
+- Left-skewed distribution
+- Used to model continuous non-negative data (e.g., time)
+
+```{r}
+#| echo: true
+
+data.frame(x = rgamma(100000, shape = 2, scale = 10)) |>
+    ggplot(aes(x = x)) +
+    geom_histogram(bins = 100, color = "black")
+```
+
+:::
+
+## Gamma Distribution - Parameters
+
+::: {.nonincremental .stretch}
+- $k$ (`shape`) and $\theta$ (`scale`) parameters control the shape of the distribution
+- When $k = 1$, it is equivalent to an **exponential** distribution
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df_gamma <- data.frame()
+for (shape in c(0.5, 1, 2, 4)) {
+    for (scale in c(0.1, 0.5, 1, 2)) {
+        dat <- data.frame(x = seq(0.001, 25, length.out = 1000))
+        dat$p <- dgamma(dat$x, shape = shape, scale = scale)
+        dat$distribution <- "Beta"
+        dat$parameters <- paste0("k = ", shape, ", theta = ", scale)
+        df_gamma <- rbind(dat, df_gamma)
+    }
+}
+
+p <- df_gamma |>
+    ggplot(aes(x = x, y = p, group = parameters)) +
+    # geom_vline(xintercept=c(0, 1), linetype="dashed") +
+    geom_line(aes(color = distribution), linewidth = 2, color = "#9C27B0") +
+    theme_minimal() +
+    theme(
+        legend.position = "none",
+        axis.title.y = element_blank(),
+        plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+        plot.tag = element_text(size = 20, face = "bold", hjust = 0.5),
+        strip.text = element_text(size = 15, face = "bold")
+    ) +
+    facet_wrap(~parameters, scales = "free_y")
+p
+```
+
+:::
+
+## Exercice! {background-color="#80DEEA"}
+
+- Make groups. Each groups picks a distribution (Normal, Uniform, Beta, Gamma) and a set of parameters
+- Then:
+  - Draw 100 random samples from that distribution
+  - Compute the **mean** of each random subset
+  - Store results in a vector
+  - Repeat 10,000 times
+  - Plot the distribution of the means
+
+## Solution {background-color="#80DEEA"}
+
+::: {.columns}
+:::: {.column width="65%"}
+
+```{r}
+#| echo: true
+#| eval: false
+
+means <- c() # Initialize an empty vector
+for (i in 1:10000) {
+    # Iterate
+    x <- rnorm(100, 5, 10)
+    means <- c(means, mean(x))
+}
+```
+
+::::
+:::
+
+## Solution {background-color="#80DEEA"}
+
+::: {.columns}
+:::: {.column width="65%"}
+
+```{r}
+#| echo: true
+#| eval: false
+
+means <- c() # Initialize an empty vector
+for (i in 1:10000) {
+    # Iterate
+    x <- rnorm(100, 5, 10)
+    means <- c(means, mean(x))
+}
+
+data.frame(x = means) |>
+    ggplot(aes(x = x)) +
+    geom_histogram(bins = 40, color = "black")
+```
+
+::::
+:::
+
+## Solution {background-color="#80DEEA"}
+
+::: {.columns}
+:::: {.column width="65%"}
+
+```{r}
+#| echo: true
+
+means <- c()
+for (i in 1:10000) {
+    x <- rbeta(100, shape1 = 10, shape2 = 1.5)
+    means <- c(means, mean(x))
+}
+
+data.frame(x = means) |>
+    ggplot(aes(x = x)) +
+    geom_histogram(bins = 40, color = "black")
+```
+
+::::
+
+:::: {.column width="35%"}
+
+::::: {.fragment}
+
+
+🤯🤯🤯🤯🤯🤯🤯🤯
+
+**A NORMAL DISTRIBUTION**
+
+🤯🤯🤯🤯🤯🤯🤯🤯
+
+
+:::::
+::::
+:::
+
+
+## Central Limit Theorem (2)
+
+- The **Central Limit Theorem** hits gain: **"the distribution of sample means approximates a normal distribution as the sample size gets larger, regardless of the population's distribution"**
+- **Practical Implications**: The Central Limit Theorem is crucial for inferential statistics. It underpins many statistical methods, such as frequentist hypothesis testing and confidence intervals. It allows for the use of normal probability models to make inferences about population parameters even when the population distribution is not normal.
+- **Standard Error (SE)** *vs.* **Standard Deviation (SD)**
+  - The standard deviation is a measure of the variability of a **single** sample of observations
+  - The standard error is a measure of the variability of **many sample means** (it is the SD of the averages of many samples drawn from the same parent distribution). The SE is often assumed to be normally distributed (even if the underlying distribution is not normal).
+
+## On Cauchy Distributions {.center background-color="#003B49"}
+
+*Why don't statisticians play hide and seek with Cauchy distributions? Because they never know where they're going to show up and how far away they could be!*
+
+## Cauchy Distribution
+
+::: {.nonincremental .stretch}
+
+- The Cauchy distribution is known for its "heavy tails" (aka "fat tails")
+- Characterized by a location parameter (the median) and a scale parameter (the spread)
+- The Cauchy distribution is **one notable exception** to the Central Limit Theorem (CLT): the distribution of the sample means of a Cauchy distribution remains a Cauchy distribution (instead of Normal). This is because the heavy tails of the Cauchy distribution significantly influence the sample mean, preventing it from settling into a normal distribution.
+
+![](https://i.stack.imgur.com/zGTLU.png){fig-align="center"}
+
+:::
+
+## On *t*-Distributions {.center background-color="#003B49"}
+
+*How do you call the PhD diploma of a Student's t-distribution? A degree of freedom!*
+
+## *t*-Distribution
+
+::: {.nonincremental .stretch}
+
+- Both Cauchy and Normal are extreme cases of the Student's *t*-distribution
+  - <small>Student's *t*-distribution becomes the Cauchy distribution when the degrees of freedom is **equal to one** and converges to the normal distribution as the degrees of freedom go to **infinity**</small>
+- Defined by its degrees of freedom $df$ (*location* and *scale* usually fixed to 0 and 1)
+- Tends to have heavier tails than the normal distribution (but less than Cauchy)
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+#| fig.align: center
+#| dpi: 600
+
+df <- data.frame(x = seq(-5, 5, length.out = 1000))
+df$Normal <- dnorm(df$x, mean = 0, sd = 1)
+df$Cauchy <- dcauchy(df$x, location = 0, scale = 1)
+df$Student_1.5 <- dt(df$x, df = 1.5)
+df$Student_2 <- dt(df$x, df = 2)
+df$Student_3 <- dt(df$x, df = 3)
+df$Student_5 <- dt(df$x, df = 5)
+df$Student_10 <- dt(df$x, df = 10)
+df$Student_20 <- dt(df$x, df = 20)
+
+df |>
+    pivot_longer(
+        starts_with("Student"),
+        names_to = "Distribution",
+        values_to = "PDF"
+    ) |>
+    separate(Distribution, into = c("Distribution", "df"), sep = "_") |>
+    mutate(label = paste0("Student (df=", df, ")")) |>
+    ggplot(aes(x = x)) +
+    geom_line(
+        data = df,
+        aes(y = Normal, color = "Normal (0, 1)"),
+        linewidth = 2
+    ) +
+    geom_line(
+        data = df,
+        aes(y = Cauchy, color = "Cauchy (0, 1)"),
+        linewidth = 2
+    ) +
+    geom_line(aes(y = PDF, color = label)) +
+    scale_color_manual(
+        values = c(
+            `Cauchy (0, 1)` = "#F44336",
+            `Student (df=1.5)` = "#FF5722",
+            `Student (df=2)` = "#FF9800",
+            `Student (df=3)` = "#FFC107",
+            `Student (df=5)` = "#FFEB3B",
+            `Student (df=10)` = "#CDDC39",
+            `Student (df=20)` = "#8BC34A",
+            `Normal (0, 1)` = "#2196F3"
+        ),
+        breaks = c(
+            "Normal (0, 1)",
+            "Student (df=20)",
+            "Student (df=10)",
+            "Student (df=5)",
+            "Student (df=3)",
+            "Student (df=2)",
+            "Student (df=1.5)",
+            "Cauchy (0, 1)"
+        )
+    ) +
+    see::theme_modern() +
+    theme(
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+        strip.text = element_text(size = 15, face = "bold")
+    ) +
+    labs(title = "Normal, Cauchy, and Student's t-Distribution", color = NULL)
+```
+
+:::
+
+## *t*-Distribution - Applications
+
+- [x] Widely used in hypothesis testing (e.g. *t*-tests), particularly for small sample sizes
+  - E.g., comparing the means of two groups in an experiment
+- [x] Essential in constructing confidence intervals
+
+
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
