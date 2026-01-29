@@ -164,7 +164,7 @@ The Bayesian framework for statistics has quickly gained popularity among scient
 ## Follow the slides
 
 - https://github.com/DominiqueMakowski/teaching
-  - 👉 *Lecture 0*
+  - 👉 *2025-26: Week 1*
 
 ## The Environment {.center background-color="#1A237E"}
 
@@ -310,6 +310,12 @@ class(x)
 
 ## Printing
 
+```{r}
+#| echo: true
+
+x <- 3
+```
+
 - The content of something is only shown on demand, by **printing** it
 
 ::: {.fragment}
@@ -317,7 +323,6 @@ class(x)
 ```{r}
 #| echo: true
 
-x <- 3
 print(x)
 ```
 
@@ -325,13 +330,24 @@ print(x)
 
 - The last line of a code chunk, if not assigned to anything, is automatically printed by R
 
+
+::: {.fragment}
+
+
 ```{r}
 #| echo: true
 
 x  # = print(x)
 ```
 
+:::
+
+
+
 - Printing things don't modify ("save") things:
+
+::: {.fragment}
+
 
 ```{r}
 #| echo: true
@@ -340,6 +356,7 @@ x + 1
 x
 ```
 
+:::
 
 ## Exercice {background-color="#FFAB91"}
 

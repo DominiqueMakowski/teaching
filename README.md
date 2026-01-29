@@ -8,8 +8,8 @@ I also offer workshops to external universities (see [here for details](https://
 
 ### Bayesian Statistics
 
-- **Lecture 1:** [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/0_RefreshR)
-- **Lecture 2:** [Distributions](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+- **Week 1:** [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/0_RefreshR)
+- **Week 2:** [Distributions](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 ### Workshops
 
@@ -27,7 +27,7 @@ I also offer workshops to external universities (see [here for details](https://
 ### Workshops
 
 - [**Intro to Bayesian Statistics** *(University of Paris-Cité - 12/24)*](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025_ParisCite)
-
+<!--
 ### Bayesian Statistics
 
 - **Lecture 1:**
@@ -55,7 +55,7 @@ I also offer workshops to external universities (see [here for details](https://
 - **Lecture 9:**
     - [brms - Posteriors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/9_LinearModelsPosterior)
 - **Lecture 10:**
-    - [Model Comparison](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/10_ModelComparison)
+    - [Model Comparison](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2025/10_ModelComparison) -->
 
 ### Psychophysiology
 
@@ -73,7 +73,7 @@ I also offer workshops to external universities (see [here for details](https://
   - [Slides](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel)
   - [Experiment](https://dominiquemakowski.github.io/teaching/Physiology/2024_Basel/experiment)
 
-### Bayesian Statistics
+<!-- ### Bayesian Statistics
 
 - [Lecture 1](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/1_Distributions)
 - [Lecture 2](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/2_MLE)
@@ -84,7 +84,7 @@ I also offer workshops to external universities (see [here for details](https://
 - [Lecture 8 & 9](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/8_LinearModelsPriors)
 - [Lecture 10](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/9_LinearModelsPosterior)
 - [Lecture 11](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2024/10_Models)
-
+ -->
 
 
 
