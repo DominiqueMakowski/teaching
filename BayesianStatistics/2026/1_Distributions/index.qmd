@@ -25,12 +25,17 @@ execute:
 fig-dpi: 300
 ---
 
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
 
 ## Distributions {.center background-color="#212121"}
 
 A fundamental concept in Bayesian statistics
 
-## On Normal Distributions {.center background-color="#003B49"}
+## On Normal Distributions {.center background-color="#1A237E"}
 
 *Why do statisticians hate normal distributions? Because they are 'mean'!*
 
@@ -78,6 +83,7 @@ A Normal distribution with $\mu = 0$ and $\sigma = 1$ is also called a **z-Distr
 
 - A **distribution** describes the **probability** of different outcomes
   - E.g., the distribution of IQ represents the probability of encountering all the different IQ scores
+- The **probability** is in this equivalent to the **frequency** ("in a group of 100 random people, how many have an IQ of > 130")
 - Distributions are defined by a set of **parameters** (e.g., location, deviation)
   - It is an abstract and convenient way of describing the probability of various events using a limited number of parameters
 - The area under the curve is equal to 1 (= describes all possible outcomes)
@@ -122,9 +128,31 @@ report::report(myvar)
 - Density estimation is the process of estimating the **Probability Distribution** of a variable
 - This estimation is based on various assumptions that can be tweaked via arguments (e.g., method, kernel type, bandwidth etc.)
 - The resulting density **is just an estimation**, and sometimes can be off
-- **How to compute**
-  - The `estimate_density()` function returns a data frame with the estimated density
-  - Contains two columns, `x` (possible values of the variable) and `y` (its associated probability)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+x <- rnorm(100000, mean = 0, sd = 1)
+x_strictly_positive <- x[x >= 0]
+
+ggplot(data.frame(x = x), aes(x = x, y = after_stat(count))) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_density(linewidth = 2) +
+  geom_density(data = data.frame(x = x_strictly_positive), 
+               color = "red", linewidth = 1) +
+  theme_minimal()
+```
+
+:::
+
+
+## Density Computation
+
+
+- The `estimate_density()` function returns a data frame with the estimated density
+- Contains two columns, `x` (possible values of the variable) and `y` (its associated probability)
 
 ::: {.fragment}
 
@@ -391,7 +419,7 @@ data.frame(x = rnorm(2000, 14, 3)) |>
   - He says "I am very attractive!" Is it true?
   - What is the most plausible score you could give to a stranger that you never saw?
 
-## On Binomial Distributions {.center background-color="#003B49"}
+## On Binomial Distributions {.center background-color="#1A237E"}
 
 *Why did the binomial distribution break up with its partner? Because it found their relationship too binary*
 
@@ -878,7 +906,7 @@ gganimate::anim_save(
 ::::
 :::
 
-## On Uniform Distributions {.center background-color="#003B49"}
+## On Uniform Distributions {.center background-color="#1A237E"}
 
 *Why did the uniform distribution get hired as a referee? Because it always calls it fair and square, giving every player an equal chance!*
 
@@ -916,7 +944,7 @@ data.frame(x = runif(50000, min = -10, max = 10)) |>
 
 [^7]: This is a bit of a lie. The Uniform distribution is actually an assumption: it assumes that all values are equally likely, which is in practice often not true.
 
-## On Beta Distributions {.center background-color="#003B49"}
+## On Beta Distributions {.center background-color="#1A237E"}
 
 *Why do beta distributions love to go to the gym? So that they are not out of shape!*
 
@@ -993,7 +1021,7 @@ p
 - [x] Useful when we know that a given parameters cannot be outside of 0-1
 
 
-## On Gamma Distributions {.center background-color="#003B49"}
+## On Gamma Distributions {.center background-color="#1A237E"}
 
 *Gamma distributions receive many compliments about their long tail. That's why there are always positive!*
 
@@ -1158,7 +1186,7 @@ data.frame(x = means) |>
   - The standard deviation is a measure of the variability of a **single** sample of observations
   - The standard error is a measure of the variability of **many sample means** (it is the SD of the averages of many samples drawn from the same parent distribution). The SE is often assumed to be normally distributed (even if the underlying distribution is not normal).
 
-## On Cauchy Distributions {.center background-color="#003B49"}
+## On Cauchy Distributions {.center background-color="#1A237E"}
 
 *Why don't statisticians play hide and seek with Cauchy distributions? Because they never know where they're going to show up and how far away they could be!*
 
@@ -1174,7 +1202,7 @@ data.frame(x = means) |>
 
 :::
 
-## On *t*-Distributions {.center background-color="#003B49"}
+## On *t*-Distributions {.center background-color="#1A237E"}
 
 *How do you call the PhD diploma of a Student's t-distribution? A degree of freedom!*
 

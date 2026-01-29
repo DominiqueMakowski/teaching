@@ -119,6 +119,7 @@ The Bayesian framework for statistics has quickly gained popularity among scient
 - Less emphasis on "THE ONLY WAY", focus on understanding concepts and applying them critically
 - No imposed organization, templates, model response, code functions to follow etc.
 - But paradoxically we now actually ***care*** about the code
+- Change of mindset: you are more ECRs than students
 - Assessments involve understanding what we discuss in class (and at the end being able to do a Bayesian analysis), no more no less
 
 
@@ -367,7 +368,7 @@ x
   - Variable = The name assigned to an object OR a column in a data frame
   - `x <- 3`. "x" is a variable. 
 
-## Vectors vs. Lists (1)
+## Vectors 
 
 - A **vector** is a "list" of elements of the **same class**, indexed by their **position**
 - In R, most operations are by default **vectorized** (i.e., applied to each element of the vector)
@@ -408,27 +409,66 @@ c(x, 3)
 
 :::
 
-## Vectors vs. Lists (2)
-
-::: {.fragment}
-
-:::: {.callout-warning}
-
-- R starts counting at 1, not 0.
+## Vector Indexing
 
 ```{r}
 #| echo: true
+
+x <- c(0, 1, 2, 3)
+```
+
+- R starts counting at 1, not 0.
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+x[2]
+```
+```{r}
 x[2]
 ```
 
-::::
+:::
+
+- Vectors can also be indexed via **logical vectors**
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+x[c(TRUE, FALSE, TRUE, FALSE)]
+```
 
 :::
 
+::: {.fragment}
 
+```{r}
+x[c(TRUE, FALSE, TRUE, FALSE)]
+```
 
+:::
 
-## Vectors vs. Lists (3)
+- Useful for filtering
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mask <- x >= 1
+mask
+x[mask]
+```
+
+:::
+
+## Vectors vs. Lists 
 
 
 - A **list** is a container of named elements of **any kind**, indexed by their **name**

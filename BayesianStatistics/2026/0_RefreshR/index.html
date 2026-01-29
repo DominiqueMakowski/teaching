@@ -249,7 +249,7 @@ p-value adjustment method: Holm (1979)</code></pre>
 
 Parameter    | Petal.Width | Petal.Length | Sepal.Width
 -------------------------------------------------------
-Sepal.Length |     0.80*** |      0.86*** |       -0.12
+Sepal.Length |     0.81*** |      0.86*** |       -0.11
 Sepal.Width  |    -0.35*** |     -0.41*** |            
 Petal.Length |     0.96*** |              |            </code></pre>
 </div>
@@ -302,6 +302,7 @@ Petal.Length |     0.96*** |              |            </code></pre>
 <li class="fragment">Less emphasis on “THE ONLY WAY”, focus on understanding concepts and applying them critically</li>
 <li class="fragment">No imposed organization, templates, model response, code functions to follow etc.</li>
 <li class="fragment">But paradoxically we now actually <strong><em>care</em></strong> about the code</li>
+<li class="fragment">Change of mindset: you are more ECRs than students</li>
 <li class="fragment">Assessments involve understanding what we discuss in class (and at the end being able to do a Bayesian analysis), no more no less</li>
 </ul>
 </div><div class="column">
@@ -565,8 +566,8 @@ Petal.Length |     0.96*** |              |            </code></pre>
 </ul></li>
 </ul>
 </section>
-<section id="vectors-vs.-lists-1" class="slide level2">
-<h2>Vectors vs.&nbsp;Lists (1)</h2>
+<section id="vectors" class="slide level2">
+<h2>Vectors</h2>
 <ul>
 <li class="fragment">A <strong>vector</strong> is a “list” of elements of the <strong>same class</strong>, indexed by their <strong>position</strong></li>
 <li class="fragment">In R, most operations are by default <strong>vectorized</strong> (i.e., applied to each element of the vector)</li>
@@ -595,34 +596,58 @@ Petal.Length |     0.96*** |              |            </code></pre>
 </div>
 </div>
 </section>
-<section id="vectors-vs.-lists-2" class="slide level2">
-<h2>Vectors vs.&nbsp;Lists (2)</h2>
-<div class="fragment">
-<div class="callout callout-warning callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="vector-indexing" class="slide level2">
+<h2>Vector Indexing</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><strong>Warning</strong></p>
-</div>
-<div class="callout-content">
 <ul>
 <li class="fragment">R starts counting at 1, not 0.</li>
 </ul>
+<div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
 </div>
+<ul>
+<li class="fragment">Vectors can also be indexed via <strong>logical vectors</strong></li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 2</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Useful for filtering</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="" aria-hidden="true" tabindex="-1"></a>mask <span class="ot">&lt;-</span> x <span class="sc">&gt;=</span> <span class="dv">1</span></span>
+<span id="cb27-2"><a href="" aria-hidden="true" tabindex="-1"></a>mask</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE  TRUE  TRUE  TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a>x[mask]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3</code></pre>
 </div>
 </div>
 </div>
 </section>
-<section id="vectors-vs.-lists-3" class="slide level2">
-<h2>Vectors vs.&nbsp;Lists (3)</h2>
+<section id="vectors-vs.-lists" class="slide level2">
+<h2>Vectors vs.&nbsp;Lists</h2>
 <ul>
 <li class="fragment">A <strong>list</strong> is a container of named elements of <strong>any kind</strong>, indexed by their <strong>name</strong></li>
 <li class="fragment">The order of things doesn’t matter (unlike in a vector)</li>
@@ -630,10 +655,10 @@ Petal.Length |     0.96*** |              |            </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var1 =</span> <span class="st">"some text"</span>, <span class="at">var2 =</span> <span class="dv">30</span>, <span class="at">var3 =</span> x)</span>
-<span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a>mylist<span class="sc">$</span>var3 <span class="co"># = mylist[["var3"]]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var1 =</span> <span class="st">"some text"</span>, <span class="at">var2 =</span> <span class="dv">30</span>, <span class="at">var3 =</span> x)</span>
+<span id="cb31-2"><a href="" aria-hidden="true" tabindex="-1"></a>mylist<span class="sc">$</span>var3 <span class="co"># = mylist[["var3"]]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0 1 2</code></pre>
+<pre><code>[1] 0 1 2 3</code></pre>
 </div>
 </div>
 </div>
@@ -657,8 +682,8 @@ Petal.Length |     0.96*** |              |            </code></pre>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var4 =</span> <span class="st">"some other text"</span>)</span>
-<span id="cb26-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(mylist, mylist2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">var4 =</span> <span class="st">"some other text"</span>)</span>
+<span id="cb33-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(mylist, mylist2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$var1
 [1] "some text"
@@ -667,7 +692,7 @@ $var2
 [1] 30
 
 $var3
-[1] 0 1 2
+[1] 0 1 2 3
 
 $var4
 [1] "some other text"</code></pre>
@@ -681,26 +706,26 @@ $var4
 <li class="fragment">What is the output?</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb28-2"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="ot">&lt;-</span> <span class="fu">c</span>(it_is_a_character, <span class="dv">3</span>)</span>
-<span id="cb28-3"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="ot">&lt;-</span> <span class="fu">c</span>(it_is_a_character, <span class="dv">3</span>)</span>
-<span id="cb28-4"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="sc">+</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb35-2"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="ot">&lt;-</span> <span class="fu">c</span>(it_is_a_character, <span class="dv">3</span>)</span>
+<span id="cb35-3"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="ot">&lt;-</span> <span class="fu">c</span>(it_is_a_character, <span class="dv">3</span>)</span>
+<span id="cb35-4"><a href="" aria-hidden="true" tabindex="-1"></a>it_is_a_character <span class="sc">+</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li class="fragment">What is the output?</li>
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb29-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">numbers =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb29-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">note =</span> <span class="st">"hello"</span></span>
-<span id="cb29-4"><a href="" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb29-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-6"><a href="" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> mylist[<span class="st">"numbers"</span>]</span>
-<span id="cb29-7"><a href="" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> mylist[[<span class="st">"numbers"</span>]]</span>
-<span id="cb29-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(a)</span>
-<span id="cb29-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb36-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">numbers =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb36-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">note =</span> <span class="st">"hello"</span></span>
+<span id="cb36-4"><a href="" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> mylist[<span class="st">"numbers"</span>]</span>
+<span id="cb36-7"><a href="" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> mylist[[<span class="st">"numbers"</span>]]</span>
+<span id="cb36-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(a)</span>
+<span id="cb36-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -710,14 +735,14 @@ $var4
 <li class="fragment">What is the output?</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb30-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">note =</span> <span class="st">"new note"</span>,</span>
-<span id="cb30-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">extra =</span> <span class="cn">TRUE</span></span>
-<span id="cb30-4"><a href="" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-6"><a href="" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> <span class="fu">c</span>(mylist, mylist2)</span>
-<span id="cb30-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(merged)</span>
-<span id="cb30-8"><a href="" aria-hidden="true" tabindex="-1"></a>merged</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a>mylist2 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb37-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">note =</span> <span class="st">"new note"</span>,</span>
+<span id="cb37-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">extra =</span> <span class="cn">TRUE</span></span>
+<span id="cb37-4"><a href="" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-5"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> <span class="fu">c</span>(mylist, mylist2)</span>
+<span id="cb37-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(merged)</span>
+<span id="cb37-8"><a href="" aria-hidden="true" tabindex="-1"></a>merged</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="sequences" class="slide level2">
@@ -727,7 +752,7 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span><span class="sc">:</span><span class="dv">9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span><span class="sc">:</span><span class="dv">9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5 6 7 8 9</code></pre>
 </div>
@@ -738,11 +763,11 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.2</span>) <span class="co"># from 0 to 1, step 0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.2</span>) <span class="co"># from 0 to 1, step 0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0 0.2 0.4 0.6 0.8 1.0</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out=</span><span class="dv">3</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out=</span><span class="dv">3</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0 0.5 1.0</code></pre>
 </div>
@@ -760,11 +785,11 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">|&gt;</span> <span class="fu">sqrt</span>() <span class="co"># equivalent to</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">|&gt;</span> <span class="fu">sqrt</span>() <span class="co"># equivalent to</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2</code></pre>
 </div>
@@ -775,15 +800,15 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">|&gt;</span></span>
-<span id="cb41-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb41-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb41-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.character</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb48-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.character</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "2" "1" "0"</code></pre>
 </div>
@@ -802,12 +827,12 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
-<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb44-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">var1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb44-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">var2 =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>),</span>
-<span id="cb44-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">var3 =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
-<span id="cb44-6"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
+<span id="cb51-2"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb51-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">var1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb51-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">var2 =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>),</span>
+<span id="cb51-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">var3 =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb51-6"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ul>
@@ -825,7 +850,7 @@ $var4
 <div class="callout-content">
 <p>You can view the first rows of a data frame with <code>head()</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 1          5.1         3.5          1.4         0.2  setosa
@@ -849,7 +874,7 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>var1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>var1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 2 3</code></pre>
 </div>
@@ -860,15 +885,15 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df<span class="sc">$</span>var1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df<span class="sc">$</span>var1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "numeric"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df<span class="sc">$</span>var2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df<span class="sc">$</span>var2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "character"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df<span class="sc">$</span>var3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df<span class="sc">$</span>var3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "logical"</code></pre>
 </div>
@@ -878,9 +903,9 @@ $var4
 <section id="data-concatenation" class="slide level2">
 <h2>Data Concatenation</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>))</span>
-<span id="cb55-2"><a href="" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"c"</span>, <span class="st">"d"</span>))</span>
-<span id="cb55-3"><a href="" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>))</span>
+<span id="cb62-2"><a href="" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"c"</span>, <span class="st">"d"</span>))</span>
+<span id="cb62-3"><a href="" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">z =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li class="fragment"><code>c()</code> would be ambiguous for dataframes because tables can be combining vertically (by rows) or horizontally (by columns)</li>
@@ -888,8 +913,8 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df1, df2)</span>
-<span id="cb56-2"><a href="" aria-hidden="true" tabindex="-1"></a>df4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df1, df2)</span>
+<span id="cb63-2"><a href="" aria-hidden="true" tabindex="-1"></a>df4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  x y
 1 1 a
@@ -897,8 +922,8 @@ $var4
 3 3 c
 4 4 d</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df1, df3)</span>
-<span id="cb58-2"><a href="" aria-hidden="true" tabindex="-1"></a>df5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df1, df3)</span>
+<span id="cb65-2"><a href="" aria-hidden="true" tabindex="-1"></a>df5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  x y     z
 1 1 a  TRUE
@@ -916,8 +941,8 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
-<span id="cb60-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"easystats"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb67-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"easystats"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ul>
@@ -969,16 +994,16 @@ $var4
 </div><div class="column">
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb61-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
-<span id="cb61-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb61-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_2d</span>() <span class="sc">+</span></span>
-<span id="cb61-6"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb68-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
+<span id="cb68-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb68-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_2d</span>() <span class="sc">+</span></span>
+<span id="cb68-6"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-31-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-36-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -994,14 +1019,14 @@ $var4
 <li>One can specify different data &amp; aesthetics for each layer</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb62-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
-<span id="cb62-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_2d</span>(<span class="at">data =</span> iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
-<span id="cb62-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb69-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
+<span id="cb69-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_2d</span>(<span class="at">data =</span> iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
+<span id="cb69-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-32-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-37-1.png" width="3000" class="r-stretch"></section>
 <section id="ggplot-basics-3" class="slide level2">
 <h2>ggplot basics (3)</h2>
 <div class="">
@@ -1009,14 +1034,14 @@ $var4
 <li>Aside from aesthetics and data, other arguments can be used to customize the plot</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
-<span id="cb63-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"yellow"</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">shape =</span> <span class="st">"triangle"</span>) <span class="sc">+</span></span>
-<span id="cb63-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_2d</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb63-4"><a href="" aria-hidden="true" tabindex="-1"></a>    see<span class="sc">::</span><span class="fu">theme_abyss</span>() <span class="co"># Package in easystats</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width)) <span class="sc">+</span></span>
+<span id="cb70-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"yellow"</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">shape =</span> <span class="st">"triangle"</span>) <span class="sc">+</span></span>
+<span id="cb70-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_2d</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb70-4"><a href="" aria-hidden="true" tabindex="-1"></a>    see<span class="sc">::</span><span class="fu">theme_abyss</span>() <span class="co"># Package in easystats</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-33-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-38-1.png" width="3000" class="r-stretch"></section>
 <section id="ggplot-basics-4" class="slide level2">
 <h2>ggplot basics (4)</h2>
 <div class="stretch">
@@ -1037,12 +1062,12 @@ $var4
 <div class="column" style="width:50%;">
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris) <span class="sc">+</span></span>
-<span id="cb64-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width, <span class="at">color =</span> <span class="st">"blue"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris) <span class="sc">+</span></span>
+<span id="cb71-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width, <span class="at">color =</span> <span class="st">"blue"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-34-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-39-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1051,12 +1076,12 @@ $var4
 </div><div class="column">
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris) <span class="sc">+</span></span>
-<span id="cb65-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width), <span class="at">color =</span> <span class="st">"blue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris) <span class="sc">+</span></span>
+<span id="cb72-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width), <span class="at">color =</span> <span class="st">"blue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-35-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-40-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1073,21 +1098,21 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb66-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
-<span id="cb66-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb66-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(</span>
-<span id="cb66-5"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">values =</span> <span class="fu">list</span>(</span>
-<span id="cb66-6"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">setosa =</span> <span class="st">"orange"</span>,</span>
-<span id="cb66-7"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">versicolor =</span> <span class="st">"purple"</span>,</span>
-<span id="cb66-8"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">virginica =</span> <span class="st">"green"</span></span>
-<span id="cb66-9"><a href="" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb66-10"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb66-11"><a href="" aria-hidden="true" tabindex="-1"></a>    see<span class="sc">::</span><span class="fu">theme_abyss</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb73-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb73-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb73-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(</span>
+<span id="cb73-5"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">values =</span> <span class="fu">list</span>(</span>
+<span id="cb73-6"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">setosa =</span> <span class="st">"orange"</span>,</span>
+<span id="cb73-7"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">versicolor =</span> <span class="st">"purple"</span>,</span>
+<span id="cb73-8"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">virginica =</span> <span class="st">"green"</span></span>
+<span id="cb73-9"><a href="" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb73-10"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb73-11"><a href="" aria-hidden="true" tabindex="-1"></a>    see<span class="sc">::</span><span class="fu">theme_abyss</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-36-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-41-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1116,20 +1141,20 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">age=</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out=</span><span class="dv">30</span>),</span>
-<span id="cb67-2"><a href="" aria-hidden="true" tabindex="-1"></a>                 <span class="at">height=</span><span class="fu">seq</span>(<span class="dv">150</span>, <span class="dv">170</span>, <span class="at">length.out=</span><span class="dv">30</span>),</span>
-<span id="cb67-3"><a href="" aria-hidden="true" tabindex="-1"></a>                 <span class="at">weight=</span><span class="fu">seq</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="at">length.out=</span><span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">age=</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out=</span><span class="dv">30</span>),</span>
+<span id="cb74-2"><a href="" aria-hidden="true" tabindex="-1"></a>                 <span class="at">height=</span><span class="fu">seq</span>(<span class="dv">150</span>, <span class="dv">170</span>, <span class="at">length.out=</span><span class="dv">30</span>),</span>
+<span id="cb74-3"><a href="" aria-hidden="true" tabindex="-1"></a>                 <span class="at">weight=</span><span class="fu">seq</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="at">length.out=</span><span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>height, <span class="at">y=</span>age, <span class="at">size=</span>weight)) <span class="sc">+</span></span>
-<span id="cb68-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
-<span id="cb68-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>height, <span class="at">y=</span>age, <span class="at">size=</span>weight)) <span class="sc">+</span></span>
+<span id="cb75-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb75-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-38-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-43-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1143,10 +1168,10 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="" aria-hidden="true" tabindex="-1"></a>myvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Tom"</span>, <span class="st">"Dom"</span>, <span class="st">"Harry"</span>)</span>
-<span id="cb69-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x <span class="cf">in</span> myvec) {</span>
-<span id="cb69-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(x)</span>
-<span id="cb69-4"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="" aria-hidden="true" tabindex="-1"></a>myvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Tom"</span>, <span class="st">"Dom"</span>, <span class="st">"Harry"</span>)</span>
+<span id="cb76-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x <span class="cf">in</span> myvec) {</span>
+<span id="cb76-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(x)</span>
+<span id="cb76-4"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Tom"
 [1] "Dom"
@@ -1159,9 +1184,9 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
-<span id="cb71-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(i)</span>
-<span id="cb71-3"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb78-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(i)</span>
+<span id="cb78-3"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1
 [1] 2
@@ -1181,18 +1206,18 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="" aria-hidden="true" tabindex="-1"></a>myseq <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co"># Initialize empty vector</span></span>
-<span id="cb73-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
-<span id="cb73-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Take 10 random elements from this list</span></span>
-<span id="cb73-4"><a href="" aria-hidden="true" tabindex="-1"></a>    newvector <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb73-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute mean</span></span>
-<span id="cb73-6"><a href="" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(newvector)</span>
-<span id="cb73-7"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Append to myseq</span></span>
-<span id="cb73-8"><a href="" aria-hidden="true" tabindex="-1"></a>    myseq <span class="ot">&lt;-</span> <span class="fu">c</span>(myseq, mu)</span>
-<span id="cb73-9"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb73-10"><a href="" aria-hidden="true" tabindex="-1"></a>myseq</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="" aria-hidden="true" tabindex="-1"></a>myseq <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co"># Initialize empty vector</span></span>
+<span id="cb80-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb80-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Take 10 random elements from this list</span></span>
+<span id="cb80-4"><a href="" aria-hidden="true" tabindex="-1"></a>    newvector <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb80-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute mean</span></span>
+<span id="cb80-6"><a href="" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(newvector)</span>
+<span id="cb80-7"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Append to myseq</span></span>
+<span id="cb80-8"><a href="" aria-hidden="true" tabindex="-1"></a>    myseq <span class="ot">&lt;-</span> <span class="fu">c</span>(myseq, mu)</span>
+<span id="cb80-9"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb80-10"><a href="" aria-hidden="true" tabindex="-1"></a>myseq</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 1.7 2.0 2.1 2.3 2.2 1.9 1.9 1.6 2.3 1.8</code></pre>
+<pre><code> [1] 1.9 2.2 1.9 2.2 2.0 2.6 1.7 1.2 1.7 1.9</code></pre>
 </div>
 </div>
 </div>
@@ -1208,18 +1233,18 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a new function</span></span>
-<span id="cb75-2"><a href="" aria-hidden="true" tabindex="-1"></a>do_an_addition <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
-<span id="cb75-3"><a href="" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> x <span class="sc">+</span> y</span>
-<span id="cb75-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(result)</span>
-<span id="cb75-5"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a new function</span></span>
+<span id="cb82-2"><a href="" aria-hidden="true" tabindex="-1"></a>do_an_addition <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) {</span>
+<span id="cb82-3"><a href="" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> x <span class="sc">+</span> y</span>
+<span id="cb82-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(result)</span>
+<span id="cb82-5"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the function</span></span>
-<span id="cb76-2"><a href="" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">do_an_addition</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">3</span>)</span>
-<span id="cb76-3"><a href="" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the function</span></span>
+<span id="cb83-2"><a href="" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">do_an_addition</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">3</span>)</span>
+<span id="cb83-3"><a href="" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5</code></pre>
 </div>
@@ -1242,10 +1267,10 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="" aria-hidden="true" tabindex="-1"></a>do_a_multiplication <span class="ot">&lt;-</span> <span class="cf">function</span>(numbers) {</span>
-<span id="cb78-2"><a href="" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> x <span class="sc">*</span> y</span>
-<span id="cb78-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(result)</span>
-<span id="cb78-4"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="" aria-hidden="true" tabindex="-1"></a>do_a_multiplication <span class="ot">&lt;-</span> <span class="cf">function</span>(numbers) {</span>
+<span id="cb85-2"><a href="" aria-hidden="true" tabindex="-1"></a>    result <span class="ot">&lt;-</span> x <span class="sc">*</span> y</span>
+<span id="cb85-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(result)</span>
+<span id="cb85-4"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ul>
@@ -1253,19 +1278,19 @@ $var4
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="" aria-hidden="true" tabindex="-1"></a>a_cool_function <span class="ot">&lt;-</span> <span class="cf">function</span>(v1, v2) {</span>
-<span id="cb79-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(v1 <span class="sc">+</span> v2)</span>
-<span id="cb79-3"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb79-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-5"><a href="" aria-hidden="true" tabindex="-1"></a>the_answer_is_42 <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb79-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) {</span>
-<span id="cb79-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (h <span class="cf">in</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>) {</span>
-<span id="cb79-8"><a href="" aria-hidden="true" tabindex="-1"></a>    v <span class="ot">&lt;-</span> t <span class="sc">|&gt;</span> </span>
-<span id="cb79-9"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">a_cool_function</span>(h) </span>
-<span id="cb79-10"><a href="" aria-hidden="true" tabindex="-1"></a>    the_answer_is_42 <span class="ot">&lt;-</span> <span class="fu">c</span>(the_answer_is_42, v)</span>
-<span id="cb79-11"><a href="" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb79-12"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb79-13"><a href="" aria-hidden="true" tabindex="-1"></a>the_answer_is_42</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="" aria-hidden="true" tabindex="-1"></a>a_cool_function <span class="ot">&lt;-</span> <span class="cf">function</span>(v1, v2) {</span>
+<span id="cb86-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(v1 <span class="sc">+</span> v2)</span>
+<span id="cb86-3"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb86-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-5"><a href="" aria-hidden="true" tabindex="-1"></a>the_answer_is_42 <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb86-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) {</span>
+<span id="cb86-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (h <span class="cf">in</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>) {</span>
+<span id="cb86-8"><a href="" aria-hidden="true" tabindex="-1"></a>    v <span class="ot">&lt;-</span> t <span class="sc">|&gt;</span> </span>
+<span id="cb86-9"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">a_cool_function</span>(h) </span>
+<span id="cb86-10"><a href="" aria-hidden="true" tabindex="-1"></a>    the_answer_is_42 <span class="ot">&lt;-</span> <span class="fu">c</span>(the_answer_is_42, v)</span>
+<span id="cb86-11"><a href="" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb86-12"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb86-13"><a href="" aria-hidden="true" tabindex="-1"></a>the_answer_is_42</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
