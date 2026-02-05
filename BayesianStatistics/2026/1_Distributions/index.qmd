@@ -1234,23 +1234,6 @@ df |>
   - E.g., comparing the means of two groups in an experiment
 - [x] Essential in constructing confidence intervals
 
-## Marginal Distributions
-
-
-```{r}
-#| echo: false
-
-df <- data.frame(
-  var1 = rnorm(10000, mean = 0, sd = 1),
-  var2 = runif(10000, min = -5, max = 5)
-)
-
-ggplot(df, aes(x = var1, y = var2)) +
-  geom_point(alpha = 0.3, size=3) 
-```
-
-- What is the distribution of `var1` alone? 
-- What is the distribution of `var2` alone?
 
 ## Marginal Distributions
 
