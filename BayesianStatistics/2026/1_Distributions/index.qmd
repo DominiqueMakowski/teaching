@@ -166,6 +166,7 @@ head(d)
 :::
 
 ## How to visualize a distribution? (1)
+
 ::: {.nonincremental}
 
 :::: {.columns}
@@ -265,11 +266,7 @@ y
 
 :::
 
-## Exercice! {background-color="#80DEEA"}
-
-::: {.nonincremental .stretch}
-
-- Visualize the distribution from the following data:
+## Visualizing
 
 ```{r}
 #| echo: true
@@ -278,61 +275,32 @@ x <- seq(-4, 4, length.out = 7)
 y <- dnorm(x, mean = 0, sd = 1)
 ```
 
+- These two vectors represent the *x*-axis and the *y* coordinates of the density **line**
+- In order to plot it, we need to create a "temporary" data frame holding these two vectors as columns
 
-:::
-
-## How to visualize a distribution? (3)
-
-::: {.nonincremental .stretch}
-
-- We can visualize the PDF using a **line plot** (as it is a continuous distribution)
+::: {.fragment}
 
 ```{r}
 #| echo: true
-#| eval: false
 
-data.frame(x = x, y = y) |>
-    ggplot(aes(x = x, y = y)) +
-    geom_line()
+data.frame(x = x, y = y) |>  # Put x and y into a dataframe
+  ggplot(aes(x = x, y = y)) +  # Use ggplot and reference the columns
+  geom_line()
 ```
 
-:::: {.fragment}
-
-```{r}
-#| echo: false
-
-data.frame(x = x, y = y) |>
-    ggplot(aes(x = x, y = y)) +
-    geom_line()
-```
-
-::::
 :::
 
-## How to visualize a distribution? (4)
 
-::: {.nonincremental .stretch}
+## Exercice! {background-color="#80DEEA"}
 
-- Add more points for a more fined-grained estimation plot
+- Increase the number of more points for a smoother density plot
+- Make the line orange
+
+::: {.fragment}
 
 ```{r}
 #| echo: true
-#| eval: false
-
-x <- seq(-4, 4, length.out = 1000)
-y <- dnorm(x, mean = 0, sd = 1)
-
-data.frame(x = x, y = y) |>
-    ggplot(aes(x = x, y = y)) +
-    geom_line(color = "orange", linewidth = 2) +
-    see::theme_abyss() +
-    labs(y = "Density", x = "Values of x")
-```
-
-:::: {.fragment}
-
-```{r}
-#| echo: false
+#| eval: true
 #| out.width: "70%"
 
 x <- seq(-4, 4, length.out = 1000)
@@ -345,10 +313,7 @@ data.frame(x = x, y = y) |>
     labs(y = "Density", x = "Values of x")
 ```
 
-::::
-
 :::
-
 
 ## Understand the parameters
 
@@ -425,7 +390,6 @@ data.frame(x = rnorm(2000, 14, 3)) |>
 
 ## Binomial Distribution
 
-::: {.nonincremental .stretch}
 
 - The **Binomial distribution** models the probability of a series of **binary** outcome trials (e.g., successes/failures, heads/tails, etc.)[^3]
 - It is defined by two parameters: `size` (number of trials) and `prob` (probability of "success")[^4]
@@ -433,7 +397,6 @@ data.frame(x = rnorm(2000, 14, 3)) |>
 [^3]: The probability of a **single** binary event is related to the *Bernoulli* distribution. A **series** of Bernoulli trials is related to a *Binomial* distribution.
 [^4]: Ones vs. zeros
 
-:::
 
 ## Random draws
 
@@ -631,26 +594,24 @@ ggplot(data, aes(x = time, y = trajectory)) +
 
 ## Exercice! {background-color="#80DEEA"}
 
-::: {.nonincremental .stretch}
+- We want to simulate 20 different random walks and visualize them as different colors
+- What functions will we need to use?
 
-- Can you simulate 20 different random walks and visualize them as different colors?
+::: {.callout-tip}
 
-
-:::: {.callout-tip}
-
-- You can **loop** over a sequence of iterations with `for(i in 1:20) {...}`
+- "Do *X* 20 times" = **loop** over a sequence of iterations with `for(i in 1:20) {...}`
+- Because ggplot takes a dataframe, we will need all the data from the 20 runs in one single dataframe
 - The `data.frame()` function can be used to initialize an empty data frame
-- The `rbind()` ("row-bind") function can be used to concatenate data frames vertically
-
-::::
+- The `rbind()` function can be used to concatenate data frames vertically
 
 :::
 
+
 ## Solution (1) {background-color="#80DEEA"}
 
-::: {.nonincremental .stretch}
+::: {.nonincremental}
 
-- Can you **simulate 20 different random walks** and visualize them as different colors?
+- Let's **simulate 20 different random walks**
 
 ```{r}
 #| echo: true
@@ -672,9 +633,7 @@ data
 
 ## Solution (2) {background-color="#80DEEA"}
 
-::: {.nonincremental .stretch}
-
-- Can you simulate 20 different random walks and **visualize them as different colors**?
+::: {.nonincremental}
 
 ```{r}
 #| echo: true
@@ -688,7 +647,7 @@ ggplot(data, aes(x = time, y = trajectory, color = iteration)) +
 
 ## Solution (3) {background-color="#80DEEA"}
 
-::: {.nonincremental .stretch}
+::: {.nonincremental}
 
 - The `color` aesthetic needs to be converted to a **factor** to be interpreted as a discrete variable
 
@@ -696,7 +655,7 @@ ggplot(data, aes(x = time, y = trajectory, color = iteration)) +
 #| echo: true
 
 data |>
-    mutate(iteration = as.factor(iteration)) |>
+    mutate(iteration = as.factor(iteration)) |>  # <--
     ggplot(aes(x = time, y = trajectory, color = iteration)) +
     geom_line() +
     coord_flip()
@@ -707,7 +666,9 @@ data |>
 
 ## Make it nicer
 
-::: {.nonincremental .stretch}
+::: {.nonincremental}
+
+- We can increase the steps do make it more interesting
 
 ```{r}
 #| echo: true
@@ -746,11 +707,26 @@ data |>
 - A Random Walk is the successive sum of random binary outcomes
 - **What is the distribution of the *result* (arrival position) of a Random Walk?**
 
-## Solution {background-color="#FFAB91"}
+## Exercice! {background-color="#80DEEA"}
 
-::: {.nonincremental .stretch}
+```{r}
+#| echo: true
 
-- Select values at last step and compute histogram
+data <- data.frame() 
+for (i in 1:10000) {
+    walk_data <- data.frame(
+        trajectory = random_walk(200),
+        time = seq(0, 200),
+        iteration = i
+    )
+    data <- rbind(data, walk_data)
+}
+```
+
+- Run the random walk simulation with 10000 steps and 200 steps
+- Visualize the distribution of the final positions (at time = 200) using a histogram
+
+::: {.fragment}
 
 ```{r}
 #| echo: true
@@ -758,22 +734,19 @@ data |>
 data |>
     filter(time == max(time)) |>
     ggplot(aes(x = trajectory)) +
-    geom_histogram()
+    geom_histogram(bins = 100)
 ```
 
 :::
 
-## What happens with more trials?
 
-::: {.stretch}
+## Simulation
 
-- Try increasing the number of walks
+::: {.columns}
 
-:::: {.columns}
+:::: {.column width="65%" .stretch}
 
-::::: {.column width="65%" .stretch}
-
-:::::: {.fragment}
+::::: {.fragment}
 
 ```{r RandomWalkAnimation}
 #| echo: true
@@ -858,13 +831,13 @@ gganimate::anim_save(
 
 ![](img/random.gif)
 
-::::::
-
 :::::
 
-::::: {.column width="35%"}
+::::
 
-:::::: {.fragment}
+:::: {.column width="35%"}
+
+::::: {.fragment}
 
 
 🤯🤯🤯🤯🤯🤯🤯🤯
@@ -874,15 +847,14 @@ gganimate::anim_save(
 🤯🤯🤯🤯🤯🤯🤯🤯
 
 
-::::::
+:::::
 
 - How is it possible than a complex distribution emerges from such a simple process of random binary choices?
-
-:::::
 
 ::::
 
 :::
+
 
 ## Central Limit Theorem (1)
 
@@ -953,7 +925,8 @@ data.frame(x = runif(50000, min = -10, max = 10)) |>
 
 
 - The Beta distribution can be used to model probabilities
-- Defined by two shape parameters, **α** and **β** (`shape1` \& `shape2`)^[Note that other parameterizations exist, especially in Beta-regression models]
+- Defined by two shape parameters, **α** and **β** (`shape1` \& `shape2`)
+  - Note it can also be expressed via other, more convenient, parametrizations. Often, in Beta-regression models, the Beta distribution is set by a location $\mu$ (mean) and scale $\phi$ parameters.  
 - Only expressed in the range $]0, 1[$ (i.e., null outside of this range)
 
 ::: {.fragment .r-stretch}
@@ -973,6 +946,7 @@ data.frame(x = rbeta(10000, shape1 = 1.5, shape2 = 10)) |>
 ## Beta Distribution - Parameters
 
 ::: {.nonincremental .stretch}
+
 - $\alpha$ (`shape1`) and $\beta$ (`shape2`) parameters control the shape of the distribution
 - $\alpha$ pushes the distribution to the right, $\beta$ to the left
 - When $\alpha = \beta$, the distribution is symmetric
@@ -1096,40 +1070,32 @@ p
   - Repeat 10,000 times
   - Plot the distribution of the means
 
-## Solution {background-color="#80DEEA"}
-
-::: {.columns}
-:::: {.column width="65%"}
+::: {.fragment}
 
 ```{r}
 #| echo: true
 #| eval: false
 
 means <- c() # Initialize an empty vector
-for (i in 1:10000) {
-    # Iterate
-    x <- rnorm(100, 5, 10)
-    means <- c(means, mean(x))
+for (i in 1:10000) {  # Iterate
+    x <- ...  # <- TODO: draw a random variable from your chosen distribution
+    means <- c(means, mean(x))  # Compute the mean and store it
 }
 ```
 
-::::
 :::
 
 ## Solution {background-color="#80DEEA"}
 
-::: {.columns}
-:::: {.column width="65%"}
 
 ```{r}
 #| echo: true
-#| eval: false
+#| output: false
 
 means <- c() # Initialize an empty vector
-for (i in 1:10000) {
-    # Iterate
-    x <- rnorm(100, 5, 10)
-    means <- c(means, mean(x))
+for (i in 1:10000) {  # Iterate
+    x <- rnorm(100, 5, 10)  # Draw random sample
+    means <- c(means, mean(x))  # Compute the mean and store it
 }
 
 data.frame(x = means) |>
@@ -1137,34 +1103,11 @@ data.frame(x = means) |>
     geom_histogram(bins = 40, color = "black")
 ```
 
-::::
-:::
+- What does yours look like?
 
-## Solution {background-color="#80DEEA"}
+::: {.fragment}
 
-::: {.columns}
-:::: {.column width="65%"}
-
-```{r}
-#| echo: true
-
-means <- c()
-for (i in 1:10000) {
-    x <- rbeta(100, shape1 = 10, shape2 = 1.5)
-    means <- c(means, mean(x))
-}
-
-data.frame(x = means) |>
-    ggplot(aes(x = x)) +
-    geom_histogram(bins = 40, color = "black")
-```
-
-::::
-
-:::: {.column width="35%"}
-
-::::: {.fragment}
-
+They all look like...
 
 🤯🤯🤯🤯🤯🤯🤯🤯
 
@@ -1173,18 +1116,16 @@ data.frame(x = means) |>
 🤯🤯🤯🤯🤯🤯🤯🤯
 
 
-:::::
-::::
 :::
 
 
 ## Central Limit Theorem (2)
 
-- The **Central Limit Theorem** hits gain: **"the distribution of sample means approximates a normal distribution as the sample size gets larger, regardless of the population's distribution"**
+- The **Central Limit Theorem** hits gain: **"the distribution of the means of any sample approximates a normal distribution as the sample size gets larger, regardless of the population's distribution"**
 - **Practical Implications**: The Central Limit Theorem is crucial for inferential statistics. It underpins many statistical methods, such as frequentist hypothesis testing and confidence intervals. It allows for the use of normal probability models to make inferences about population parameters even when the population distribution is not normal.
 - **Standard Error (SE)** *vs.* **Standard Deviation (SD)**
   - The standard deviation is a measure of the variability of a **single** sample of observations
-  - The standard error is a measure of the variability of **many sample means** (it is the SD of the averages of many samples drawn from the same parent distribution). The SE is often assumed to be normally distributed (even if the underlying distribution is not normal).
+  - The standard error is a measure of the variability of **many sample means** (it is the SD of the averages of many samples drawn from the same parent distribution). The SE is often assumed to be normally distributed (even if the underlying distribution is not normal), which is backed by the CLT.
 
 ## On Cauchy Distributions {.center background-color="#1A237E"}
 
@@ -1292,6 +1233,221 @@ df |>
 - [x] Widely used in hypothesis testing (e.g. *t*-tests), particularly for small sample sizes
   - E.g., comparing the means of two groups in an experiment
 - [x] Essential in constructing confidence intervals
+
+## Marginal Distributions
+
+
+```{r}
+#| echo: false
+
+df <- data.frame(
+  var1 = rnorm(10000, mean = 0, sd = 1),
+  var2 = runif(10000, min = -5, max = 5)
+)
+
+ggplot(df, aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.3, size=3) 
+```
+
+- What is the distribution of `var1` alone? 
+- What is the distribution of `var2` alone?
+
+## Marginal Distributions
+
+
+```{r}
+#| echo: false
+
+df <- data.frame(
+  var1 = rnorm(10000, mean = 0, sd = 1),
+  var2 = runif(10000, min = -5, max = 5)
+)
+
+ggplot(df, aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) 
+```
+
+- What is the distribution of `var1` alone (i.e;, its *marginal* distribution)? 
+- What is the marginal distribution of `var2`?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show code"
+
+ggplot(df, aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  ggside::geom_xsidehistogram(bins=50) +
+  ggside::geom_ysidehistogram(bins=50) +
+  theme_minimal()
+```
+
+:::
+
+
+## Quizz {background-color="#FFAB91"}
+
+```{r}
+#| echo: false
+#| fig-height: 10
+#| fig-width: 10
+#| out-width: "50%"
+#| out-height: "50%"
+
+data.frame(
+  var1 = rnorm(10000, 100, 15),
+  var2 = rnorm(10000, 0, 1)
+) |> 
+  ggplot(aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  theme_minimal() 
+```
+
+- What are the marginal distributions of `var1` and `var2`?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show code"
+#| fig-height: 10
+#| fig-width: 10
+#| out-width: "50%"
+#| out-height: "50%"
+
+data.frame(
+  var1 = rnorm(10000, 100, 15),
+  var2 = rnorm(10000, 0, 1)
+) |> 
+  ggplot(aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  ggside::geom_xsidehistogram(bins=50) +
+  ggside::geom_ysidehistogram(bins=50) +
+  theme_minimal() 
+```
+
+:::
+
+## Quizz {background-color="#FFAB91"}
+
+```{r}
+#| echo: false
+
+data.frame(
+  var1 = rgamma(10000, 1.5, 1),
+  var2 = rbeta(10000, 2, 2)
+) |> 
+  filter(var1 < 7) |>
+  ggplot(aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  theme_minimal()
+```
+
+- What are the marginal distributions of `var1` and `var2`?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show code"
+
+data.frame(
+  var1 = rgamma(10000, 1.5, 1),
+  var2 = rbeta(10000, 2, 2)
+) |> 
+  filter(var1 < 7) |>
+  ggplot(aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  ggside::geom_xsidehistogram(bins=70) +
+  ggside::geom_ysidehistogram(bins=50) +
+  theme_minimal()
+```
+
+:::
+
+## Quizz {background-color="#FFAB91"}
+
+```{r}
+#| echo: false
+
+r <- rbeta(10000, 10, 10)
+theta <- 2.0*pi*runif(10000)
+
+data.frame(
+  var1 = r * cos(theta),
+  var2 = r * sin(theta)
+) |> 
+  ggplot(aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  # ggside::geom_xsidehistogram(bins=70) +
+  # ggside::geom_ysidehistogram(bins=70) +
+  theme_minimal()
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show code"
+
+r <- rbeta(10000, 10, 10)
+theta <- 2.0*pi*runif(10000)
+
+data.frame(
+  var1 = r * cos(theta),
+  var2 = r * sin(theta)
+) |> 
+  ggplot(aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  ggside::geom_xsidehistogram(bins=70) +
+  ggside::geom_ysidehistogram(bins=70) +
+  theme_minimal()
+```
+
+:::
+
+
+## Quizz {background-color="#FFAB91"}
+
+```{r}
+#| echo: false
+
+data.frame(
+  var1 = rbeta(10000, 0.3, 0.3),
+  var2 = rbeta(10000, 10000, 10000)
+) |> 
+  ggplot(aes(x = var1, y = var2)) +
+  # geom_point(alpha = 0.2, size=3) +
+  ggside::geom_xsidehistogram(bins=70) +
+  ggside::geom_ysidehistogram(bins=70) +
+  theme_minimal()
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show code"
+
+data.frame(
+  var1 = rbeta(10000, 0.3, 0.3),
+  var2 = rbeta(10000, 10000, 10000)
+) |> 
+  ggplot(aes(x = var1, y = var2)) +
+  geom_point(alpha = 0.2, size=3) +
+  ggside::geom_xsidehistogram(bins=70) +
+  ggside::geom_ysidehistogram(bins=70) +
+  theme_minimal()
+```
+
+:::
+
 
 
 

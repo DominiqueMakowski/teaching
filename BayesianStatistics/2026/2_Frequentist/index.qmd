@@ -1,0 +1,790 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**2. On Regression Parameters in a Frequentist Framework**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+```
+
+
+## Recap
+
+```{r}
+#| echo: false
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df <- data.frame(
+  x = seq(-6, 6, length.out = 500),
+  y = dnorm(seq(-6, 6, length.out = 500), 1.5, 1),
+  Distribution = "Normal (1, 1)"
+)
+# t-distribution
+df <- data.frame(
+  x = seq(-6, 6, length.out = 500),
+  y = dt(seq(-6, 6, length.out = 500), 1),
+  Distribution = "t (df=1)"
+) |> rbind(df)
+
+# Uniform
+df <- data.frame(
+  x = seq(-21, 51, length.out = 500),
+  y = dunif(seq(-21, 51, length.out = 500), -20, 50),
+  Distribution = "Uniform (-20, 50)"
+) |> rbind(df)
+
+# Beta
+df <- data.frame(
+  x = seq(-0.1, 1.1, length.out = 500),
+  y = dbeta(seq(-0.1, 1.1, length.out = 500), 3, 3),
+  Distribution = "Beta (3, 3)"
+) |> rbind(df)
+
+# Gamma
+df <- data.frame(
+  x = seq(-0.1, 10, length.out = 500),
+  y = dgamma(seq(-0.1, 10, length.out = 500), 3, 3),
+  Distribution = "Gamma (3,  3)"
+) |> rbind(df)
+
+# Cauchy
+df <- data.frame(
+  x = seq(-10, 10, length.out = 500),
+  y = dcauchy(seq(-10, 10, length.out = 500), 0, 1),
+  Distribution = "Cauchy (0, 1)"
+) |> rbind(df)
+
+df |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_line(linewidth=1) +
+  facet_wrap(~Distribution, scales="free") +
+  theme_bw() +
+  theme(strip.text = element_blank())
+```
+
+## Solution
+
+```{r}
+#| echo: false
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_line(linewidth=1) +
+  facet_wrap(~Distribution, scales="free") +
+  theme_bw() 
+```
+
+## Regression Parameters {.center background-color="#003B49"}
+
+
+## Quizz {background-color="#FFAB91"}
+
+::: {.stretch}
+
+- What is wrong with this [**Correlation**]{.fragment .strike} plot?
+- It is more a "regression" plot *(scatter plot + regression line)*
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df <- bayestestR::simulate_correlation(n=500, r=0.7)
+df |> 
+  ggplot(aes(x=V1, y=V2)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2, color="red") +
+  theme_bw()
+```
+
+:::
+
+## Solution {background-color="#80DEEA"}
+
+::: {.stretch}
+
+- A correlation is a measure of the **strength** of association [-1, 1]
+  - Better represented by an elipsis
+- The line is a **regression** line
+  - The angle of the line is the regression coefficient (can be > 1)
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+df |> 
+  ggplot(aes(x=V1, y=V2)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2, color="red") +
+  stat_ellipse(type = "norm", color="blue", linewidth=2) +
+  theme_bw()
+```
+
+::: 
+
+## Tests vs. Models
+
+- Psychology uses a lot of **tests** (*t*-tests, correlation tests, ANOVAs, etc.)
+- **Tests** != **Models**
+  - We can't predict the value of `y` given `x` with a test
+- However, tests are usually **based** on models
+- In particular, tests are related to specific **parameters** of models
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+cor.test(mtcars$wt, mtcars$qsec) |> 
+  parameters::parameters()
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+lm(wt ~ qsec, data=mtcars) |> 
+  parameters::parameters()
+```
+
+:::
+
+- **What are <span style="color:orange;">*Parameters*</span>**?
+
+
+## Linear Model
+
+::: {.stretch style="font-size: 85%"}
+
+- Linear function: $y = ax + b$
+- Regression formula: $\hat{y} = Intercept + \beta_{1}x$
+  - <span style="color:red;">$\hat{y}$</span> (Y-hat): *predicted* response/outcome/dependent variable
+  - <span style="color:blue;">$Intercept$ ($\beta_{0}$)</span>: "starting point". Value of $\hat{y}$ when $x=0$
+  - <span style="color:green;">$\beta_{1}$</span> (beta) : slope/"effect". Change of $\hat{y}$ from the intercept when $x$ **increases by 1**
+  - $x$: predictor/independent variable
+- **What are the parameters of the regression line below?** [<span style="color:orange;">***Intercept = 1 and beta = 3***</span>]{.fragment}
+  
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+ggplot(df, aes(x=V1, y=V2)) +
+  geom_point(alpha=0) +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  geom_abline(intercept = 1, slope = 3, color="red", linewidth=2)  +
+  geom_segment(aes(x = 0, y = 1, xend = 1, yend = 1), linewidth=1, 
+               color="green", linetype="dashed") +
+  geom_segment(aes(x = 1, y = 1, xend = 1, yend = 4), linewidth=1, 
+               color="green", linetype="solid", arrow=arrow(length = unit(0.1, "inches"))) +
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1), linewidth=1, 
+               color="blue", linetype="solid", arrow=arrow(length = unit(0.1, "inches"))) +
+  geom_point(aes(x = 0, y = 0), color="purple", size=8, shape="+") +
+  labs(x="x", y="y") +
+  theme_bw() +
+  coord_cartesian(xlim = c(-1, 1.5), ylim = c(-3, 4))
+```
+  
+
+
+:::
+
+
+## Impact of Parameters
+
+::: {.nonincremental .stretch}
+
+- What happens when we change the **slope** and the **intercept**?
+
+![](img/regression.jpg)
+
+:::
+
+## Hands-on! {background-color="#FFAB91"}
+
+::: {.nonincremental .stretch}
+
+- Compute the linear regression coefficients for:
+  - Response variable: `mpg`
+  - Predictor variable: `qsec`
+  - Dataset: `mtcars` (built-in in R)
+
+:::
+
+## Linear Regression in R
+
+::: {.stretch style="font-size: 90%"}
+
+- In R, we use the `lm()` function (linear model) with the `response ~ predictor` formula to specify the model
+- We can apply the `summary()` method to get the results
+- **What are the coefficients?** 
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- lm(mpg ~ qsec, data=mtcars)
+summary(model)
+```
+
+::::
+
+- $Intercept = -5.1140$ and $\beta_{qsec} = 1.4121$
+- **How are the parameters computed?**
+
+
+:::
+
+
+## Unit sensitivity
+
+```{r}
+#| echo: true
+
+df <- mtcars
+df$qsec10 <- df$qsec / 10
+model <- lm(mpg ~ qsec10, data=df)
+```
+
+- What happens if you divide the predictor by 10?
+  - Will it change the model? Will it make the effect less significant? Will change the coefficient?
+
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: true
+
+summary(model)
+```
+
+:::
+
+- Raw coefficient in a regression model are unit dependent (it is important to know the scale of your variables for interpreting the coefficients)
+
+
+## Frequentist Estimation {.center background-color="#003B49"}
+
+
+## Ordinary Least Squares (OLS)
+
+::: {.stretch}
+
+- The Ordinary Least Squares (OLS) line is the line that minimizes the **sum** of **squared residuals** (**Residual Sum of Squares - RSS**)
+  - $RSS = \sum(residuals^{2})$ (the square is to make them positive)
+- The **residuals** are the differences between observed and predicted values
+  - $RSS = \sum_{i=1}^{n_{obs}}(y_{i} - \hat{y}_{i})^{2}$
+- Squared residuals correspond to ***Errors*** (epsilon $\varepsilon$)
+
+```{r}
+#| echo: true
+#| code-fold: true
+
+p <- mtcars |> 
+  ggplot(aes(x=qsec, y=mpg)) +
+  geom_point(alpha=0.7, size=6) +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
+  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
+               color="red", linetype="dotted", linewidth=1) +
+  theme_bw() +
+  labs(x="x", y="y", title="The residuals are the vertical distances between each point and the line.")
+p
+```
+
+
+:::
+
+## Maximum Likelihood Estimation (MLE)
+
+::::: {.columns}
+
+:::: {.column width="50%" style="font-size: 85%"}
+
+
+- The OLS "line" (i.e., the OLS coefficients) can be computed using various algorithms, but one is particularly useful
+- This approach is called **Maximum Likelihood Estimation (MLE)**
+- In a typical linear regression model, the assumption is made that the **errors** are **normally distributed**[^2]
+  - Why? This "trick" allows to get OLS-equivalent coefficients and further enable **inferential statistics**
+- MLE tries to maximize the **likelihood** of the data given the model^[Keep this mind, because in a few lessons we will be talking about the exact opposite; the likelihood of a model given the data], by finding the best distribution parameters to "fit" the residuals
+
+  
+[^2]: This is VERY OFTEN confused with the requirement to have variables normally distributed, which is NOT a requirement for linear regression. The normality concerns the residuals, not the variables.
+
+
+::::
+:::: {.column style="font-size: 75%"}
+
+![](img/FisherYoung.jpg){fig-align="center"}
+
+Ronald Fisher (1890 – 1962), *"a genius who almost single-handedly created the foundations for modern statistical science"*, introduced MLE in 1922
+
+::::
+:::::
+
+## Linear Model = "Gaussian" Model
+
+::: {.stretch .nonincremental}
+
+- Solving the linear model equation means finding the **best fitting normal distribution** around the *residuals*
+- In other words, a typical "linear model" is actually a "Gaussian" model
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| dpi: 300
+
+p <- mtcars |> 
+  ggplot(aes(x=qsec, y=mpg)) +
+  geom_point(alpha=0.7, size=6) +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
+  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
+               color="red", linetype="dotted", linewidth=1) +
+  theme_bw() +
+  labs(x="x", y="y", title="The residuals are the vertical distances between each point and the line.")
+
+p2 <- data.frame(Error=insight::get_residuals(lm(mpg ~ qsec, data=mtcars))) |> 
+  ggplot(aes(x=Error)) +
+  geom_histogram(bins=10, fill="grey", color="black") +
+  geom_vline(xintercept = 0, linetype="dashed") +
+  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 2)),
+               aes(y=after_stat(density)*40), color="#F44336", linewidth=1, adjust=1) +
+  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 3)),
+               aes(y=after_stat(density)*50), color="#FF5722", linewidth=1, adjust=1) +
+  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 4)),
+               aes(y=after_stat(density)*60), color="#FF9800", linewidth=1, adjust=1) +
+  geom_point(aes(y=0), size=10, shape=16, alpha=0.3) +
+  theme_bw() +
+  coord_flip() +
+  labs(y = "Density")
+
+p + theme(plot.title = element_blank()) | p2
+```
+
+:::
+
+## Homoscedasticity   
+
+
+::: {.nonincremental .stretch}
+
+- The line that goes through the *Normal* distribution's locations $\mu$ also minimizes the sum of squared residuals (OLS)
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| dpi: 300
+
+model <- lm(mpg ~ qsec, data=mtcars)
+
+p <- mtcars |> 
+  ggplot(aes(x=qsec, y=mpg)) +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
+  theme_bw()
+
+# Function to add normal distribution curves
+add_normals <- function(p, model) {
+  sigma <- summary(model)$sigma  # Standard deviation of residuals
+  n <- 100  # Number of points for each curve
+  
+  for(i in 1:nrow(mtcars)) {
+    x_val <- mtcars$qsec[i]
+    y_pred <- predict(model, newdata = data.frame(qsec = x_val))
+    
+    # Create a sequence of y values for the normal curve
+    y_seq <- seq(y_pred - 3*sigma, y_pred + 3*sigma, length.out = n)
+    density <- dnorm(y_seq, mean = y_pred, sd = sigma)
+    
+    # Adjust density to match the scale of the plot
+    max_width <- 1  # Max width of areas
+    density_scaled <- (density / max(density)) * max_width
+    
+    # Create a dataframe for each path
+    path_df <- data.frame(x = x_val + density_scaled, y = y_seq)
+    path_dfv <- data.frame(x=path_df$x[1], ymin=min(path_df$y), ymax=max(path_df$y))
+    
+    # Add the path to the plot
+    p <- p + 
+      geom_segment(data = path_dfv, aes(x = x, xend=x, y = ymin, yend=ymax), 
+                   color = "#FF9800", linewidth = 0.7, alpha=0.8, linetype="dotted") +
+      geom_path(data = path_df, aes(x = x, y = y), 
+                color = "#FF9800", linewidth = 1, alpha=0.8) 
+  }
+  p
+}
+
+
+# Create the final plot
+p <- add_normals(p, model) +
+  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(alpha=0.8, size=6) 
+p
+```
+
+
+:::
+
+
+
+
+## Linear Models - Deviation
+
+:::: {.columns}
+
+::: {.column width="50%" style="font-size: 75%"}
+
+- Once we have estimated the distribution of errors: 
+  - We can obtain the regression line (the **slope** of the distribution's locations $\mu$)
+  - We can obtain the **spread** of the distribution, i.e., the **standard deviation** of the errors $\sigma$ (sigma)[^3] 
+- The **standard deviation** of the errors, also called the **residual standard error**, and is computed as:
+  - $\sigma = \sqrt{\frac{\sum_{i=1}^{n} (y_i - \hat{y_i})^2}{n_{obs} - k}}$
+  - $\sigma = \sqrt{\frac{RSS}{n_{obs} - k}}$
+  - $k$ is the number of predictors in the model (excluding the intercept) 
+  - *N* observations - *k* predictors = **degrees of freedom (df)** 
+  - $\sigma = \sqrt{\frac{RSS}{df}}$
+
+[^3]: Remember, a Normal distribution is defined by its location/mean $\mu$ and dispersion/standard deviation $\sigma$
+
+::: 
+::: {.column}
+
+```{r}
+#| echo: false
+
+p
+```
+
+:::
+
+::::
+
+## OLS vs. MLE
+
+::::: {.columns}
+:::: {.column width="50%" style="font-size: 80%"}
+
+- MLE is a general approach to estimating parameters of models and is not limited to linear models
+  - Same approach used in many other models (e.g., logistic regression, Poisson regression, etc.) where the key change is the **family** (type) of the distribution of errors
+- In linear models where the distribution of errors is Normal (i.e., in linear models), **MLE is equivalent to OLS estimation**
+- In fact, OLS can be seen as a special case of MLE estimation, but easier to compute as the parameters can be estimated using simpler formulas
+- This is why in R, there are **two separate functions** for linear models (estimated using OLS) and "general" linear models (estimated using MLE)
+  - But we can use the latter to estimate linear models too!
+
+::::
+:::: {.column style="font-size: 80%"}
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+summary(lm(mpg ~ qsec, data=mtcars))
+summary(glm(mpg ~ qsec, data=mtcars, family="gaussian"))
+```
+
+:::
+
+::::
+:::::
+
+## Model Parameters
+
+- In regression models, 2 types of parameters are estimated (using OLS/MLE)
+  - The coefficients
+    - Intercept
+    - The slope(s)
+  - "Distributional" (aka "Auxiliary") parameters (about the distribution of errors)
+    - E.g., the standard deviation of the errors $\sigma$ (sigma) in linear models
+    - Usually, most people tend to ignore these... but they are important!
+- The remaining indices (SE, *t*-value, *p*-value) are calculated using them
+
+## Quizz {background-color="#FFAB91"}
+
+- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
+  - *Tip*: just look at the output...
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+model <- lm(mpg ~ qsec, data=mtcars)
+```
+
+:::
+
+## Solution {background-color="#80DEEA"}
+
+::: {.nonincremental .stretch}
+
+- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
+  - *Tip*: just look at the output...
+
+```{r}
+#| echo: true
+
+model <- lm(mpg ~ qsec, data=mtcars)
+summary(model)
+```
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+insight::get_sigma(model)
+```
+
+::::
+
+:::
+
+## Why is it important?
+
+- The characteristics of the estimated $Normal$ distribution of residuals, $\mu$ and $\sigma$, are used to compute the **coefficient** ($\beta$) and **standard error** ($SE$) of each of the model's parameters, respectively
+  - $\mu$ (the center of the normal distribution) is used to compute the **coefficients** (intercept and slope) of the regression line
+  - $\sigma$ (the spread) is used to compute the **standard error** (the uncertainty related to the coefficient) <sub><sup>*via a fairly complex formula*</sup></sub>
+- Two models can have the same coefficients, but different SEs, depending on the spread of the residuals
+
+
+## Quizz {background-color="#FFAB91"}
+
+- What happens if you divide the coefficient by its SE?
+- **You obtain the *t*-value!**
+- Why is it called a *t*-value 🤔
+
+
+```{r}
+#| echo: true
+
+model <- lm(mpg ~ qsec, data=mtcars)
+summary(model)
+```
+
+## The *t*-value
+
+::: {.stretch}
+
+- The **t-value** is the ratio between the **coefficient** and its **standard error**
+- It can be seen as a "**standardized**" index of the coefficient's precision (independent of the scale/unit of the variable)
+  - Why "precision"?
+- It corresponds to a point on a *t*-distribution of corresponding degrees of freedom (df), centered at 0
+- This *t*-distribution is the assumption made in Frequentist statistics about the distribution of coefficients (effects) **under the null hypothesis**
+  - Not to be confused with the distribution of residuals (which is assumed to be *Normal*)
+  - This *t*-distribution can be used to adjust for the sample size (*df*) - hence the use of *t* instead of *Normal* to introduce bias (especially for small sample sizes). For large sample sizes (= large *df*), it becomes equivalent to a Normal distribution
+
+:::
+
+## The *t*-value
+
+::: {.nonincremental .stretch}
+
+- The *t*-value shows how likely our coefficient compared to the assumed distributions of possible coefficient under the **null hypothesis** (i.e., if there is an absence of effect)
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+# Plot  t-distribution
+x <- seq(-5, 5, length.out = 1000)
+y <- dt(x, df=30)
+df <- data.frame(x = x, y = y)
+
+t_value <- insight::get_statistic(model)[2, 2]
+
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_area(color="black", fill="grey") +
+  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
+  theme_minimal() +
+  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
+       title = paste0("t-Distribution (df=30); ", "t-value = ", round(t_value, 2), "\n"))
+```
+
+:::
+
+## Is our coefficient precisely different from 0?
+
+- Is our coefficient likely to be observed under the null hypothesis?
+  - What is the *probability* to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
+  - $Prob > |t|$
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+df$Probability <- ifelse(df$x < -t_value, "< -t", "Smaller")
+df$Probability <- ifelse(df$x > t_value, "> +t", df$Probability)
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_line() +
+  geom_area(aes(x = x, y = y, fill = Probability), alpha = 0.5) +
+  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
+  theme_minimal() +
+  scale_fill_manual(values = c("red", "red", "grey")) +
+  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
+       title = paste0("t-Distribution (df=30); ", "t-value = ", round(t_value, 2), "\n"))
+```
+
+## Is our coefficient "big" (i.e., precise)?
+
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Is our coefficient (more specifically, its "precision") likely to be observed under the null hypothesis?
+  - What is the *probability* $p$ to obtain a coefficient at least *as precise as ours* (in both directions) under the null hypothesis?
+  - $Prob > |t|$
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+prob <- pt(-t_value, df=30, lower.tail = TRUE) + 
+  pt(t_value, df=30, lower.tail = FALSE)
+
+round(prob, 4)
+```
+
+:::::
+
+- Look again at your summary...
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+
+```{r}
+#| echo: false
+
+summary(model)
+```
+
+:::::
+
+- **It is the *p*-value!**
+- You computed the *p*-value by hand!
+
+::::
+
+:::
+
+
+
+## *p*-value
+
+::: {style="font-size: 75%"}
+
+- The **p-value** is the probability of observing a value >= to the ***t*-value** under the null hypothesis. In other words, it is the probability of obtaining test results at least as "big" (precisely away from 0) as the result actually observed if we repeat it an infinite amount of times and there is no true effect.
+  - It is quite convoluted... 
+  - Is not a "trivial" value. It has some delicate aspects.
+- **Estimation**: It is the product of several complicated steps:
+  - Estimate the SE of the coefficients (this is not a straightforward process and gets complicated in more complex models)
+  - Estimate the *df* (degrees of freedom) of the model (this is also problematic for complex models, e.g., mixed models)
+  - Make a strong assumption about the distribution of the coefficients under the null hypothesis (e.g., the *t*-distribution)
+- **Interpretation**:
+  - We tend to focus on a dichotomous interpretation of the *p*-value (significant or not), based on an arbitrary threshold $\alpha$ typically set to 5\% (.05) for literally no reason in particular
+  - We often interpret it as the probability of the null hypothesis being true, or as an index of effect magnitude, which is not correct (it's more related to the width of the certainty around the estimate than its absolute size)
+- However, ***p*-values are not *fundamentally* bad**. They are very good at one thing: controlling how often, if we repeat an experiment infinitely, we'll make a particular kind of error. *It's just that it's often not what we care about in practice.*
+
+:::
+
+## Confidence Intervals (CI)
+
+::: {.stretch}
+
+- Confidence Intervals are often seen as a "range" of likely values for the coefficient, and the more we would get close to the coefficient the more "likely" the values would be. It is **incorrect**
+- The **confidence interval** (CI) is the range of values that contains, e.g., with 95\% of probability, the value of the coefficient if the *t*-distribution was centered around the *t*-value (as if the null effect was the estimated coefficient).
+- The interpretation is, again, fairly convoluted
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+# Get 95% ETI of the t distribution
+ci <- qt(c(0.025, 0.975), df=30, lower.tail = TRUE) + t_value
+# ci * parameters::parameters(model)$SE[2]  # Indeed shows the right CI
+
+df |>
+  ggplot(aes(x = x, y = y)) +
+  geom_area(fill="grey", alpha=0.5) +
+  geom_area(aes(x = x + t_value, y = y), color="red", fill="red", alpha=0.5) +
+  geom_segment(aes(x = t_value, y = 0, xend = t_value, yend = dt(t_value, df=30)), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(aes(x = t_value, y = dt(t_value, df=30)), color="red", size=3) +
+  # Horizontal segment indicating the CI range
+  geom_segment(aes(x = ci[1], y = 0.05, xend = ci[2], yend = 0.05), 
+               color="orange", linetype="solid", linewidth=1, arrow = arrow(ends='both')) +
+  geom_vline(xintercept = ci[1], color="orange", linetype="dotted", linewidth=0.5) +
+  geom_vline(xintercept = ci[2], color="orange", linetype="dotted", linewidth=0.5) +
+  theme_minimal() +
+  labs(x = "\nt-values - standardized coefficient under the null hypothesis", y = "Probability", 
+       title = paste0("Shifted t-Distribution (df=30); ", "location = ", round(t_value, 2), "(t-value)\n"))
+```
+
+:::
+
+## Next Week
+
+- Can we do better and get more intuitive quantities? 
+  - The answer starts with **"B"**... 
+  - And ends with **"...ootstrapping"**
+
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+

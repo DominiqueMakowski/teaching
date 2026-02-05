@@ -301,8 +301,8 @@
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-hidden="true" tabindex="-1"></a>report<span class="sc">::</span><span class="fu">report</span>(myvar)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>x: n = 500, Mean = 0.01, SD = 0.96, Median = 9.86e-03, MAD = 1.07, range:
-[-2.34, 2.19], Skewness = -0.09, Kurtosis = -0.57, 0% missing</code></pre>
+<pre><code>x: n = 500, Mean = -0.08, SD = 1.03, Median = -0.09, MAD = 1.03, range: [-3.51,
+3.07], Skewness = -0.06, Kurtosis = 0.09, 0% missing</code></pre>
 </div>
 </div>
 </div>
@@ -348,13 +348,13 @@
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> bayestestR<span class="sc">::</span><span class="fu">estimate_density</span>(myvar)</span>
 <span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          x          y
-1 -2.337650 0.02815431
-2 -2.333223 0.02859185
-3 -2.328797 0.02903186
-4 -2.324370 0.02947694
-5 -2.319943 0.02992513
-6 -2.315517 0.03037588</code></pre>
+<pre><code>          x           y
+1 -3.508988 0.005940367
+2 -3.502558 0.006028781
+3 -3.496129 0.006117068
+4 -3.489699 0.006205209
+5 -3.483269 0.006293064
+6 -3.476840 0.006380644</code></pre>
 </div>
 </div>
 </div>
@@ -468,48 +468,38 @@
 </div>
 </div>
 </section>
-<section id="exercice" class="slide level2" data-background-color="#80DEEA">
-<h2>Exercice!</h2>
-<div class="stretch">
-<ul>
-<li>Visualize the distribution from the following data:</li>
-</ul>
+<section id="visualizing" class="slide level2">
+<h2>Visualizing</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">7</span>)</span>
 <span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-</section>
-<section id="how-to-visualize-a-distribution-3" class="slide level2">
-<h2>How to visualize a distribution? (3)</h2>
-<div class="stretch">
 <ul>
-<li>We can visualize the PDF using a <strong>line plot</strong> (as it is a continuous distribution)</li>
+<li class="fragment">These two vectors represent the <em>x</em>-axis and the <em>y</em> coordinates of the density <strong>line</strong></li>
+<li class="fragment">In order to plot it, we need to create a “temporary” data frame holding these two vectors as columns</li>
 </ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y) <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
-<span id="cb16-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div class="fragment">
 <div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y) <span class="sc">|&gt;</span>  <span class="co"># Put x and y into a dataframe</span></span>
+<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span>  <span class="co"># Use ggplot and reference the columns</span></span>
+<span id="cb16-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
-</div>
 </section>
-<section id="how-to-visualize-a-distribution-4" class="slide level2">
-<h2>How to visualize a distribution? (4)</h2>
-<div class="stretch">
+<section id="exercice" class="slide level2" data-background-color="#80DEEA">
+<h2>Exercice!</h2>
 <ul>
-<li>Add more points for a more fined-grained estimation plot</li>
+<li class="fragment">Increase the number of more points for a smoother density plot</li>
+<li class="fragment">Make the line orange</li>
 </ul>
+<div class="fragment">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
 <span id="cb17-2"><a href="" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
@@ -519,15 +509,11 @@
 <span id="cb17-6"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb17-7"><a href="" aria-hidden="true" tabindex="-1"></a>    see<span class="sc">::</span><span class="fu">theme_abyss</span>() <span class="sc">+</span></span>
 <span id="cb17-8"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">x =</span> <span class="st">"Values of x"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="fragment">
-<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" style="width:70.0%"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:70.0%"></p>
 </figure>
-</div>
 </div>
 </div>
 </div>
@@ -575,7 +561,7 @@
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" width="3000" class="r-stretch"></section>
 <section id="quizz" class="slide level2" data-background-color="#FFAB91">
 <h2>Quizz</h2>
 <ul>
@@ -595,7 +581,7 @@
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -615,12 +601,10 @@
 </section>
 <section id="binomial-distribution" class="slide level2 scrollable">
 <h2>Binomial Distribution</h2>
-<div class="stretch">
 <ul>
-<li>The <strong>Binomial distribution</strong> models the probability of a series of <strong>binary</strong> outcome trials (e.g., successes/failures, heads/tails, etc.)<sup>1</sup></li>
-<li>It is defined by two parameters: <code>size</code> (number of trials) and <code>prob</code> (probability of “success”)<sup>2</sup></li>
+<li class="fragment">The <strong>Binomial distribution</strong> models the probability of a series of <strong>binary</strong> outcome trials (e.g., successes/failures, heads/tails, etc.)<sup>1</sup></li>
+<li class="fragment">It is defined by two parameters: <code>size</code> (number of trials) and <code>prob</code> (probability of “success”)<sup>2</sup></li>
 </ul>
-</div>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>The probability of a <strong>single</strong> binary event is related to the <em>Bernoulli</em> distribution. A <strong>series</strong> of Bernoulli trials is related to a <em>Binomial</em> distribution.</p></li><li id="fn2"><p>Ones vs.&nbsp;zeros</p></li></ol></aside></section>
 <section id="random-draws" class="slide level2">
 <h2>Random draws</h2>
@@ -633,7 +617,7 @@
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">10</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
 <span id="cb19-2"><a href="" aria-hidden="true" tabindex="-1"></a>y</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0 1 1 0 0 0 1 0 1 1</code></pre>
+<pre><code> [1] 1 1 0 1 0 0 0 1 0 1</code></pre>
 </div>
 </div>
 </div>
@@ -696,12 +680,12 @@
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">rbinom</span>(<span class="dv">10</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0 1 1 0 1 0 1 1 1 1</code></pre>
+<pre><code> [1] 0 1 1 0 0 1 0 1 1 1</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Is equivalent to</span></span>
 <span id="cb24-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 1 1 1 1 0 0 0 0 1 1</code></pre>
+<pre><code> [1] 1 1 1 0 0 0 0 0 0 1</code></pre>
 </div>
 </div>
 </div>
@@ -709,12 +693,12 @@
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">rbinom</span>(<span class="dv">10</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0 1 1 1 1 0 0 0 1 0</code></pre>
+<pre><code> [1] 0 0 1 0 1 0 1 1 0 0</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Is equivalent to</span></span>
 <span id="cb28-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 1 0 0 0 0 1 1 0 0 0</code></pre>
+<pre><code> [1] 1 0 1 0 0 1 0 0 0 1</code></pre>
 </div>
 </div>
 </div>
@@ -801,12 +785,12 @@
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-26-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-24-1.png" width="3000" class="r-stretch"></section>
 <section id="exercice-1" class="slide level2" data-background-color="#80DEEA">
 <h2>Exercice!</h2>
-<div class="stretch">
 <ul>
-<li>Can you simulate 20 different random walks and visualize them as different colors?</li>
+<li class="fragment">We want to simulate 20 different random walks and visualize them as different colors</li>
+<li class="fragment">What functions will we need to use?</li>
 </ul>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -818,20 +802,19 @@
 </div>
 <div class="callout-content">
 <ul>
-<li>You can <strong>loop</strong> over a sequence of iterations with <code>for(i in 1:20) {...}</code></li>
-<li>The <code>data.frame()</code> function can be used to initialize an empty data frame</li>
-<li>The <code>rbind()</code> (“row-bind”) function can be used to concatenate data frames vertically</li>
+<li class="fragment">“Do <em>X</em> 20 times” = <strong>loop</strong> over a sequence of iterations with <code>for(i in 1:20) {...}</code></li>
+<li class="fragment">Because ggplot takes a dataframe, we will need all the data from the 20 runs in one single dataframe</li>
+<li class="fragment">The <code>data.frame()</code> function can be used to initialize an empty data frame</li>
+<li class="fragment">The <code>rbind()</code> function can be used to concatenate data frames vertically</li>
 </ul>
-</div>
 </div>
 </div>
 </div>
 </section>
 <section id="solution-1" class="slide level2" data-background-color="#80DEEA">
 <h2>Solution (1)</h2>
-<div class="stretch">
 <ul>
-<li>Can you <strong>simulate 20 different random walks</strong> and visualize them as different colors?</li>
+<li>Let’s <strong>simulate 20 different random walks</strong></li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>() <span class="co"># Initialize empty data frame</span></span>
@@ -1069,41 +1052,35 @@
 220          6   10        20</code></pre>
 </div>
 </div>
-</div>
 </section>
 <section id="solution-2" class="slide level2" data-background-color="#80DEEA">
 <h2>Solution (2)</h2>
-<div class="">
-<ul>
-<li>Can you simulate 20 different random walks and <strong>visualize them as different colors</strong>?</li>
-</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> trajectory, <span class="at">color =</span> iteration)) <span class="sc">+</span></span>
 <span id="cb41-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb41-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-</div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-28-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-26-1.png" width="3000" class="r-stretch"></section>
 <section id="solution-3" class="slide level2" data-background-color="#80DEEA">
 <h2>Solution (3)</h2>
-<div class="">
 <ul>
 <li>The <code>color</code> aesthetic needs to be converted to a <strong>factor</strong> to be interpreted as a discrete variable</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb42-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">as.factor</span>(iteration)) <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">as.factor</span>(iteration)) <span class="sc">|&gt;</span>  <span class="co"># &lt;--</span></span>
 <span id="cb42-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> trajectory, <span class="at">color =</span> iteration)) <span class="sc">+</span></span>
 <span id="cb42-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb42-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-</div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-29-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-27-1.png" width="3000" class="r-stretch"></section>
 <section id="make-it-nicer" class="slide level2">
 <h2>Make it nicer</h2>
-<div class="">
+<ul>
+<li>We can increase the steps do make it more interesting</li>
+</ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Show plot code</summary>
@@ -1128,8 +1105,7 @@
 </details>
 
 </div>
-</div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-30-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-28-1.png" width="3000" class="r-stretch"></section>
 <section id="quizz-1" class="slide level2" data-background-color="#FFAB91">
 <h2>Quizz</h2>
 <ul>
@@ -1139,104 +1115,118 @@
 <li class="fragment"><strong>What is the distribution of the <em>result</em> (arrival position) of a Random Walk?</strong></li>
 </ul>
 </section>
-<section id="solution" class="slide level2" data-background-color="#FFAB91">
-<h2>Solution</h2>
-<div class="">
-<ul>
-<li>Select values at last step and compute histogram</li>
-</ul>
+<section id="exercice-2" class="slide level2" data-background-color="#80DEEA">
+<h2>Exercice!</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(time <span class="sc">==</span> <span class="fu">max</span>(time)) <span class="sc">|&gt;</span></span>
-<span id="cb44-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> trajectory)) <span class="sc">+</span></span>
-<span id="cb44-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>() </span>
+<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {</span>
+<span id="cb44-3"><a href="" aria-hidden="true" tabindex="-1"></a>    walk_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb44-4"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">trajectory =</span> <span class="fu">random_walk</span>(<span class="dv">200</span>),</span>
+<span id="cb44-5"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">time =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">200</span>),</span>
+<span id="cb44-6"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">iteration =</span> i</span>
+<span id="cb44-7"><a href="" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb44-8"><a href="" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data, walk_data)</span>
+<span id="cb44-9"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-31-1.png" width="3000" class="r-stretch"></section>
-<section id="what-happens-with-more-trials" class="slide level2">
-<h2>What happens with more trials?</h2>
-<div class="stretch">
 <ul>
-<li class="fragment">Try increasing the number of walks</li>
+<li class="fragment">Run the random walk simulation with 10000 steps and 200 steps</li>
+<li class="fragment">Visualize the distribution of the final positions (at time = 200) using a histogram</li>
 </ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(time <span class="sc">==</span> <span class="fu">max</span>(time)) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> trajectory)) <span class="sc">+</span></span>
+<span id="cb45-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-30-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="simulation" class="slide level2">
+<h2>Simulation</h2>
 <div class="columns">
 <div class="column stretch" style="width:65%;">
 <div class="fragment">
 <div class="cell">
 <details class="code-fold">
 <summary>Show figure code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
-<span id="cb45-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb45-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb45-6"><a href="" aria-hidden="true" tabindex="-1"></a>all_iter <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb45-7"><a href="" aria-hidden="true" tabindex="-1"></a>distr <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb45-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
-<span id="cb45-9"><a href="" aria-hidden="true" tabindex="-1"></a>    walk_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb45-10"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">trajectory =</span> <span class="fu">random_walk</span>(<span class="dv">99</span>),</span>
-<span id="cb45-11"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">time =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">99</span>),</span>
-<span id="cb45-12"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">group =</span> i,</span>
-<span id="cb45-13"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">iteration =</span> <span class="cn">NA</span></span>
-<span id="cb45-14"><a href="" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb45-15"><a href="" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data, walk_data)</span>
-<span id="cb45-16"><a href="" aria-hidden="true" tabindex="-1"></a>    data<span class="sc">$</span>iteration <span class="ot">&lt;-</span> i</span>
-<span id="cb45-17"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-18"><a href="" aria-hidden="true" tabindex="-1"></a>    max_t <span class="ot">&lt;-</span> <span class="fu">max</span>(walk_data<span class="sc">$</span>time)</span>
-<span id="cb45-19"><a href="" aria-hidden="true" tabindex="-1"></a>    distr_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(data, time <span class="sc">==</span> max_t)<span class="sc">$</span>trajectory <span class="sc">|&gt;</span></span>
-<span id="cb45-20"><a href="" aria-hidden="true" tabindex="-1"></a>        bayestestR<span class="sc">::</span><span class="fu">estimate_density</span>(<span class="at">precision =</span> <span class="dv">256</span>) <span class="sc">|&gt;</span></span>
-<span id="cb45-21"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
-<span id="cb45-22"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> datawizard<span class="sc">::</span><span class="fu">rescale</span>(y, <span class="at">to =</span> <span class="fu">c</span>(max_t, max_t <span class="sc">+</span> max_t <span class="sc">/</span> <span class="dv">3</span>)),</span>
-<span id="cb45-23"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">iteration =</span> i</span>
-<span id="cb45-24"><a href="" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb45-25"><a href="" aria-hidden="true" tabindex="-1"></a>    distr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(distr, distr_data)</span>
-<span id="cb45-26"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-27"><a href="" aria-hidden="true" tabindex="-1"></a>    all_iter <span class="ot">&lt;-</span> <span class="fu">rbind</span>(all_iter, data)</span>
-<span id="cb45-28"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb45-29"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-30"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> all_iter <span class="sc">|&gt;</span></span>
-<span id="cb45-31"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">as.factor</span>(iteration), <span class="at">group =</span> <span class="fu">as.factor</span>(group))</span>
-<span id="cb45-32"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-33"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-34"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
-<span id="cb45-35"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filter(iteration == 100) |&gt;</span></span>
-<span id="cb45-36"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb45-37"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
-<span id="cb45-38"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> trajectory, <span class="at">color =</span> group),</span>
-<span id="cb45-39"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
-<span id="cb45-40"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">1.3</span></span>
-<span id="cb45-41"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb45-42"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(</span>
-<span id="cb45-43"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> distr,</span>
-<span id="cb45-44"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">xmin =</span> <span class="fu">max</span>(all_iter<span class="sc">$</span>time), <span class="at">xmax =</span> y, <span class="at">y =</span> x),</span>
-<span id="cb45-45"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#FF9800"</span></span>
-<span id="cb45-46"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb45-47"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
-<span id="cb45-48"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">filter</span>(df, time <span class="sc">==</span> <span class="fu">max</span>(time)),</span>
-<span id="cb45-49"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> trajectory, <span class="at">color =</span> group),</span>
-<span id="cb45-50"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">5</span>,</span>
-<span id="cb45-51"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.2</span></span>
-<span id="cb45-52"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb45-53"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Position"</span>, <span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">title =</span> <span class="st">"N random walks: {frame}"</span>) <span class="sc">+</span></span>
-<span id="cb45-54"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb45-55"><a href="" aria-hidden="true" tabindex="-1"></a>    see<span class="sc">::</span><span class="fu">theme_blackboard</span>() <span class="sc">+</span></span>
-<span id="cb45-56"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
-<span id="cb45-57"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span>
-<span id="cb45-58"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># p</span></span>
-<span id="cb45-59"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-60"><a href="" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">transition_manual</span>(iteration)</span>
-<span id="cb45-61"><a href="" aria-hidden="true" tabindex="-1"></a>gganimate<span class="sc">::</span><span class="fu">anim_save</span>(</span>
-<span id="cb45-62"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="st">"img/random.gif"</span>,</span>
-<span id="cb45-63"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">animate</span>(</span>
-<span id="cb45-64"><a href="" aria-hidden="true" tabindex="-1"></a>        anim,</span>
-<span id="cb45-65"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">height =</span> <span class="dv">1000</span>,</span>
-<span id="cb45-66"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="dv">1000</span>,</span>
-<span id="cb45-67"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">fps =</span> <span class="dv">7</span>,</span>
-<span id="cb45-68"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_pause =</span> <span class="dv">7</span> <span class="sc">*</span> <span class="dv">4</span>,</span>
-<span id="cb45-69"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">duration =</span> <span class="dv">20</span></span>
-<span id="cb45-70"><a href="" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb45-71"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
+<span id="cb46-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb46-4"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb46-6"><a href="" aria-hidden="true" tabindex="-1"></a>all_iter <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb46-7"><a href="" aria-hidden="true" tabindex="-1"></a>distr <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb46-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb46-9"><a href="" aria-hidden="true" tabindex="-1"></a>    walk_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb46-10"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">trajectory =</span> <span class="fu">random_walk</span>(<span class="dv">99</span>),</span>
+<span id="cb46-11"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">time =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">99</span>),</span>
+<span id="cb46-12"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">group =</span> i,</span>
+<span id="cb46-13"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">iteration =</span> <span class="cn">NA</span></span>
+<span id="cb46-14"><a href="" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb46-15"><a href="" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data, walk_data)</span>
+<span id="cb46-16"><a href="" aria-hidden="true" tabindex="-1"></a>    data<span class="sc">$</span>iteration <span class="ot">&lt;-</span> i</span>
+<span id="cb46-17"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-18"><a href="" aria-hidden="true" tabindex="-1"></a>    max_t <span class="ot">&lt;-</span> <span class="fu">max</span>(walk_data<span class="sc">$</span>time)</span>
+<span id="cb46-19"><a href="" aria-hidden="true" tabindex="-1"></a>    distr_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(data, time <span class="sc">==</span> max_t)<span class="sc">$</span>trajectory <span class="sc">|&gt;</span></span>
+<span id="cb46-20"><a href="" aria-hidden="true" tabindex="-1"></a>        bayestestR<span class="sc">::</span><span class="fu">estimate_density</span>(<span class="at">precision =</span> <span class="dv">256</span>) <span class="sc">|&gt;</span></span>
+<span id="cb46-21"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
+<span id="cb46-22"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> datawizard<span class="sc">::</span><span class="fu">rescale</span>(y, <span class="at">to =</span> <span class="fu">c</span>(max_t, max_t <span class="sc">+</span> max_t <span class="sc">/</span> <span class="dv">3</span>)),</span>
+<span id="cb46-23"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">iteration =</span> i</span>
+<span id="cb46-24"><a href="" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb46-25"><a href="" aria-hidden="true" tabindex="-1"></a>    distr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(distr, distr_data)</span>
+<span id="cb46-26"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-27"><a href="" aria-hidden="true" tabindex="-1"></a>    all_iter <span class="ot">&lt;-</span> <span class="fu">rbind</span>(all_iter, data)</span>
+<span id="cb46-28"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-29"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-30"><a href="" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> all_iter <span class="sc">|&gt;</span></span>
+<span id="cb46-31"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">as.factor</span>(iteration), <span class="at">group =</span> <span class="fu">as.factor</span>(group))</span>
+<span id="cb46-32"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-33"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-34"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb46-35"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filter(iteration == 100) |&gt;</span></span>
+<span id="cb46-36"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb46-37"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
+<span id="cb46-38"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> trajectory, <span class="at">color =</span> group),</span>
+<span id="cb46-39"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
+<span id="cb46-40"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">1.3</span></span>
+<span id="cb46-41"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb46-42"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(</span>
+<span id="cb46-43"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> distr,</span>
+<span id="cb46-44"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">xmin =</span> <span class="fu">max</span>(all_iter<span class="sc">$</span>time), <span class="at">xmax =</span> y, <span class="at">y =</span> x),</span>
+<span id="cb46-45"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#FF9800"</span></span>
+<span id="cb46-46"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb46-47"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb46-48"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">filter</span>(df, time <span class="sc">==</span> <span class="fu">max</span>(time)),</span>
+<span id="cb46-49"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> trajectory, <span class="at">color =</span> group),</span>
+<span id="cb46-50"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">5</span>,</span>
+<span id="cb46-51"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">alpha =</span> <span class="fl">0.2</span></span>
+<span id="cb46-52"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb46-53"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Position"</span>, <span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">title =</span> <span class="st">"N random walks: {frame}"</span>) <span class="sc">+</span></span>
+<span id="cb46-54"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb46-55"><a href="" aria-hidden="true" tabindex="-1"></a>    see<span class="sc">::</span><span class="fu">theme_blackboard</span>() <span class="sc">+</span></span>
+<span id="cb46-56"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
+<span id="cb46-57"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span>
+<span id="cb46-58"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># p</span></span>
+<span id="cb46-59"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-60"><a href="" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">transition_manual</span>(iteration)</span>
+<span id="cb46-61"><a href="" aria-hidden="true" tabindex="-1"></a>gganimate<span class="sc">::</span><span class="fu">anim_save</span>(</span>
+<span id="cb46-62"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="st">"img/random.gif"</span>,</span>
+<span id="cb46-63"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">animate</span>(</span>
+<span id="cb46-64"><a href="" aria-hidden="true" tabindex="-1"></a>        anim,</span>
+<span id="cb46-65"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">height =</span> <span class="dv">1000</span>,</span>
+<span id="cb46-66"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="dv">1000</span>,</span>
+<span id="cb46-67"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">fps =</span> <span class="dv">7</span>,</span>
+<span id="cb46-68"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_pause =</span> <span class="dv">7</span> <span class="sc">*</span> <span class="dv">4</span>,</span>
+<span id="cb46-69"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">duration =</span> <span class="dv">20</span></span>
+<span id="cb46-70"><a href="" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb46-71"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><img data-src="img/random.gif"></p>
@@ -1251,7 +1241,6 @@
 <li class="fragment">How is it possible than a complex distribution emerges from such a simple process of random binary choices?</li>
 </ul>
 </div></div>
-</div>
 </section>
 <section id="central-limit-theorem-1" class="slide level2">
 <h2>Central Limit Theorem (1)</h2>
@@ -1292,15 +1281,15 @@
 </ul>
 <div class="fragment r-strecth">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Use runif(): random + uniform</span></span>
-<span id="cb46-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">50000</span>, <span class="at">min =</span> <span class="sc">-</span><span class="dv">10</span>, <span class="at">max =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb46-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb46-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb46-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">15</span>, <span class="dv">15</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># Use runif(): random + uniform</span></span>
+<span id="cb47-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">50000</span>, <span class="at">min =</span> <span class="sc">-</span><span class="dv">10</span>, <span class="at">max =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb47-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb47-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb47-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">15</span>, <span class="dv">15</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-32-1.png" width="3000"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-31-1.png" width="3000"></p>
 </figure>
 </div>
 </div>
@@ -1324,28 +1313,32 @@
 <h2>On Beta Distributions</h2>
 <p><em>Why do beta distributions love to go to the gym? So that they are not out of shape!</em></p>
 </section>
-<section id="beta-distribution" class="slide level2 scrollable">
+<section id="beta-distribution" class="slide level2">
 <h2>Beta Distribution</h2>
 <ul>
 <li class="fragment">The Beta distribution can be used to model probabilities</li>
-<li class="fragment">Defined by two shape parameters, <strong>α</strong> and <strong>β</strong> (<code>shape1</code> &amp; <code>shape2</code>)<sup>1</sup></li>
+<li class="fragment">Defined by two shape parameters, <strong>α</strong> and <strong>β</strong> (<code>shape1</code> &amp; <code>shape2</code>)
+<ul>
+<li class="fragment">Note it can also be expressed via other, more convenient, parametrizations. Often, in Beta-regression models, the Beta distributions is set by a location <span class="math inline">\(\mu\)</span> (mean) and scale <span class="math inline">\(\phi\)</span> parameters.<br>
+</li>
+</ul></li>
 <li class="fragment">Only expressed in the range <span class="math inline">\(]0, 1[\)</span> (i.e., null outside of this range)</li>
 </ul>
 <div class="fragment r-stretch">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="at">shape1 =</span> <span class="fl">1.5</span>, <span class="at">shape2 =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb47-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb47-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="at">shape1 =</span> <span class="fl">1.5</span>, <span class="at">shape2 =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb48-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-33-1.png" style="width:60.0%"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-32-1.png" style="width:60.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<aside><ol class="aside-footnotes"><li id="fn6"><p>Note that other parameterizations exist, especially in Beta-regression models</p></li></ol></aside></section>
+</section>
 <section id="beta-distribution---parameters" class="slide level2">
 <h2>Beta Distribution - Parameters</h2>
 <div class="">
@@ -1357,36 +1350,36 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Show figure code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="" aria-hidden="true" tabindex="-1"></a>df_beta <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb48-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (shape1 <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>)) {</span>
-<span id="cb48-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (shape2 <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>)) {</span>
-<span id="cb48-4"><a href="" aria-hidden="true" tabindex="-1"></a>        dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">1.25</span>, <span class="fl">0.0001</span>))</span>
-<span id="cb48-5"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>p <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(dat<span class="sc">$</span>x, <span class="at">shape1 =</span> shape1, <span class="at">shape2 =</span> shape2)</span>
-<span id="cb48-6"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>distribution <span class="ot">&lt;-</span> <span class="st">"Beta"</span></span>
-<span id="cb48-7"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>parameters <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"alpha = "</span>, shape1, <span class="st">", beta = "</span>, shape2)</span>
-<span id="cb48-8"><a href="" aria-hidden="true" tabindex="-1"></a>        df_beta <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dat, df_beta)</span>
-<span id="cb48-9"><a href="" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb48-10"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-11"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-12"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df_beta <span class="sc">|&gt;</span></span>
-<span id="cb48-13"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> p, <span class="at">group =</span> parameters)) <span class="sc">+</span></span>
-<span id="cb48-14"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb48-15"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> distribution), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"#4CAF50"</span>) <span class="sc">+</span></span>
-<span id="cb48-16"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb48-17"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb48-18"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb48-19"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb48-20"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb48-21"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.tag =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb48-22"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb48-23"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb48-24"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>parameters, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span>
-<span id="cb48-25"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="" aria-hidden="true" tabindex="-1"></a>df_beta <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb49-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (shape1 <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>)) {</span>
+<span id="cb49-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (shape2 <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>)) {</span>
+<span id="cb49-4"><a href="" aria-hidden="true" tabindex="-1"></a>        dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.25</span>, <span class="fl">1.25</span>, <span class="fl">0.0001</span>))</span>
+<span id="cb49-5"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>p <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(dat<span class="sc">$</span>x, <span class="at">shape1 =</span> shape1, <span class="at">shape2 =</span> shape2)</span>
+<span id="cb49-6"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>distribution <span class="ot">&lt;-</span> <span class="st">"Beta"</span></span>
+<span id="cb49-7"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>parameters <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"alpha = "</span>, shape1, <span class="st">", beta = "</span>, shape2)</span>
+<span id="cb49-8"><a href="" aria-hidden="true" tabindex="-1"></a>        df_beta <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dat, df_beta)</span>
+<span id="cb49-9"><a href="" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb49-10"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb49-11"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-12"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df_beta <span class="sc">|&gt;</span></span>
+<span id="cb49-13"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> p, <span class="at">group =</span> parameters)) <span class="sc">+</span></span>
+<span id="cb49-14"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb49-15"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> distribution), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"#4CAF50"</span>) <span class="sc">+</span></span>
+<span id="cb49-16"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb49-17"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb49-18"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb49-19"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb49-20"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb49-21"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.tag =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb49-22"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb49-23"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb49-24"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>parameters, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span>
+<span id="cb49-25"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-34-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-33-1.png" width="3000" class="r-stretch"></section>
 <section id="beta-distribution---applications" class="slide level2">
 <h2>Beta Distribution - Applications</h2>
 <ul class="task-list">
@@ -1412,13 +1405,13 @@
 <li class="fragment">Used to model continuous non-negative data (e.g., time)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rgamma</span>(<span class="dv">100000</span>, <span class="at">shape =</span> <span class="dv">2</span>, <span class="at">scale =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb49-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb49-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rgamma</span>(<span class="dv">100000</span>, <span class="at">shape =</span> <span class="dv">2</span>, <span class="at">scale =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-35-1.png" width="3000" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-34-1.png" width="3000" class="r-stretch"></section>
 <section id="gamma-distribution---parameters" class="slide level2">
 <h2>Gamma Distribution - Parameters</h2>
 <div class="">
@@ -1429,37 +1422,37 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Show figure code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="" aria-hidden="true" tabindex="-1"></a>df_gamma <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb50-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (shape <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)) {</span>
-<span id="cb50-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (scale <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>)) {</span>
-<span id="cb50-4"><a href="" aria-hidden="true" tabindex="-1"></a>        dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="dv">25</span>, <span class="at">length.out =</span> <span class="dv">1000</span>))</span>
-<span id="cb50-5"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>p <span class="ot">&lt;-</span> <span class="fu">dgamma</span>(dat<span class="sc">$</span>x, <span class="at">shape =</span> shape, <span class="at">scale =</span> scale)</span>
-<span id="cb50-6"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>distribution <span class="ot">&lt;-</span> <span class="st">"Beta"</span></span>
-<span id="cb50-7"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>parameters <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"k = "</span>, shape, <span class="st">", theta = "</span>, scale)</span>
-<span id="cb50-8"><a href="" aria-hidden="true" tabindex="-1"></a>        df_gamma <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dat, df_gamma)</span>
-<span id="cb50-9"><a href="" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb50-10"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb50-11"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-12"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df_gamma <span class="sc">|&gt;</span></span>
-<span id="cb50-13"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> p, <span class="at">group =</span> parameters)) <span class="sc">+</span></span>
-<span id="cb50-14"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># geom_vline(xintercept=c(0, 1), linetype="dashed") +</span></span>
-<span id="cb50-15"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> distribution), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"#9C27B0"</span>) <span class="sc">+</span></span>
-<span id="cb50-16"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb50-17"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb50-18"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb50-19"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb50-20"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb50-21"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.tag =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb50-22"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb50-23"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb50-24"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>parameters, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span>
-<span id="cb50-25"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="" aria-hidden="true" tabindex="-1"></a>df_gamma <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb51-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (shape <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)) {</span>
+<span id="cb51-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (scale <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>)) {</span>
+<span id="cb51-4"><a href="" aria-hidden="true" tabindex="-1"></a>        dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="dv">25</span>, <span class="at">length.out =</span> <span class="dv">1000</span>))</span>
+<span id="cb51-5"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>p <span class="ot">&lt;-</span> <span class="fu">dgamma</span>(dat<span class="sc">$</span>x, <span class="at">shape =</span> shape, <span class="at">scale =</span> scale)</span>
+<span id="cb51-6"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>distribution <span class="ot">&lt;-</span> <span class="st">"Beta"</span></span>
+<span id="cb51-7"><a href="" aria-hidden="true" tabindex="-1"></a>        dat<span class="sc">$</span>parameters <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"k = "</span>, shape, <span class="st">", theta = "</span>, scale)</span>
+<span id="cb51-8"><a href="" aria-hidden="true" tabindex="-1"></a>        df_gamma <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dat, df_gamma)</span>
+<span id="cb51-9"><a href="" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb51-10"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb51-11"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> df_gamma <span class="sc">|&gt;</span></span>
+<span id="cb51-13"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> p, <span class="at">group =</span> parameters)) <span class="sc">+</span></span>
+<span id="cb51-14"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># geom_vline(xintercept=c(0, 1), linetype="dashed") +</span></span>
+<span id="cb51-15"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> distribution), <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"#9C27B0"</span>) <span class="sc">+</span></span>
+<span id="cb51-16"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb51-17"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb51-18"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb51-19"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb51-20"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb51-21"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.tag =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb51-22"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb51-23"><a href="" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb51-24"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>parameters, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span>
+<span id="cb51-25"><a href="" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-36-1.png" width="3000" class="r-stretch"></section>
-<section id="exercice-2" class="slide level2" data-background-color="#80DEEA">
+<img data-src="index_files/figure-revealjs/unnamed-chunk-35-1.png" width="3000" class="r-stretch"></section>
+<section id="exercice-3" class="slide level2" data-background-color="#80DEEA">
 <h2>Exercice!</h2>
 <ul>
 <li class="fragment">Make groups. Each groups picks a distribution (Normal, Uniform, Beta, Gamma) and a set of parameters</li>
@@ -1472,78 +1465,48 @@
 <li class="fragment">Plot the distribution of the means</li>
 </ul></li>
 </ul>
-</section>
-<section id="solution-4" class="slide level2" data-background-color="#80DEEA">
-<h2>Solution</h2>
-<div class="columns">
-<div class="column" style="width:65%;">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co"># Initialize an empty vector</span></span>
-<span id="cb51-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {</span>
-<span id="cb51-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate</span></span>
-<span id="cb51-4"><a href="" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">5</span>, <span class="dv">10</span>)</span>
-<span id="cb51-5"><a href="" aria-hidden="true" tabindex="-1"></a>    means <span class="ot">&lt;-</span> <span class="fu">c</span>(means, <span class="fu">mean</span>(x))</span>
-<span id="cb51-6"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div></div>
-</section>
-<section id="solution-5" class="slide level2" data-background-color="#80DEEA">
-<h2>Solution</h2>
-<div class="columns">
-<div class="column" style="width:65%;">
+<div class="fragment">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co"># Initialize an empty vector</span></span>
-<span id="cb52-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {</span>
-<span id="cb52-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate</span></span>
-<span id="cb52-4"><a href="" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">5</span>, <span class="dv">10</span>)</span>
-<span id="cb52-5"><a href="" aria-hidden="true" tabindex="-1"></a>    means <span class="ot">&lt;-</span> <span class="fu">c</span>(means, <span class="fu">mean</span>(x))</span>
-<span id="cb52-6"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb52-7"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> means) <span class="sc">|&gt;</span></span>
-<span id="cb52-9"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
-<span id="cb52-10"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb52-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {  <span class="co"># Iterate</span></span>
+<span id="cb52-3"><a href="" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> ...</span>
+<span id="cb52-4"><a href="" aria-hidden="true" tabindex="-1"></a>    means <span class="ot">&lt;-</span> <span class="fu">c</span>(means, <span class="fu">mean</span>(x))  <span class="co"># Compute the mean and store it</span></span>
+<span id="cb52-5"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div></div>
+</div>
 </section>
-<section id="solution-6" class="slide level2" data-background-color="#80DEEA">
+<section id="solution" class="slide level2" data-background-color="#80DEEA">
 <h2>Solution</h2>
-<div class="columns">
-<div class="column" style="width:65%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb53-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {</span>
-<span id="cb53-3"><a href="" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">100</span>, <span class="at">shape1 =</span> <span class="dv">10</span>, <span class="at">shape2 =</span> <span class="fl">1.5</span>)</span>
-<span id="cb53-4"><a href="" aria-hidden="true" tabindex="-1"></a>    means <span class="ot">&lt;-</span> <span class="fu">c</span>(means, <span class="fu">mean</span>(x))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">c</span>() <span class="co"># Initialize an empty vector</span></span>
+<span id="cb53-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {  <span class="co"># Iterate</span></span>
+<span id="cb53-3"><a href="" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">5</span>, <span class="dv">10</span>)  <span class="co"># Draw random sample</span></span>
+<span id="cb53-4"><a href="" aria-hidden="true" tabindex="-1"></a>    means <span class="ot">&lt;-</span> <span class="fu">c</span>(means, <span class="fu">mean</span>(x))  <span class="co"># Compute the mean and store it</span></span>
 <span id="cb53-5"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb53-6"><a href="" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb53-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">x =</span> means) <span class="sc">|&gt;</span></span>
 <span id="cb53-8"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
 <span id="cb53-9"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-39-1.png" width="3000"></p>
-</figure>
 </div>
-</div>
-</div>
-</div><div class="column" style="width:35%;">
+<ul>
+<li class="fragment">What does yours look like?</li>
+</ul>
 <div class="fragment">
+<p>They all look like…</p>
 <p>🤯🤯🤯🤯🤯🤯🤯🤯</p>
 <p><strong>A NORMAL DISTRIBUTION</strong></p>
 <p>🤯🤯🤯🤯🤯🤯🤯🤯</p>
 </div>
-</div></div>
 </section>
 <section id="central-limit-theorem-2" class="slide level2">
 <h2>Central Limit Theorem (2)</h2>
 <ul>
-<li class="fragment">The <strong>Central Limit Theorem</strong> hits gain: <strong>“the distribution of sample means approximates a normal distribution as the sample size gets larger, regardless of the population’s distribution”</strong></li>
+<li class="fragment">The <strong>Central Limit Theorem</strong> hits gain: <strong>“the distribution of the means of any sample approximates a normal distribution as the sample size gets larger, regardless of the population’s distribution”</strong></li>
 <li class="fragment"><strong>Practical Implications</strong>: The Central Limit Theorem is crucial for inferential statistics. It underpins many statistical methods, such as frequentist hypothesis testing and confidence intervals. It allows for the use of normal probability models to make inferences about population parameters even when the population distribution is not normal.</li>
 <li class="fragment"><strong>Standard Error (SE)</strong> <em>vs.</em> <strong>Standard Deviation (SD)</strong>
 <ul>
 <li class="fragment">The standard deviation is a measure of the variability of a <strong>single</strong> sample of observations</li>
-<li class="fragment">The standard error is a measure of the variability of <strong>many sample means</strong> (it is the SD of the averages of many samples drawn from the same parent distribution). The SE is often assumed to be normally distributed (even if the underlying distribution is not normal).</li>
+<li class="fragment">The standard error is a measure of the variability of <strong>many sample means</strong> (it is the SD of the averages of many samples drawn from the same parent distribution). The SE is often assumed to be normally distributed (even if the underlying distribution is not normal), which is backed by the CLT.</li>
 </ul></li>
 </ul>
 </section>
@@ -1645,7 +1608,7 @@
 
 </div>
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-40-1.png" class="quarto-figure quarto-figure-center r-stretch" width="6000"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-38-1.png" class="quarto-figure quarto-figure-center r-stretch" width="6000"></section>
 <section id="t-distribution---applications" class="slide level2">
 <h2><em>t</em>-Distribution - Applications</h2>
 <ul class="task-list">
@@ -1655,6 +1618,199 @@
 </ul></li>
 <li class="fragment"><label><input type="checkbox" checked="">Essential in constructing confidence intervals</label></li>
 </ul>
+</section>
+<section id="marginal-distributions" class="slide level2">
+<h2>Marginal Distributions</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-39-1.png" width="3000" class="r-stretch"><ul>
+<li class="fragment">What is the distribution of <code>var1</code> alone?</li>
+<li class="fragment">What is the distribution of <code>var2</code> alone?</li>
+</ul>
+</section>
+<section id="marginal-distributions-1" class="slide level2">
+<h2>Marginal Distributions</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-40-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">What is the distribution of <code>var1</code> alone (i.e;, its <em>marginal</em> distribution)?</li>
+<li class="fragment">What is the marginal distribution of <code>var2</code>?</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span></span>
+<span id="cb55-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb55-3"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_xsidehistogram</span>(<span class="at">bins=</span><span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb55-4"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_ysidehistogram</span>(<span class="at">bins=</span><span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb55-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-41-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quizz-2" class="slide level2" data-background-color="#FFAB91">
+<h2>Quizz</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-42-1.png" style="width:50.0%;height:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">What are the marginal distributions of <code>var1</code> and <code>var2</code>?</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb56-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var1 =</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="dv">100</span>, <span class="dv">15</span>),</span>
+<span id="cb56-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var2 =</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb56-4"><a href="" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb56-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span></span>
+<span id="cb56-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb56-7"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_xsidehistogram</span>(<span class="at">bins=</span><span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb56-8"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_ysidehistogram</span>(<span class="at">bins=</span><span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb56-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-43-1.png" style="width:50.0%;height:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quizz-3" class="slide level2" data-background-color="#FFAB91">
+<h2>Quizz</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-44-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">What are the marginal distributions of <code>var1</code> and <code>var2</code>?</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb57-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var1 =</span> <span class="fu">rgamma</span>(<span class="dv">10000</span>, <span class="fl">1.5</span>, <span class="dv">1</span>),</span>
+<span id="cb57-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var2 =</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb57-4"><a href="" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb57-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(var1 <span class="sc">&lt;</span> <span class="dv">7</span>) <span class="sc">|&gt;</span></span>
+<span id="cb57-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span></span>
+<span id="cb57-7"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb57-8"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_xsidehistogram</span>(<span class="at">bins=</span><span class="dv">70</span>) <span class="sc">+</span></span>
+<span id="cb57-9"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_ysidehistogram</span>(<span class="at">bins=</span><span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb57-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-45-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quizz-4" class="slide level2" data-background-color="#FFAB91">
+<h2>Quizz</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-46-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="dv">10</span>, <span class="dv">10</span>)</span>
+<span id="cb58-2"><a href="" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">2.0</span><span class="sc">*</span>pi<span class="sc">*</span><span class="fu">runif</span>(<span class="dv">10000</span>)</span>
+<span id="cb58-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb58-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var1 =</span> r <span class="sc">*</span> <span class="fu">cos</span>(theta),</span>
+<span id="cb58-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var2 =</span> r <span class="sc">*</span> <span class="fu">sin</span>(theta)</span>
+<span id="cb58-7"><a href="" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb58-8"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span></span>
+<span id="cb58-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb58-10"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_xsidehistogram</span>(<span class="at">bins=</span><span class="dv">70</span>) <span class="sc">+</span></span>
+<span id="cb58-11"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_ysidehistogram</span>(<span class="at">bins=</span><span class="dv">70</span>) <span class="sc">+</span></span>
+<span id="cb58-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-47-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quizz-5" class="slide level2" data-background-color="#FFAB91">
+<h2>Quizz</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-48-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb59-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var1 =</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>),</span>
+<span id="cb59-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">var2 =</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="dv">10000</span>, <span class="dv">10000</span>)</span>
+<span id="cb59-4"><a href="" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb59-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2)) <span class="sc">+</span></span>
+<span id="cb59-6"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb59-7"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_xsidehistogram</span>(<span class="at">bins=</span><span class="dv">70</span>) <span class="sc">+</span></span>
+<span id="cb59-8"><a href="" aria-hidden="true" tabindex="-1"></a>  ggside<span class="sc">::</span><span class="fu">geom_ysidehistogram</span>(<span class="at">bins=</span><span class="dv">70</span>) <span class="sc">+</span></span>
+<span id="cb59-9"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-49-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="the-end-for-now" class="slide level2 center" data-background-color="#212121">
 <h2>The End <sub><sup>(for now)</sup></sub></h2>

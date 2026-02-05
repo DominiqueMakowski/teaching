@@ -18,12 +18,29 @@
   - Difference between belt, Impendence pneumography (electrodes on the chest), Spirometers (air flow), Thermistors (hot air vs cold air)
 
 # Bayesian
+
+## 2026
+
+- RefreshR: 2h full (had to rush a bit towards the end)
+
+
+## 2025
 - 2025: did everything in 10 weeks, but semester is 11.
-- Make R refresher either a full 2 hours / an online video pre-course
-- Introduce Marginal distributions as part of the distribution lecture, with exercices on "guess the shape" (banana, doughnut, ...)
-- Mention that for Beta distribution, a reparametrization in terms of mu exists
 - After the lecture on distirbutions, make a summary of data and make exercice with intercept-only models. Show that it predicts the mean.
-  - Reframe linear models as models predicting a particular parameter of a distribution (Gaussian for linear models)
+  - Different random samples from different distributions: ` MASS::fitdistr(x, "normal")`
+
+```
+x <- rnorm(1000, mean=50, sd=10)
+x <- rgamma(1000, 3, 2)
+
+
+
+MASS::fitdistr(x, "normal")
+
+summary(lm(x ~ 1, data=data.frame(x = x)))
+```
+
+- Reframe linear models as models predicting a particular parameter of a distribution (Gaussian for linear models)
   - Show that is also computes sigma, and do a density plot of a variable vs. a pdf of the Normal distribution using the model parameters
   - Only introduces the difference between OLS later, saying that this is a simple equation-based approach to get the same results
 - Part on OLS vs. MLE very confusing. Revise OLS vs MLE
