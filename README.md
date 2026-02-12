@@ -9,8 +9,9 @@ I also offer workshops to external universities (see [here for details](https://
 ### Bayesian Statistics
 
 - **Week 1:** [RefreshR](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/0_RefreshR)
-- **Week 2:** [Distributions](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/1_Distributions)
-- **Week 3:** [Maximum Likelihood](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+- **Week 2:** [Distributions](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/1_Distributions) (until Cauchy)
+- **Week 3:** [Frequentist Models](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/2_Frequentist)
+- **Week 3:** [Bootstrapping](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 ### Workshops
 

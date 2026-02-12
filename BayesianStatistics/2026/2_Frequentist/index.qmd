@@ -105,54 +105,408 @@ df |>
   theme_bw() 
 ```
 
-## Regression Parameters {.center background-color="#003B49"}
+## Maximum Likelihood {.center background-color="#003B49"}
 
 
-## Quizz {background-color="#FFAB91"}
+## Fitting distributions to data
 
-::: {.stretch}
+- **Maximum Likelihood Estimation (MLE)** is the act of  estimating the parameters of a distribution most fitting the data.
+- Typical algorithms that solve it proceed by iteratively adjusting the parameters of the distribution and computing the divergence between the observed and predicted probabilities, and finding the parameters that minimize this divergence (i.e., that maximizes the likelihood).
+- They are not trivial algorithms
+- We can use the `fitdistr()` (*"fit distribution"*) function from the `MASS` package.
 
-- What is wrong with this [**Correlation**]{.fragment .strike} plot?
-- It is more a "regression" plot *(scatter plot + regression line)*
+
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+x <- rnorm(1000, mean=50, sd=10)
+
+MASS::fitdistr(x, "normal")
+```
+
 
 ```{r}
 #| echo: true
 #| code-fold: true
 #| code-summary: "Show figure code"
 
-df <- bayestestR::simulate_correlation(n=500, r=0.7)
-df |> 
-  ggplot(aes(x=V1, y=V2)) +
-  geom_point() +
-  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2, color="red") +
-  theme_bw()
+params <- MASS::fitdistr(x, "normal")
+
+data.frame(x=x) |> 
+  ggplot(aes(x=x)) +
+  geom_histogram(aes(y=after_stat(density)), bins=60, fill="grey", color="black") +
+  geom_line(
+    data = data.frame(
+      x=seq(0, 100, length.out = 500), 
+      y=dnorm(seq(0, 100, length.out = 500), mean=params$estimate["mean"], sd=params$estimate["sd"])), 
+    aes(x=x, y=y), color="red", linewidth=2) +
+  theme_bw() +
+  labs(x="x", y="Density")
+```
+
+:::::
+
+::::
+
+
+:::: {.column}
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+x <- rgamma(1000, 2, 3)
+
+MASS::fitdistr(x, "normal")
+```
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+params <- MASS::fitdistr(x, "normal")
+
+data.frame(x=x) |> 
+  ggplot(aes(x=x)) +
+  geom_histogram(aes(y=after_stat(density)), bins=100, fill="grey", color="black") +
+  geom_line(
+    data = data.frame(
+      x=seq(-1.5, 3.5, length.out = 500), 
+      y=dnorm(seq(-1.5, 3.5, length.out = 500), mean=params$estimate["mean"], sd=params$estimate["sd"])), 
+    aes(x=x, y=y), color="red", linewidth=2) +
+  theme_bw() +
+  labs(x="x", y="Density")
+```
+
+:::::
+
+::::
+
+:::
+
+## Maximum Likelihood: Caveats
+
+- MLE will always find *some* best fitting parameters: **it doesn't mean that the distribution is a good fit for the data.**
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+x <- rbeta(2000, 0.5, 0.5)
+
+MASS::fitdistr(x, "normal")
+```
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show figure code"
+
+params <- MASS::fitdistr(x, "normal")
+
+data.frame(x=x) |> 
+  ggplot(aes(x=x)) +
+  geom_histogram(aes(y=after_stat(density)), bins=100, fill="grey", color="black") +
+  geom_line(
+    data = data.frame(
+      x=seq(-0.5, 1.5, length.out = 500), 
+      y=dnorm(seq(-0.5, 1.5, length.out = 500), mean=params$estimate["mean"], sd=params$estimate["sd"])), 
+    aes(x=x, y=y), color="red", linewidth=2) +
+  theme_bw() +
+  labs(x="x", y="Density")
 ```
 
 :::
 
-## Solution {background-color="#80DEEA"}
+## Quizz {background-color="#FFAB91"}
 
-::: {.stretch}
 
-- A correlation is a measure of the **strength** of association [-1, 1]
-  - Better represented by an elipsis
-- The line is a **regression** line
-  - The angle of the line is the regression coefficient (can be > 1)
+
+::: {.columns}
+
+:::: {.column width="50%" .nonincremental}
+
+- Run the following:
+
+
+```{r}
+#| echo: true
+
+df <- data.frame(y = rgamma(50000, 0.5, 8))
+```
+
+::::
+
+:::: {.column}
 
 ```{r}
 #| echo: true
 #| code-fold: true
-#| code-summary: "Show figure code"
 
-df |> 
-  ggplot(aes(x=V1, y=V2)) +
-  geom_point() +
-  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2, color="red") +
-  stat_ellipse(type = "norm", color="blue", linewidth=2) +
-  theme_bw()
+ggplot(df, aes(x=y)) +
+  geom_histogram(aes(y=after_stat(density)), bins=100, fill="grey", color="black") +
+  theme_bw() +
+  labs(x="y", y="Density")
 ```
 
-::: 
+::::
+
+:::
+
+
+- What are the parameters of the **best fitting Normal distribution** of `y`?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+MASS::fitdistr(df$y, "normal")
+```
+
+:::
+
+- Fit an intercept-only linear regression model to `y` and look at its summary.
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- lm(y ~ 1, data=df)
+summary(model)
+```
+
+:::
+
+- What do you notice?
+
+
+## Linear Model = "Gaussian" Model
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- You might have heard that an "intercept only" model predicts the **mean** of the data
+- That is true, but it is not the whole story...
+- More generally, a linear model finds the **parameters** of the best fitting normal distribution 
+  - The location $\mu$ = which technically corresponds to the mean of the data
+  - The spread $\sigma$ = the standard deviation of the "residuals" (i.e., the distance between the observed data and the predicted mean)
+- In other words, a typical "linear model" is actually a "Gaussian" model (based on a Normal distribution)
+
+::::
+
+:::: {.column}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig-height: 6
+#| fig-width: 6
+
+df <- data.frame(y = rnorm(5000, 10, 5))
+
+ggplot(df, aes(y=y)) +
+  geom_jitter(aes(x=0), alpha=0.3) +
+  geom_linerange(data=data.frame(x=0, y=mean(df$y), ymin=mean(df$y)-0.5*sd(df$y), ymax=mean(df$y)+0.5*sd(df$y)), 
+                 aes(x=x, y=y, ymin=ymin, ymax=ymax), color="red", linewidth=2) +
+  geom_point(data=data.frame(x=0, y=mean(df$y)), aes(x=x, y=y), color="red", size=4) +
+  geom_hline(yintercept = 10, linetype="dashed", color="red", linewidth=1) +
+  coord_cartesian(xlim = c(-1, 0.4)) + 
+  labs(x="", y="y") +
+  ggside::geom_ysidedensity(data=data.frame(y = rnorm(50000, 10, 5)), color = "red", linewidth = 2) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) 
+```
+
+::::
+
+:::
+
+## Homoscedasticity  
+
+- In typical linear models, we express $\mu$ as a function of the predictors (e.g., $\mu = \beta_{0} + \beta_{1}x$) 
+- $\sigma$ is assumed to be constant across all observations (i.e., homoscedasticity)
+
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| dpi: 300
+
+model <- lm(mpg ~ qsec, data=mtcars)
+
+p <- mtcars |> 
+  ggplot(aes(x=qsec, y=mpg)) +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
+  theme_bw()
+
+# Function to add normal distribution curves
+add_normals <- function(p, model) {
+  sigma <- summary(model)$sigma  # Standard deviation of residuals
+  n <- 100  # Number of points for each curve
+  
+  for(i in 1:nrow(mtcars)) {
+    x_val <- mtcars$qsec[i]
+    y_pred <- predict(model, newdata = data.frame(qsec = x_val))
+    
+    # Create a sequence of y values for the normal curve
+    y_seq <- seq(y_pred - 3*sigma, y_pred + 3*sigma, length.out = n)
+    density <- dnorm(y_seq, mean = y_pred, sd = sigma)
+    
+    # Adjust density to match the scale of the plot
+    max_width <- 1  # Max width of areas
+    density_scaled <- (density / max(density)) * max_width
+    
+    # Create a dataframe for each path
+    path_df <- data.frame(x = x_val + density_scaled, y = y_seq)
+    path_dfv <- data.frame(x=path_df$x[1], ymin=min(path_df$y), ymax=max(path_df$y))
+    
+    # Add the path to the plot
+    p <- p + 
+      geom_segment(data = path_dfv, aes(x = x, xend=x, y = ymin, yend=ymax), 
+                   color = "#FF9800", linewidth = 0.7, alpha=0.8, linetype="dotted") +
+      geom_path(data = path_df, aes(x = x, y = y), 
+                color = "#FF9800", linewidth = 1, alpha=0.8) 
+  }
+  p
+}
+
+
+# Create the final plot
+p_ml <- add_normals(p, model) +
+  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
+               color="red", linetype="solid", linewidth=1) +
+  geom_point(alpha=0.8, size=6) 
+p_ml
+```
+
+
+
+## Quizz {background-color="#FFAB91"}
+
+- Estimating the parameters that maximize the **likelihood** of the data given a model^[Keep this mind, because in a few lessons we will be talking about the exact opposite; the likelihood of a model given the data] (i.e., a distribution) is called...
+- Linear regressions use what model (what distribution)? 
+- Linear regressions estimate how many parameters?
+  - $\mu$ (location): often expressed as a function of other predictors
+  - $\sigma$ (spread): assumed to be constant across all observations (i.e., homoscedasticity)
+
+
+## MLE vs. Ordinary Least Squares (OLS)
+
+- The line that goes through the *Gaussian* distribution's locations $\mu$ - i.e., the result of a MLE model - is also the line that minimizes the sum of squared residuals (OLS)
+- The regression line obtained with MLE with a Gaussian Distribution (i.e., the solution to the Gaussian model MLE algorithm) = the line that minimizes the sum of squared residuals (OLS)
+- The line that minimizes the sum of squared residuals (OLS) = the solution to the Gaussian model MLE algorithm
+- **USEFUL!**
+- The OLS solution can be easily computed using simple formulas, without the need for complex optimization algorithms (as in MLE)
+- The formula for OLS solves a special case of MLE (when we assume a Normal distribution with a single fixed $\sigma$ parameter)
+
+## Ordinary Least Squares (OLS)
+
+- The Ordinary Least Squares (OLS) line is the line that minimizes the **sum** of **squared residuals** (**Residual Sum of Squares - RSS**)
+  - $RSS = \sum(residuals^{2})$ (the square is to make them positive)
+- The **residuals** are the differences between observed and predicted values
+  - $RSS = \sum_{i=1}^{n_{obs}}(y_{i} - \hat{y}_{i})^{2}$
+- Squared residuals correspond to ***Errors*** (epsilon $\varepsilon$)
+
+```{r}
+#| echo: true
+#| code-fold: true
+
+p <- mtcars |> 
+  ggplot(aes(x=qsec, y=mpg)) +
+  geom_point(alpha=0.7, size=6) +
+  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
+  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
+               color="red", linetype="dotted", linewidth=1) +
+  theme_bw() +
+  labs(x="x", y="y", title="The residuals are the vertical distances between each point and the line.")
+p
+```
+
+
+
+
+
+## From RSS to Sigma
+
+::: {.columns}
+
+:::: {.column width="50%" style="font-size: 85%"}
+
+- Under OLS, we can compute the regression line using a simple formula (which is the same as under MLE with a Gaussian distribution)
+- Once we have the line, we can compute the residuals, from which we can work out the $\sigma$ (sigma) of the best fitting Normal distribution
+- The **standard deviation** of the errors, also called the **residual standard error**, and is computed as:
+  - $\sigma = \sqrt{\frac{\sum_{i=1}^{n} (y_i - \hat{y_i})^2}{n_{obs} - k}}$
+  - $\sigma = \sqrt{\frac{RSS}{n_{obs} - k}}$
+  - $k$ is the number of predictors in the model (excluding the intercept) 
+  - *N* observations - *k* predictors = **degrees of freedom (df)** 
+  - $\sigma = \sqrt{\frac{RSS}{df}}$
+
+
+::::
+
+:::: {.column}
+
+```{r}
+#| echo: false
+
+p_ml
+```
+
+::::
+
+:::
+
+## Summary:  OLS vs. MLE
+
+::: {.columns}
+
+:::: {.column width="50%" style="font-size: 80%"}
+
+- MLE is a general approach to estimating parameters of models and is not limited to linear models
+  - Same approach used in many other models (e.g., logistic regression, Poisson regression, etc.) where the key change is the **family** (type) of distribution 
+- In linear models, where the distribution of errors is Normal, **OLS estimation = MLE solution**
+- OLS is one easy way (i.e., solvable using simple formulas) to estimate a special case of MLE models
+- In R, there are actually **two separate functions** that can be used for Gaussian models
+  - `lm()` solves a Gaussian model using OLS
+  - `glm()` solves general linear models using MLE and can be used for simple Gaussian models too 
+
+::::
+
+:::: {.column style="font-size: 80%"}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+summary(lm(mpg ~ qsec, data=mtcars))
+summary(glm(mpg ~ qsec, data=mtcars, family="gaussian"))
+```
+
+::::::
+
+::::
+
+:::
+
+## Regression Parameters {.center background-color="#003B49"}
+
 
 ## Tests vs. Models
 
@@ -204,6 +558,8 @@ lm(wt ~ qsec, data=mtcars) |>
 #| code-fold: true
 #| fig.height: 3
 
+df <- bayestestR::simulate_correlation(n=500, r=0.7)
+
 ggplot(df, aes(x=V1, y=V2)) +
   geom_point(alpha=0) +
   geom_vline(xintercept = 0, linetype="dotted") +
@@ -251,7 +607,7 @@ ggplot(df, aes(x=V1, y=V2)) +
 ::: {.stretch style="font-size: 90%"}
 
 - In R, we use the `lm()` function (linear model) with the `response ~ predictor` formula to specify the model
-- We can apply the `summary()` method to get the results
+- We can apply the `summary()` method to get the results (base R equivalent of easystats' `model_parameters()`)
 - **What are the coefficients?** 
 
 :::: {.fragment}
@@ -266,8 +622,6 @@ summary(model)
 ::::
 
 - $Intercept = -5.1140$ and $\beta_{qsec} = 1.4121$
-- **How are the parameters computed?**
-
 
 :::
 
@@ -298,231 +652,8 @@ summary(model)
 :::
 
 - Raw coefficient in a regression model are unit dependent (it is important to know the scale of your variables for interpreting the coefficients)
+- But the other indices (*t*-value, *p*-value) haven't changed: the two models gives us the same answer.
 
-
-## Frequentist Estimation {.center background-color="#003B49"}
-
-
-## Ordinary Least Squares (OLS)
-
-::: {.stretch}
-
-- The Ordinary Least Squares (OLS) line is the line that minimizes the **sum** of **squared residuals** (**Residual Sum of Squares - RSS**)
-  - $RSS = \sum(residuals^{2})$ (the square is to make them positive)
-- The **residuals** are the differences between observed and predicted values
-  - $RSS = \sum_{i=1}^{n_{obs}}(y_{i} - \hat{y}_{i})^{2}$
-- Squared residuals correspond to ***Errors*** (epsilon $\varepsilon$)
-
-```{r}
-#| echo: true
-#| code-fold: true
-
-p <- mtcars |> 
-  ggplot(aes(x=qsec, y=mpg)) +
-  geom_point(alpha=0.7, size=6) +
-  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
-  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
-               color="red", linetype="dotted", linewidth=1) +
-  theme_bw() +
-  labs(x="x", y="y", title="The residuals are the vertical distances between each point and the line.")
-p
-```
-
-
-:::
-
-## Maximum Likelihood Estimation (MLE)
-
-::::: {.columns}
-
-:::: {.column width="50%" style="font-size: 85%"}
-
-
-- The OLS "line" (i.e., the OLS coefficients) can be computed using various algorithms, but one is particularly useful
-- This approach is called **Maximum Likelihood Estimation (MLE)**
-- In a typical linear regression model, the assumption is made that the **errors** are **normally distributed**[^2]
-  - Why? This "trick" allows to get OLS-equivalent coefficients and further enable **inferential statistics**
-- MLE tries to maximize the **likelihood** of the data given the model^[Keep this mind, because in a few lessons we will be talking about the exact opposite; the likelihood of a model given the data], by finding the best distribution parameters to "fit" the residuals
-
-  
-[^2]: This is VERY OFTEN confused with the requirement to have variables normally distributed, which is NOT a requirement for linear regression. The normality concerns the residuals, not the variables.
-
-
-::::
-:::: {.column style="font-size: 75%"}
-
-![](img/FisherYoung.jpg){fig-align="center"}
-
-Ronald Fisher (1890 – 1962), *"a genius who almost single-handedly created the foundations for modern statistical science"*, introduced MLE in 1922
-
-::::
-:::::
-
-## Linear Model = "Gaussian" Model
-
-::: {.stretch .nonincremental}
-
-- Solving the linear model equation means finding the **best fitting normal distribution** around the *residuals*
-- In other words, a typical "linear model" is actually a "Gaussian" model
-
-
-```{r}
-#| echo: true
-#| code-fold: true
-#| dpi: 300
-
-p <- mtcars |> 
-  ggplot(aes(x=qsec, y=mpg)) +
-  geom_point(alpha=0.7, size=6) +
-  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
-  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
-               color="red", linetype="dotted", linewidth=1) +
-  theme_bw() +
-  labs(x="x", y="y", title="The residuals are the vertical distances between each point and the line.")
-
-p2 <- data.frame(Error=insight::get_residuals(lm(mpg ~ qsec, data=mtcars))) |> 
-  ggplot(aes(x=Error)) +
-  geom_histogram(bins=10, fill="grey", color="black") +
-  geom_vline(xintercept = 0, linetype="dashed") +
-  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 2)),
-               aes(y=after_stat(density)*40), color="#F44336", linewidth=1, adjust=1) +
-  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 3)),
-               aes(y=after_stat(density)*50), color="#FF5722", linewidth=1, adjust=1) +
-  geom_density(data=data.frame(Error=bayestestR::distribution_normal(n=100, sd = 4)),
-               aes(y=after_stat(density)*60), color="#FF9800", linewidth=1, adjust=1) +
-  geom_point(aes(y=0), size=10, shape=16, alpha=0.3) +
-  theme_bw() +
-  coord_flip() +
-  labs(y = "Density")
-
-p + theme(plot.title = element_blank()) | p2
-```
-
-:::
-
-## Homoscedasticity   
-
-
-::: {.nonincremental .stretch}
-
-- The line that goes through the *Normal* distribution's locations $\mu$ also minimizes the sum of squared residuals (OLS)
-
-```{r}
-#| echo: true
-#| code-fold: true
-#| dpi: 300
-
-model <- lm(mpg ~ qsec, data=mtcars)
-
-p <- mtcars |> 
-  ggplot(aes(x=qsec, y=mpg)) +
-  geom_smooth(method="lm", formula = 'y ~ x', se=FALSE, linewidth=2) +
-  theme_bw()
-
-# Function to add normal distribution curves
-add_normals <- function(p, model) {
-  sigma <- summary(model)$sigma  # Standard deviation of residuals
-  n <- 100  # Number of points for each curve
-  
-  for(i in 1:nrow(mtcars)) {
-    x_val <- mtcars$qsec[i]
-    y_pred <- predict(model, newdata = data.frame(qsec = x_val))
-    
-    # Create a sequence of y values for the normal curve
-    y_seq <- seq(y_pred - 3*sigma, y_pred + 3*sigma, length.out = n)
-    density <- dnorm(y_seq, mean = y_pred, sd = sigma)
-    
-    # Adjust density to match the scale of the plot
-    max_width <- 1  # Max width of areas
-    density_scaled <- (density / max(density)) * max_width
-    
-    # Create a dataframe for each path
-    path_df <- data.frame(x = x_val + density_scaled, y = y_seq)
-    path_dfv <- data.frame(x=path_df$x[1], ymin=min(path_df$y), ymax=max(path_df$y))
-    
-    # Add the path to the plot
-    p <- p + 
-      geom_segment(data = path_dfv, aes(x = x, xend=x, y = ymin, yend=ymax), 
-                   color = "#FF9800", linewidth = 0.7, alpha=0.8, linetype="dotted") +
-      geom_path(data = path_df, aes(x = x, y = y), 
-                color = "#FF9800", linewidth = 1, alpha=0.8) 
-  }
-  p
-}
-
-
-# Create the final plot
-p <- add_normals(p, model) +
-  geom_segment(aes(x = qsec, y = mpg, xend = qsec, yend = predict(lm(mpg ~ qsec, data=mtcars))), 
-               color="red", linetype="solid", linewidth=1) +
-  geom_point(alpha=0.8, size=6) 
-p
-```
-
-
-:::
-
-
-
-
-## Linear Models - Deviation
-
-:::: {.columns}
-
-::: {.column width="50%" style="font-size: 75%"}
-
-- Once we have estimated the distribution of errors: 
-  - We can obtain the regression line (the **slope** of the distribution's locations $\mu$)
-  - We can obtain the **spread** of the distribution, i.e., the **standard deviation** of the errors $\sigma$ (sigma)[^3] 
-- The **standard deviation** of the errors, also called the **residual standard error**, and is computed as:
-  - $\sigma = \sqrt{\frac{\sum_{i=1}^{n} (y_i - \hat{y_i})^2}{n_{obs} - k}}$
-  - $\sigma = \sqrt{\frac{RSS}{n_{obs} - k}}$
-  - $k$ is the number of predictors in the model (excluding the intercept) 
-  - *N* observations - *k* predictors = **degrees of freedom (df)** 
-  - $\sigma = \sqrt{\frac{RSS}{df}}$
-
-[^3]: Remember, a Normal distribution is defined by its location/mean $\mu$ and dispersion/standard deviation $\sigma$
-
-::: 
-::: {.column}
-
-```{r}
-#| echo: false
-
-p
-```
-
-:::
-
-::::
-
-## OLS vs. MLE
-
-::::: {.columns}
-:::: {.column width="50%" style="font-size: 80%"}
-
-- MLE is a general approach to estimating parameters of models and is not limited to linear models
-  - Same approach used in many other models (e.g., logistic regression, Poisson regression, etc.) where the key change is the **family** (type) of the distribution of errors
-- In linear models where the distribution of errors is Normal (i.e., in linear models), **MLE is equivalent to OLS estimation**
-- In fact, OLS can be seen as a special case of MLE estimation, but easier to compute as the parameters can be estimated using simpler formulas
-- This is why in R, there are **two separate functions** for linear models (estimated using OLS) and "general" linear models (estimated using MLE)
-  - But we can use the latter to estimate linear models too!
-
-::::
-:::: {.column style="font-size: 80%"}
-::: {.fragment}
-
-```{r}
-#| echo: true
-
-summary(lm(mpg ~ qsec, data=mtcars))
-summary(glm(mpg ~ qsec, data=mtcars, family="gaussian"))
-```
-
-:::
-
-::::
-:::::
 
 ## Model Parameters
 
@@ -530,59 +661,11 @@ summary(glm(mpg ~ qsec, data=mtcars, family="gaussian"))
   - The coefficients
     - Intercept
     - The slope(s)
-  - "Distributional" (aka "Auxiliary") parameters (about the distribution of errors)
-    - E.g., the standard deviation of the errors $\sigma$ (sigma) in linear models
+  - "Distributional" (aka "Auxiliary") parameters (the other parameters of the distribution used)
+    - E.g., $\sigma$ (sigma) for linear models
     - Usually, most people tend to ignore these... but they are important!
-- The remaining indices (SE, *t*-value, *p*-value) are calculated using them
-
-## Quizz {background-color="#FFAB91"}
-
-- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
-  - *Tip*: just look at the output...
-
-::: {.fragment}
-
-```{r}
-#| echo: true
-#| eval: false
-
-model <- lm(mpg ~ qsec, data=mtcars)
-```
-
-:::
-
-## Solution {background-color="#80DEEA"}
-
-::: {.nonincremental .stretch}
-
-- Find $\sigma$ (sigma, aka *residual standard error*) and $df$ for previous linear model.
-  - *Tip*: just look at the output...
-
-```{r}
-#| echo: true
-
-model <- lm(mpg ~ qsec, data=mtcars)
-summary(model)
-```
-
-:::: {.fragment}
-
-```{r}
-#| echo: true
-
-insight::get_sigma(model)
-```
-
-::::
-
-:::
-
-## Why is it important?
-
-- The characteristics of the estimated $Normal$ distribution of residuals, $\mu$ and $\sigma$, are used to compute the **coefficient** ($\beta$) and **standard error** ($SE$) of each of the model's parameters, respectively
-  - $\mu$ (the center of the normal distribution) is used to compute the **coefficients** (intercept and slope) of the regression line
-  - $\sigma$ (the spread) is used to compute the **standard error** (the uncertainty related to the coefficient) <sub><sup>*via a fairly complex formula*</sup></sub>
-- Two models can have the same coefficients, but different SEs, depending on the spread of the residuals
+- Two models can have the same coefficients, but different sigmas
+- The **standard error** (the uncertainty related to the coefficient) of the coefficients is computed using $\sigma$ <sub><sup>*via a fairly complex formula*</sup></sub>
 
 
 ## Quizz {background-color="#FFAB91"}

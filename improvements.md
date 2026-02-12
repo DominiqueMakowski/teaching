@@ -9,6 +9,7 @@
 - Timing 2025: 2h topics: had to rush through HRV part
   - Remove ANS part
   - OR Focus on ECG + Cardiac phase (skip ANS + HRV)
+- Insula: Add Craig's model ("How do you feel - now?")
 - On Respiratory Cycles:
   - The respiratory cycle modulates distinct dynamics of affective and perceptual decision-making: https://www.researchgate.net/publication/379401636_The_respiratory_cycle_modulates_distinct_dynamics_of_affective_and_perceptual_decision-making
 - Pupil dilation and prediction error: https://www.researchgate.net/publication/385429455_Pupil_dilation_offers_a_time-window_on_prediction_error
@@ -21,8 +22,8 @@
 
 ## 2026
 
-- RefreshR: 2h full (had to rush a bit towards the end)
-
+- Week 1: RefreshR: 2h full (had to rush a bit towards the end)
+- Week 2: Distributions until Cauchy (had to rush a lot)
 
 ## 2025
 - 2025: did everything in 10 weeks, but semester is 11.
