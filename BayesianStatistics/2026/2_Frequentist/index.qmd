@@ -116,7 +116,6 @@ df |>
 - We can use the `fitdistr()` (*"fit distribution"*) function from the `MASS` package.
 
 
-
 ::: {.columns}
 
 :::: {.column width="50%"}
@@ -194,6 +193,44 @@ data.frame(x=x) |>
 ::::
 
 :::
+
+## Gaussian Maximum Likelihood vs. The Mean
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+```{r}
+#| echo: true
+
+x <- rgamma(1000, 2, 3)
+
+MASS::fitdistr(x, "normal")
+mean(x)
+```
+
+::::
+
+:::: {.column}
+
+
+```{r}
+#| echo: true
+
+x <- runif(1000, -10, 4)
+
+MASS::fitdistr(x, "normal")
+mean(x)
+```
+
+::::
+
+:::
+
+- Fitting the best Gaussian distribution has interesting properties 
+- The "location" (mean) of the best fitting Normal distribution of the data = the actual (empirical) **mean** of the data
+  - We can use one to find the other
+
 
 ## Maximum Likelihood: Caveats
 
@@ -304,8 +341,8 @@ summary(model)
 - You might have heard that an "intercept only" model predicts the **mean** of the data
 - That is true, but it is not the whole story...
 - More generally, a linear model finds the **parameters** of the best fitting normal distribution 
-  - The location $\mu$ = which technically corresponds to the mean of the data
-  - The spread $\sigma$ = the standard deviation of the "residuals" (i.e., the distance between the observed data and the predicted mean)
+  - The location $\mu$ corresponds to the mean of the data
+  - The spread $\sigma$ corresponds to the standard deviation of the "residuals" (i.e., the distance between the observed data and the predicted mean)
 - In other words, a typical "linear model" is actually a "Gaussian" model (based on a Normal distribution)
 
 ::::
@@ -408,10 +445,9 @@ p_ml
 
 ## MLE vs. Ordinary Least Squares (OLS)
 
-- The line that goes through the *Gaussian* distribution's locations $\mu$ - i.e., the result of a MLE model - is also the line that minimizes the sum of squared residuals (OLS)
 - The regression line obtained with MLE with a Gaussian Distribution (i.e., the solution to the Gaussian model MLE algorithm) = the line that minimizes the sum of squared residuals (OLS)
-- The line that minimizes the sum of squared residuals (OLS) = the solution to the Gaussian model MLE algorithm
-- **USEFUL!**
+  - Conversely: the line that minimizes the sum of squared residuals (OLS) = the solution to the Gaussian model MLE algorithm
+  - **USEFUL!**
 - The OLS solution can be easily computed using simple formulas, without the need for complex optimization algorithms (as in MLE)
 - The formula for OLS solves a special case of MLE (when we assume a Normal distribution with a single fixed $\sigma$ parameter)
 
