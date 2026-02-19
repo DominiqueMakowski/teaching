@@ -1,0 +1,1141 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**3. On Bootstrapping**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+```
+
+
+
+<!-- ## Distribution Game (Again) -->
+
+<!-- ```{r} -->
+<!-- #| echo: false -->
+<!-- #| code-fold: true -->
+<!-- #| code-summary: "Show figure code" -->
+
+<!-- df <- data.frame( -->
+<!--   x = seq(-6, 6, length.out = 500), -->
+<!--   y = dnorm(seq(-6, 6, length.out = 500), 1.5, 1), -->
+<!--   Distribution = "Normal (1, 1)" -->
+<!-- ) -->
+<!-- # t-distribution -->
+<!-- df <- data.frame( -->
+<!--   x = seq(-6, 6, length.out = 500), -->
+<!--   y = dt(seq(-6, 6, length.out = 500), 3), -->
+<!--   Distribution = "t (df=3)" -->
+<!-- ) |> rbind(df) -->
+
+<!-- # Uniform -->
+<!-- df <- data.frame( -->
+<!--   x = seq(-21, 51, length.out = 500), -->
+<!--   y = dunif(seq(-21, 51, length.out = 500), -20, 50), -->
+<!--   Distribution = "Uniform (-20, 50)" -->
+<!-- ) |> rbind(df) -->
+
+<!-- # Beta -->
+<!-- df <- data.frame( -->
+<!--   x = seq(-0.1, 1.1, length.out = 500), -->
+<!--   y = dbeta(seq(-0.1, 1.1, length.out = 500), 3, 3), -->
+<!--   Distribution = "Beta (3, 3)" -->
+<!-- ) |> rbind(df) -->
+
+<!-- # Gamma -->
+<!-- df <- data.frame( -->
+<!--   x = seq(-0.1, 10, length.out = 500), -->
+<!--   y = dgamma(seq(-0.1, 10, length.out = 500), 3, 3), -->
+<!--   Distribution = "Gamma (3,  3)" -->
+<!-- ) |> rbind(df) -->
+
+<!-- # Cauchy -->
+<!-- df <- data.frame( -->
+<!--   x = seq(-10, 10, length.out = 500), -->
+<!--   y = dcauchy(seq(-10, 10, length.out = 500), 0, 1), -->
+<!--   Distribution = "Cauchy (0, 1)" -->
+<!-- ) |> rbind(df) -->
+
+<!-- df |>  -->
+<!--   ggplot(aes(x=x, y=y)) + -->
+<!--   geom_line(linewidth=1) + -->
+<!--   facet_wrap(~Distribution, scales="free") + -->
+<!--   theme_bw() + -->
+<!--   theme(axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank(), -->
+<!--         strip.text = element_blank()) -->
+<!-- ``` -->
+
+<!-- ## Solution -->
+
+<!-- ```{r} -->
+<!-- #| echo: false -->
+<!-- #| code-fold: true -->
+<!-- #| code-summary: "Show figure code" -->
+
+<!-- df |>  -->
+<!--   ggplot(aes(x=x, y=y)) + -->
+<!--   geom_line(linewidth=1) + -->
+<!--   facet_wrap(~Distribution, scales="free") + -->
+<!--   theme_bw() + -->
+<!--   theme(axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank()) -->
+<!-- ``` -->
+
+
+
+## Recap {background-color="#1A237E"}
+
+- Frequentist statistics assume that the the parameters of a model are **fixed** (but unknown) and that the data are **random** samples from a fixed **parent distribution**.
+- We try to infer what would happen if we repeated the experiment (i.e., repeatedly sampled from the parent distribution) an infinite number of times
+- We quantify the assumed variability of the estimated parameter: the **standard error** <sup><sub>(standard error = variability of sample means; standard deviation = variability of a sample).</sub></sup> 
+- Under the CLT, we often assume that this distribution of the estimate is Normal. Not to be confused with the distribution of the "standardized parameter" (e.g., *t*-value) under the null-hypothesis - used to compute *p*-values.
+- This standardized index of precision (e.g., *t*-value) is used to find answers interpreted as "significance" (e.g., probability of being superior to a threshold) using **analytical distributions** (e.g., a *t*-distribution with certain parameters).
+- Using analytical distributions allows us to **compute exact answers** as the probability function (PDF), the quantile function, etc., are known and mathematically tractable (i.e., we can compute exact results with functions like `pnorm()`, `qnorm()`, `pt()`, `dt()`, etc.).
+
+## Example: Correlations
+
+- A correlation measures the **strength** of the linear relationship between two variables.
+- A Pearson correlation coefficient (*r*) can be computed with the formula:
+- $r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2 \sum (y_i - \bar{y})^2}}$
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+x <- c(3, 4, 5, 6, 3, 2) #  Any vector of values
+y <- c(3, 3, 4, 5, 4, 3) # Another vector of values
+
+# Calculate Pearson's correlation coefficient using the formula
+n <- length(x)
+x_bar <- mean(x)
+y_bar <- mean(y)
+
+r <- sum((x - x_bar) * (y - y_bar)) / sqrt(sum((x - x_bar)^2) * sum((y - y_bar)^2))
+r
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+cor(x, y)
+```
+
+:::
+
+## Correlation Test
+
+- The *t*-value of a correlation is computed as: $t = \frac{r \sqrt{n - 2}}{\sqrt{1 - r^2}}$
+- The *t*-value can be seen as a "standardized" index of coefficient precision (adjusted for the sample size *n*). 
+- We can then use the Probability function *p* of the corresponding *t*-distribution to compute $p > |t|$.
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Calculate the t-value
+t_value <- r * sqrt(n - 2) / sqrt(1 - r^2)
+t_value
+
+# Calculate the p-value
+p_value <- 2 * pt(abs(t_value), df = n - 2, lower.tail = FALSE)
+p_value
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+cor.test(x, y)
+```
+
+:::
+
+
+## Using the `{correlation}` package
+
+- `{correlation}` is part of the `easystats` collection of packages, and allows to run various types of correlations, and to plot the results.
+- Contrary to base R's `cor.test()`, `cor_test()` takes the data as a first argument and the variable names next.
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+results <- correlation::cor_test(mtcars, "mpg", "qsec")
+results
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+plot(results)
+```
+
+:::
+
+## Extract the correlation value
+
+- The `cor_test()` function returns a data.frame, so it's easy to extract values
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+actual_r <- results$r
+actual_r
+```
+
+:::
+
+## Parent Population
+
+- Frequentist "inferential" statistics are used to make inferences about the **parent population** from which the data are **sampled**<sup><sub>(this is a difference with the Bayesian framework, but more on that later)</sub></sup>
+- We use a lot of assumptions about how the effects (and absence thereof) are distributed for the *parent population*, which allows us to estimate things like confidence intervals and p-values.
+- If we had access to the *parent populations*, we wouldn't need to compute these indices, we would just say this is the "true" value of the effect.
+- But we usually don't have access to the parent population, and we have to rely on the data at hand (assumed to be a **random sample** from the parent distribution) and infer/assume the shape of the parent distribution
+
+## "Data are random"
+
+- This assumption has an interesting consequence...
+- Data points can be seen as "**interchangeable**"!
+- We could make a new sample from the same data points
+
+```{r}
+set.seed(123)
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# New samples will be the same number of obs, but randomly different rows
+new_obs <- sample(1:nrow(mtcars), replace = TRUE)
+new_obs
+```
+
+:::
+
+- This sample is theoretically "as good" as the original one
+- We could compute the model again on this new sample...
+
+## Recompute correlation on the "new" sample
+
+
+- Create a new dataset...
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+new_sample <- mtcars[new_obs, ]
+```
+
+:::
+
+- and compute the correlation again...
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+new_sample |> 
+  correlation::cor_test("mpg", "qsec")
+```
+
+:::
+
+
+## Rince and repeat
+
+- What happens if we repeat this process many times?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+r_values <- c()  # Initialize an empty vector of r values
+for (i in 1:5000) {  # Repeat the process 5000 times
+  new_sample <- mtcars[sample(1:nrow(mtcars), replace = TRUE), ]  # Sample new data
+  result <- correlation::cor_test(new_sample, "mpg", "qsec")  # Compute the correlation
+  r_values <- c(r_values, result$r)  # Append the r value to the vector
+}
+```
+
+:::
+
+## Quizz {background-color="#FFAB91"}
+
+::: {.nonincremental .stretch}
+
+- Run this code, and plot the distribution of the series of *r* values
+
+```{r}
+#| echo: true
+#| eval: false
+
+r_values <- c()  # Initialize an empty vector of r values
+for (i in 1:5000) {  # Repeat the process 5000 times
+  new_sample <- mtcars[sample(1:nrow(mtcars), replace = TRUE), ]  # Sample new data
+  result <- correlation::cor_test(new_sample, "mpg", "qsec")  # Compute the correlation
+  r_values <- c(r_values, result$r)  # Append the r value to the vector
+}
+```
+
+- Hint: use `data.frame(r = r_values)` to create a dataframe with the vector of *r* values (that you can pass to `ggplot()`)
+
+:::
+
+## Solution {background-color="#80DEEA"}
+
+
+```{r}
+#| echo: true
+
+p <- data.frame(r = r_values) |> 
+  ggplot(aes(x = r)) +
+  geom_histogram(fill = "grey", color = "darkgrey") +
+  geom_vline(xintercept = actual_r, color = "red", linetype="dashed") +
+  theme_bw()
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+p
+```
+
+:::
+
+## Bootstrapping
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+![](img/bootstrapping.png)
+
+::::
+
+:::: {.column}
+
+- The process of sampling **with replacement**^[otherwise it is the same as the original data] from the data a new sample of the same size to compute a **distribution** for the statistical index of interest is called **bootstrapping**
+  - Why do we sample *with replacement*?
+- The term "**bootstrapping**" comes from the impossible act of "**pulling yourself up by your own bootstraps!**", which refers to the process of randomly resampling your own dataset to create many simulated datasets from which we can obtain meaningful results.
+
+::::
+
+:::
+
+## Why bootstrapping?
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Instead of having a **point-estimate** of a statistical parameter (in our case a correlation coefficient *r*), we now have a **distribution** of the statistic
+  - Note: an empirical distribution (i.e., just a bunch of numbers)
+- This distribution is valid (flows from the premises of frequentist statistics) and can be used to directly estimate the uncertainty related to the statistic of interest
+- From now on, you need to shift your thinking from "point-estimates" (single values) to start thinking in terms of "distribution" of statistical values
+- How to describe this distribution? 
+
+::::
+
+:::: {.column}
+
+![](https://media.giphy.com/media/s239QJIh56sRW/giphy.gif)
+
+::::
+
+:::
+
+## Describing a distribution of statistics
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- How can we describe the distribution of statistics?
+- Ideally, we would always have visualizations (using a histogram / density plot)
+  - Not the most convenient in reports and tables
+- We need to compute **descriptive indices**
+- We usually still compute a point-estimate, useful to give an idea of the "central tendency" of the distribution <sub><sup>*(as our little brains don't process well uncertainty and ranges)*</sup></sub>
+- Which one? [**Mean? Median? Mode?**]{.fragment}
+
+::::
+
+:::: {.column}
+
+```{r}
+#| echo: false
+
+p
+```
+
+
+::::
+
+:::
+
+## Indices of Centrality - Mean
+
+- The **mean** is a common index of centrality
+- Pros: 
+  - Easy to compute
+  - Easy to interpret ("average" value)
+  - It is an important mathematical property
+- Cons:
+  - Sensitive to outliers
+  - Not suitable for discrete distributions (e.g. counts: `mean(c(0, 0, 1, 4, 6))`)
+  - Not the most appropriate for non-symmetric distributions
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+r_mean <- mean(r_values)
+r_mean
+```
+
+:::
+
+## Indices of Centrality - Mean
+
+```{r}
+#| echo: true
+
+p <- p + geom_vline(xintercept = r_mean, color = "blue") 
+p
+```
+
+
+## Indices of Centrality - Median
+
+- The **median** is the value that separates the distribution in two halves
+- Pros: 
+  - Easy to compute
+  - Robust to outliers
+  - Consistent interpretation in terms of probabilities (50% of the values are below and above the median value)
+  - "There are 50% chances that the value of the statistic is above the median"
+- Cons:
+  - Too robust? (to variability in the tails)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+r_median <- median(r_values)
+r_median
+```
+
+:::
+
+## Indices of Centrality - Median
+
+```{r}
+#| echo: true
+
+p <- p + geom_vline(xintercept = r_median, color = "orange") 
+p
+```
+
+
+
+
+## Indices of Centrality - Mode/MAP
+
+::: {.columns}
+:::: {.column width="50%"}
+
+- The **mode** is the most frequent value in the distribution
+- For continuous distribution, it is meaningless (as the probability of having exactly the same value is very low)
+- The equivalent for continuous distributions is called the "**maximum a posteriori**" (**MAP**)
+- It corresponds to the most probable value, based on the density estimation of the statistic
+
+::::
+:::: {.column width="50%"}
+::::: {.fragment}
+
+![](img/map.png)
+
+:::::
+::::
+:::
+
+## Indices of Centrality - Mode/MAP
+
+- Pros: 
+  - Interpretation: "the most likely value"
+- Cons:
+  - Complex to compute (need to estimate the density of the distribution)
+  - Problematic for multimodal distributions
+  - Not really robust
+  - Not always defined (e.g. uniform distributions)
+- Can be computed using the `{bayestestR}` package (in *easystats*)
+
+::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+r_map <- as.numeric(bayestestR::map_estimate(r_values))
+r_map
+```
+
+:::
+
+::: {.fragment}
+:::: {.callout-warning}
+
+The `map_estimate()` function does not return a numeric value. The MAP value can be extracted using `as.numeric()`.
+
+::::
+:::
+## Indices of Centrality - Mode/MAP
+
+```{r}
+#| echo: true
+
+p <- p + geom_vline(xintercept = r_map, color = "purple") 
+p
+```
+
+## Which one(s) to pick?
+
+::: {.stretch}
+
+- 🤷
+- Each index has its pros and cons. No consensus on which one is "better" 
+- In some cases, these indices of centrality tend to converge (e.g. for symmetric distributions)
+  - E.g., in a normal distribution, the mean, median and mode are the same
+- In other cases, they can be quite different
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+data <- data.frame(x = bayestestR::distribution_beta(10000, 1.5, 6))
+indices <- data.frame(Index = c("Mean", "Median", "MAP"), 
+                      Value = c(mean(data$x), median(data$x), as.numeric(bayestestR::map_estimate(data$x))))
+
+data |> 
+  ggplot(aes(x)) +
+  geom_histogram(bins=60, color="darkgrey", fill="grey") +
+  geom_vline(data = indices, aes(xintercept = Value, color = Index), size = 1) +
+  scale_color_manual(values = c("purple", "green", "blue")) +
+  theme_bw()
+```
+
+::::
+:::
+
+## Indices of Dispersion
+
+- It is also useful to describe the **dispersion** of the distribution
+- In MLE, we computed the **standard error** of the statistic, which is...
+  - The standard deviation of a summary statistic (e.g., the dispersion of means of many distributions)
+  - The standard deviation of the statistic "if we repeated the experiment an infinite number of times"
+- When bootstrap is used, we can directly compute the **standard deviation** of the distribution of the statistic
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+sd(r_values)  # The equivalent of the SE in traditional frequentist models
+```
+
+:::
+
+## Indices of Dispersion - MAD
+
+- The **median absolute deviation** (**MAD**) is an alternative index of dispersion
+- It is "median-based": it corresponds to the median of the absolute deviations from the median
+- It shares some properties with the median, such as being more robust to outliers than the SD
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mad(r_values)
+```
+
+:::
+
+- People tend to be consistent and use either **Mean \& SD** or **Median \& MAD**
+
+## Credible Interval (CI)
+
+- Since we have the distribution of the statistic at hand, we can also directly compute a **credible interval** (**CI**), i.e., a range where values are "likely" to be found. 
+- It is the equivalent of the *Confidence* Interval, but with more straightforward interpretation
+  - The interpretation for a 95% **Confidence** Interval would be *"there is a 95% probability that when computing a confidence interval from data of this sort, the effect falls within this range"*
+  - The interpretation for a 95% **Credible** Interval would be *"there is a 95% probability that the effect falls within this range"*
+- Note that **Credible Interval** is mostly used in a **Bayesian context** (where we measure actual beliefs about probabilities, hence the name "credible"). In a Frequentist context, we would rather use the **Bootstrapped Confidence Interval**.
+  - I will continue using **Credible** just so that you don't confuse it with normal parametric **Confidence Intervals**
+
+## Credible Interval - ETI
+
+- The **Equal-Tailed Interval** (**ETI**) is the commonly used as an index of CI because of its computational simplicity
+- It is made by excluding an **equal amount data from each tail** of the distribution.
+- Typically, we do a 95% CI, which excludes 2.5% from each tail of the distribution.
+- It is the range of values that contains 95% of the distribution (i.e., the 2.5% and 97.5% quantiles)
+- It can be computed using the `bayestestR::eti()` function
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::eti(data, ci = 0.95)
+```
+
+:::
+
+## Credible Interval - ETI 
+
+- It works well for symmetric distributions, but can be problematic for skewed distributions
+- For example, it can exclude "high probability" regions of the distribution, which is counter-intuitive
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+
+data <- data.frame(x = bayestestR::distribution_beta(10000, 3, 20))
+
+ci_eti <- bayestestR::eti(data)
+
+bayestestR::estimate_density(data$x, method="logspline") |> 
+  mutate(ETI = ifelse(x > ci_eti$CI_high, "Higher", ifelse(x < ci_eti$CI_low, "Lower", "Within CI"))) |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_area(aes(fill = ETI)) + 
+  scale_fill_manual(values = c("Lower"="#2196F3", "Higher"="#03A9F4", "Within CI"="#F44336")) +
+  labs(fill = "95% ETI", x="Bootstrapped distribution of r coefficients", y="Probability") +
+  theme_bw() 
+```
+
+:::
+
+## Credible Interval - HDI
+
+
+- The **Highest Density Interval** (**HDI**) is an alternative index of CI that is more robust to skewed distributions and more intuitive
+- It is the range of values that contains 95% of the distribution and has the highest density
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::hdi(data)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| fig.height: 3
+
+ci_hdi <- bayestestR::hdi(data)
+
+bayestestR::estimate_density(data$x, method="logspline") |> 
+  mutate(HDI = ifelse(x > ci_hdi$CI_high, "Higher", ifelse(x < ci_hdi$CI_low, "Lower", "Within CI"))) |> 
+  ggplot(aes(x=x, y=y)) +
+  geom_area(aes(fill = HDI)) + 
+  geom_hline(yintercept = 0.95, color="black", linetype="dashed") +
+  scale_fill_manual(values = c("Lower"="#4CAF50", "Higher"="#8BC34A", "Within CI"="#F44336")) +
+  labs(fill = "95% HDI", x="Bootstrapped distribution of r coefficients", y="Probability") +
+  theme_bw() 
+```
+
+:::
+
+
+## Credible Interval - Which type to use?
+
+- For symmetric distributions, the ETI and HDI are equivalent
+- HDI is overall more "intuitive", as it tells the range of values that contains 95% of the most probable values
+- But ETI is simpler to compute, and hence is often the default in many software
+
+
+## Why 95% CI?
+
+- **Why do we use "95%" (0.95) for the CI?**
+- Because of the .05 alpha level (used for the *p*-value)
+- Indeed, confidence intervals have a direct relationship with the *p*-value: 
+  - if the 95% CI is $[0.00, x]$ or $[x, 0.00]$, then the *p*-value = .05. 
+  - In other words, a 0.95 CI excluding 0 has a *p*-value < .05.
+- But this .05 alpha level is arbitrary...
+  - Yes. And so is 95%. It is mostly a *convention*.
+- Recently, a trend emerged to "shake up" the conventions and highlight the arbitrary nature of the .05 alpha level
+  - McElreath (2018) suggested to use **89% CI** instead of 95% CI. *Why?* [**Because why not!**]{.fragment}
+- Some software also use 90% or 94% CI as default
+- However, I still personally recommends 95% 
+  - See [**https://github.com/easystats/bayestestR/discussions/250**](https://github.com/easystats/bayestestR/discussions/250)
+- **Importantly**, the choice of the CI is for you to decide.
+
+
+
+## Recap {background-color="#1A237E"}
+
+- Bootstrapping allow us to obtain a **distribution** of statistics of interest (e.g., correlation coefficients), instead of a single value
+- Having a distribution allows us to directly compute useful descriptive indices, without relying on complex assumptions and analytical solutions
+- We describe a distribution of parameters with:
+  - An index of **centrality** (e.g., mean, median, MAP)
+  - An index of **dispersion** (e.g., SD, MAD)
+  - A range of **uncertainty** (e.g., Credible Intervals using ETIs or HDIs)
+- What is missing?
+  - Significance?
+  - Effect size?
+
+## How certain are we of the *direction* of the effect?
+
+- Having a distribution of effects allows us to gain information about its **direction**
+- The **direction** of the effect is the sign of the effect (e.g., positive or negative)
+- How can we compute it?
+  - We can simply compute the proportion of the distribution that is positive or negative
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Remember: TRUE = 1 and FALSE = 0
+# So we can count all TRUE by summing them
+sum(r_values > 0)  / length(r_values)
+```
+
+:::
+
+## Probability of Direction (pd)
+
+```{r}
+#| include: false
+
+pd <- sum(r_values > 0)  / length(r_values)
+```
+
+- The probability that the correlation is positive (regardless of its size) is `r insight::format_value(pd, digits=6)`
+  - $P_{(direction > 0)}$ `r insight::format_pd(pd, name="")`
+- This index is actually called the **Probability of Direction** (**pd**)
+- It is defined as the probability that the effect is positive or negative (whichever is the largest)
+- It varies between 0.50 (50\%) and 1.00 (100\%), with 0.50 indicating that the effect is equally likely to be positive or negative, and 100\% indicating that the effect is for sure positive or negative
+- We can conceptualize it as an **index of effect existence** (i.e., how likely is the effect to exist in a given direction *regardless* of its size)
+  - If $pd \rightarrow 100\%$, it means that there is certainly a positive|negative effect (but it can be small, large, or its size can be uncertain)
+
+## *pd* vs. *p*-value
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Although **conceptually distinct**, the *pd* typically very strongly correlates with one-sided *p*-values
+  - But it is **not** an index of **significance** (the interpretation is more straightforward)
+- For example, if the *pd* is > 97.5\% (0.975), then the *p*-value is typically < .05
+  - $p_{onesided} = 1 - pd$
+  - $p_{twosided} = 2(1 - pd)$
+- A function `bayestestR` exists to convert between the two indices. 
+  - Use it only to gain an intuition, **is it not a formal conversion**
+
+<!-- Talk about advantages and limitations when we re-introduce these indices in the context of Bayesian statistics
+-->
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::p_to_pd(c(0.05, 0.01, 0.001), direction = "two-sided")
+bayestestR::pd_to_p(c(0.90, 0.95), direction = "two-sided")
+```
+
+:::::
+
+::::
+
+:::: {.column }
+
+
+![](img/spiderman.png)
+
+
+::::
+
+:::
+
+## Probability of null effect?
+
+- The *pd* tells us the probability that a distribution (of an effect) is positive (> 0) or negative (< 0)
+- Can we know if the effect is larger or smaller than **zero**?
+- In other words, can we know the probability of the effect being different from 0? 
+  - Which is the goal of **Null Hypothesis Significance Testing (NHST)**
+- Well, ***not really***...
+  - The probability of a continuous distribution being different from a single value is always **infinite**
+  - Infinity of values vs. a single one, exactly 0.0000
+- What can we do?
+  - What if instead of considering "no effect" as being exactly 0.0000, we consider it as being "close to 0.0000"?
+  - What if we defined a range of "negligible" values, **equivalent to 0 for practical** purposes?
+  - This is the idea behind the **Region of Practical Equivalence** (**ROPE**)
+
+## Region of Practical Equivalence (ROPE)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- The idea of the ROPE is to **explicitly** define a range that we consider as "negligible" (i.e., equivalent to 0 for practical purposes)
+- For instance, say I decide to define a **parameter < 0.24** as negligible <sub><sup>*because why not?*</sup></sub>
+  - Justified based on e.g., prior studies, preliminary data, theoretical knowledge, ...
+  - I *preregister* this hypothesis (so that I am not accused of making this choice after seeing the results)
+- What is the probability of $parameter < |0.24|$?
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+data.frame(r = r_values) |> 
+  ggplot(aes(x=r)) +
+  geom_density(fill="blue") +
+  geom_area(data=data.frame(x=c(-0.24, 0.24)), aes(x=x, y=4), fill="red", alpha=0.5) +
+  coord_cartesian(xlim=c(-0.5, 1))
+```
+
+:::::
+
+::::
+
+:::
+
+
+## Compute ROPE
+
+::: {.columns}
+
+:::: {.column width="40%"}
+
+```{r}
+#| echo: false
+
+data.frame(r = r_values) |>
+  ggplot(aes(x=r)) +
+  geom_density(fill="blue") +
+  geom_area(data=data.frame(x=c(-0.24, 0.24)), aes(x=x, y=4), fill="red", alpha=0.5) +
+  coord_cartesian(xlim=c(-0.5, 1))
+```
+
+::::
+
+:::: {.column width="60%"}
+
+- Let's compute the **proportion of the distribution that is within the ROPE**
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+is_lower <- abs(r_values) < 0.24
+sum(is_lower) / length(is_lower)
+```
+:::::
+
+
+- `r insight::format_percent(sum(is_lower) / length(is_lower))` of the distribution is within the ROPE
+- This can also be done using the `bayestestR::rope()` function
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::rope(r_values, range = c(-0.24, 0.24), ci = 1.00)
+```
+
+:::::
+
+::::
+
+:::
+
+
+## ROPE + CI = <3
+
+::: {.columns}
+
+:::: {.column width="40%"}
+
+- We often compute the proportion of a certain **Credible Interval** that lies within the ROPE
+- The ROPE index is often computed as the **95\% CI** of the distribution that lies within the ROPE bounds
+  - Because the CI is considered to be more stable than the whole distribution, and thus the resulting index is less prone to small random fluctuations
+- **Be careful** when reading and presenting results involving ROPE: what is the ROPE range and the CI used?
+
+::::
+
+:::: {.column width="60%"}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+# ci=0.95 is the default setting for rope()
+result <- bayestestR::rope(r_values, range = c(-0.24, 0.24), ci = 0.95)
+result
+
+# The results can be plotted
+plot(result)
+```
+
+:::::
+
+::::
+
+:::
+
+## Is p-ROPE an index of significance?
+
+- This index corresponds to the **proportion of the distribution/Credible Interval that is within the ROPE**
+- *p*-ROPE ($P_{x~\in~ROPE}$) can be interpreted as an index of **significance**
+  - The probability that an effect is non-negligible
+  - i.e., "significant" is here meant in the sense of **"large enough to matter"** sense
+  - Note that *p*-ROPE index is **not** equivalent or highly correlated with *p*-values
+- Note that "**Equivalence Testing**" is sometimes presented as an alternative to Null-Hypothesis Significance Testing (NHST), and can be also used with more traditional tests (with the idea of testing against a range of pre-specified "negligible" values instead of a point-null).
+
+
+## ROPE range (1)
+
+- In the previous example, I had reasons to pick `[-0.24, 0.24]` as the ROPE range
+- In most studies, in practice, we don't have a clear reason to pick a specific range (especially in exploratory studies)
+- How can we select a **reasonable** ROPE range?
+- Let's think again about what we are doing:
+  - We are trying to estimate a correlation *r*
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+r_values <- c()  # Initialize an empty vector of r values
+for (i in 1:5000) {  # Repeat the process 5000 times
+  result <- mtcars[sample(1:nrow(mtcars), replace = TRUE), ] |>  # Sample new data
+    correlation::cor_test("mpg", "qsec")  # Compute the correlation
+  r_values <- c(r_values, result$r)  # Append the r value to the vector
+}
+```
+
+:::
+
+
+
+## ROPE range (2)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Instead of a single value, we applied a bootstrapping algorithm and obtained a **distribution** of correlation values
+- We are trying to describe this distribution using various indices
+- But given the nature of the index that we are focusing on (a correlation), we can already know some things about the distribution
+  - *r*-values are bounded between -1 and 1
+  - They are "standardized" (i.e., invariant of the unit of the variables)
+  - This is why they can be used as an index of effect size (similar to *Cohen's d*, $\eta^2$, etc.)
+
+::::
+
+:::: {.column}
+
+```{r}
+#| echo: false
+
+data.frame(r = r_values) |> 
+  ggplot(aes(x=r)) +
+  geom_density(fill="blue") +
+  coord_cartesian(xlim=c(-1, 1))
+```
+
+::::
+
+:::
+
+## ROPE range (3)
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- We can use effect size "rules of thumb" to select a ROPE range
+- Look for the help page of the `effectsize::interpret_r()` function
+  - Select the function and press `F1`
+  - Or use `?effectsize::interpret_r`
+  - Or Google `effectsize package interpret_r`
+  
+  
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+?effectsize::interpret_r
+```
+
+![](img/interpret_r.png)
+
+:::::
+
+::::
+
+:::
+
+
+## ROPE range (4)
+
+- One of the most common rules of thumb is the one proposed by Cohen (1988) suggests that *r* < 0.1 is a very small (i.e., negligible) effect
+- We can use this rule of thumb to select a ROPE range based on Cohen's (1988) interpretation guidelines `[-0.1, 0.1]`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::rope(r_values, range = c(-0.1, 0.1), ci = 0.95)
+```
+
+:::
+
+- If *p*-ROPE is lower than certain threshold (typically, `0.05`), we can conclude that the effect is not negligible (i.e., "significant")
+- While this can be done for correlations, defining an appropriate ROPE range can become difficult for other types of parameters (e.g., regression coefficients)
+- We will discuss the pros/cons of various "significance" indices later in the module
+
+## Reporting
+
+- How to report a bootstrapped correlation?
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::describe_posterior(r_values)
+```
+
+:::
+
+- Describe the "centrality" (e.g;, Median), the "uncertainty" (CI), and the "significance" (e.g., ROPE, *pd*, ...)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::describe_posterior(r_values, 
+                               centrality="mean", 
+                               dispersion=TRUE, 
+                               ci=0.90, 
+                               ci_method="hdi",
+                               rope_range =c(-0.05, 0.05), 
+                               test="rope")
+```
+
+:::
+
+- Choices must be made and justified: important to understand what the indices are and what they mean
+
+## Bootstrapping-specific indices?
+
+- Are these new indices (median, MAD, credible intervals, p-direction, ROPE) **bootstrapping**-specific?
+  - **NO!** Bootstrapping is just a method that provides a parameter **distribution** instead of point-values
+- These indices are "simply" descriptive summaries of parameter **distributions**
+- Thus, they can be used whenever we have a distributions of parameters
+- ⚠️**Spoiler Alert**⚠️ We will meet these indices again later in the module in another context...
+
+## Boostrapping: pros and cons
+
+- Is Bootstrapping the silver bullet of statistics?
+- More robust (does not depend on parametric assumptions, e.g., *t*-distribution etc.), more flexible (can be used when analytical solutions are not available)
+- Straightforward computation and interpretation of various descriptive indices (confidence intervals, etc.)
+- Cons:
+  - Computationally intensive (hence its "recent" development)
+  - Allowed by the "frequentist assumption" that the data are a random sample from the parent population
+  - In practice... it is not really the case. 
+    - Sample data is often non randomly sampled
+    - It is not always clear how to bootstrap (e.g., for repeated measures)
+  - Although boostrapping has been demonstrated to work in many cases, it intuitively *feels* weird to consider the observations as "interchangeable" 
+- Is there an alternative that combines some of the strengths of bootstrapping but without its weaknesses?
+  - [**B**]{.fragment}[**A**]{.fragment}[**Y**]{.fragment}[**E**]{.fragment}[**S**]{.fragment}
+  
+
+
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
