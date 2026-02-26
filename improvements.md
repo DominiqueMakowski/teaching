@@ -23,14 +23,20 @@
 ## 2026
 
 - Week 1: RefreshR: 2h full (had to rush a bit towards the end)
+  - Remove the fluff at the beginning 
 - Week 2: Distributions until Cauchy (had to rush a lot)
 - Week 3: Distributions from Cauchy + Frequentist (rushed, skipped the quantile function and manual computation of the p-value, but ended 10 min before the end)
--
+
+
 ## 2025
+
 - 2025: did everything in 10 weeks, but semester is 11.
-- Assignment: Make TAP 1 in-person (during week 6) + final TAP (make it report) at the end (**AFTER** the last lecture, not week 9)
 - https://github.com/benjamin-rosenbaum/bayesian-intro
+- Probably need to drop a bit of Frequentist stats to have more time on boostrapping and Bayesian
+  - Just say that *t*, *df*, p and CIs are complicated and convoluted, focus on the notion of "repeated the experiment an infinite amount of times" and then move on to bootstrapping. 
+  - Replace Week 3 Frequentist + Week 4 Boostrapping by Week 3 Freq + Boostrapping (correlation and indices of centrality), Week 4 Boostrapping (rest of indices, ROPE, application to linear models)
+- Lecture 4: Add "ROPEs don't like Defaults"
+- Lecture 4: Bootstrapping: apply bootstrapping to simple lm model, to start thinking of parameters of models as distributions 
 - Lecture 8 is too much for one (need to introduce data grids, posterior predictive checks, intercept-only models etc)
 - Lecture 8/9: change PP checks to use modelbased's estimate_predictions and estimate_relation()
-- "ROPEs don't like Defaults"
 - MCMC: read https://www.jeremykun.com/2015/04/06/markov-chain-monte-carlo-without-all-the-bullshit/

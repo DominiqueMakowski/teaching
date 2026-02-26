@@ -12,7 +12,8 @@ I also offer workshops to external universities (see [here for details](https://
 - **Week 2:** [Distributions](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/1_Distributions) (until Cauchy)
 - **Week 3:** [Frequentist Models](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/2_Frequentist)
 - **Week 4:** [Bootstrapping](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/3_Bootstrapping)
-- **Week 5:** [Bayesian Theorem](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+- **Week 5:** [Bayesian Theorem](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/4_BayesTheorem)
+- **Week 6:** [Bayes Factors (BIC Approximation)](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 ### Workshops
 
