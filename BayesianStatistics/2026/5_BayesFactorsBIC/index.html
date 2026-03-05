@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/tabby.min.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-969ddfa49e00a70eb3423444dbc81f6c.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
+
+  <meta name="author" content="Dominique MakowskiD.Makowski@sussex.ac.uk">
+  <title>Bayesian Statistics</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #e1e4e8; background-color: #24292e; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #e1e4e8; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #f97583; } /* Attribute */
+    code span.bn { color: #79b8ff; } /* BaseN */
+    code span.bu { color: #f97583; } /* BuiltIn */
+    code span.cf { color: #f97583; } /* ControlFlow */
+    code span.ch { color: #9ecbff; } /* Char */
+    code span.cn { color: #79b8ff; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #f97583; } /* DataType */
+    code span.dv { color: #79b8ff; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #f97583; font-weight: bold; } /* Extension */
+    code span.fl { color: #79b8ff; } /* Float */
+    code span.fu { color: #b392f0; } /* Function */
+    code span.im { color: #9ecbff; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #f97583; } /* Keyword */
+    code span.op { color: #e1e4e8; } /* Operator */
+    code span.ot { color: #b392f0; } /* Other */
+    code span.pp { color: #f97583; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #79b8ff; } /* SpecialChar */
+    code span.ss { color: #9ecbff; } /* SpecialString */
+    code span.st { color: #9ecbff; } /* String */
+    code span.va { color: #ffab70; } /* Variable */
+    code span.vs { color: #9ecbff; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-61f1b1f9639486d0013a71a02afd7ce5.css">
+  <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="index_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-color="black" data-background-image="https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true" data-background-opacity="0.2" class="quarto-title-block center">
+  <h1 class="title">Bayesian Statistics</h1>
+  <p class="subtitle"><strong>5. Bayes Factors (BIC approximation)</strong></p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<sub>Dominique Makowski</sub><br><sub><sup><em>D.Makowski@sussex.ac.uk</em></sup></sub> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="recap" class="slide level2 center" data-background-color="#1A237E">
+<h2>Recap</h2>
+<ul>
+<li class="fragment">We learned about the <strong>Bayes’ Theorem</strong>:
+<ul>
+<li class="fragment"><span class="math inline">\(P(H|X) =\frac{P(H)~P(X|H)}{P(X)}\)</span></li>
+</ul></li>
+<li class="fragment">And how it can be used to update our beliefs about a hypothesis given new data</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-2-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="final-nail-in-the-coffin-for-the-p-value" class="slide level2">
+<h2>Final nail in the coffin for the <em>p</em>-value</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<!-- ![](img/LuciferLikesP.jpg){width="30%"} -->
+<p><img data-src="img/BayesBurstsThePValueBalloon.jpg" style="width:45.0%"></p>
+<ul>
+<li class="fragment">Another thing often heard about the <em>p</em>-value is that it can only be used to <strong>reject</strong> the <strong>null hypothesis</strong> (effect = 0), not as an index of evidence <strong>in favour of the null</strong></li>
+<li class="fragment">This is because the <em>p</em>-value, by definition, is <strong>uniformly distributed</strong> under the null hypothesis
+<ul>
+<li class="fragment">This means that, if the null hypothesis is true, all values of the <em>p</em>-value are equally likely; <em>p</em> = .001 is just as likely as <em>p</em> = 1</li>
+</ul></li>
+</ul>
+</div><div class="column">
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>) {</span>
+<span id="cb1-3"><a href="" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb1-4"><a href="" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb1-5"><a href="" aria-hidden="true" tabindex="-1"></a>  test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(x, y)</span>
+<span id="cb1-6"><a href="" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">c</span>(p, test<span class="sc">$</span>p.value)</span>
+<span id="cb1-7"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">p =</span> p) <span class="sc">|&gt;</span> </span>
+<span id="cb1-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>p)) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">40</span>, <span class="at">color=</span><span class="st">"white"</span>, <span class="at">fill=</span><span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"p-values"</span>, <span class="at">y=</span><span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb1-13"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="evidence-against-the-null-hypothesis" class="slide level2">
+<h2>Evidence against the null hypothesis?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li class="fragment">Altough Frequentists recently came up with some workarounds (region of practical equivalence testing), it is still seen as a limitation of the Frequentist framework</li>
+<li class="fragment">This is problematic in science because we are often interested in disproving a hypothesis, or proving that there is no effect</li>
+<li class="fragment">Does Uncle Bayes have a trick in his hat?</li>
+</ul>
+</div><div class="column">
+<p><img data-src="img/BayesMagic.jpg"></p>
+</div></div>
+</section>
+<section id="the-likelihood-as-a-known-model" class="slide level2">
+<h2>The “Likelihood” as a <em>known</em> model</h2>
+<div class="columns">
+<div class="column" style="font-size: 85%;">
+<ul>
+<li class="fragment"><strong>Bayes’ Theorem</strong>: <span class="math inline">\(P(H|data) =P(H)~P(data|H)\)</span>
+<ul>
+<li class="fragment">Bayes’ theorem relates the probability of a hypothesis (H) given some observed evidence (data X) to the probability of data given the hypothesis, as well as the prior probability of the hypothesis</li>
+</ul></li>
+<li class="fragment"><span class="math inline">\(P(data|H)\)</span> is the <strong>likelihood</strong> of the data given a hypothesis</li>
+<li class="fragment">It typically corresponds to a “model of the world”</li>
+<li class="fragment">In the previous example, we had “the model” of coin tosses. We know the likelihood of outcomes given various coin types because it corresponds to a physical reality (a fair coin gives 50% heads). So the “model” was obvious and easy to define.</li>
+</ul>
+</div><div class="column" style="font-size: 80%;">
+<div class="fragment">
+<p><img data-src="img/likelihood1.png"></p>
+</div>
+<ul>
+<li class="fragment">Conceptually, in this experiment:
+<ul>
+<li class="fragment">The <strong>likelihood</strong> was a statistical model linking a parameter <strong><em>x</em></strong> (the probability by which a coin is biased towards heads: 0.3, 0.4, 0.5, 0.6, 0.7) to the outcome (heads).</li>
+<li class="fragment">The <strong>prior</strong> corresponded to the distribution of our credibility across the different possible <strong><em>x</em></strong> values.</li>
+<li class="fragment">The <strong>posterior</strong> corresponded to the updated distribution of our credibility across the different possible <strong><em>x</em></strong> values after observing the data (coin tosses).</li>
+</ul></li>
+</ul>
+</div></div>
+</section>
+<section id="the-likelihood-as-a-model-with-probabilistic-parameters" class="slide level2">
+<h2>The “Likelihood” as a model with <em>probabilistic</em> parameters</h2>
+<div class="columns">
+<div class="column" style="width:65%;">
+<ul>
+<li class="fragment">We often have general beliefs about probabilistic models.
+<ul>
+<li class="fragment"><em>What are the odds that more type of coints exist?</em></li>
+<li class="fragment"><em>What are the odds that my model of the coin is True</em></li>
+<li class="fragment">…</li>
+</ul></li>
+<li class="fragment">In practice, the model’s likelihood depends on uncertain parameter over which we have other priors, or a combination of priors (e.g., Intercept + Slope)</li>
+</ul>
+</div><div class="column" style="width:35%;">
+<p><img data-src="img/likelihood2.png"></p>
+</div></div>
+<ul>
+<li class="fragment">The “likelihood”, as well as the “hypothesis”, can represent different things (a statistical model, beliefs about whether a general hypothesis is True, etc.)</li>
+<li class="fragment">Problems can be specified in different ways (it is flexible framework)</li>
+<li class="fragment">In typical real-life statistical scenarios, the <strong>likelihood</strong> term <span class="math inline">\(P(data|H)\)</span> is very complex to establish mathematically (i.e., it is hard to compute/approximate it)</li>
+<li class="fragment">But it is not impossible. And accessing the likelihood is very useful…</li>
+</ul>
+</section>
+<section id="the-likelihood-summary" class="slide level2">
+<h2>The “Likelihood”: Summary</h2>
+<ul>
+<li class="fragment">The likelihood <span class="math inline">\(P(data|H)\)</span> represents “the probability of the data given a hypothesis”</li>
+<li class="fragment">This hypothesis can be:
+<ul>
+<li class="fragment">A statistical model with fixed and known parameters (e.g., <span class="math inline">\(y = 2x + 3\)</span>)</li>
+<li class="fragment">A statistical model with unknown (probabilistic) parameters (e.g., <span class="math inline">\(y = \beta x + Intercept\)</span> with <span class="math inline">\(\beta \sim Normal(0, 1)\)</span> and <span class="math inline">\(Intercept \sim Normal(3, 2)\)</span>)</li>
+<li class="fragment">Any other statement about the world (e.g., a hypothesis like “this model is <em>true</em>”)</li>
+</ul></li>
+<li class="fragment">Mathematically computing the value of <span class="math inline">\(P(data|H)\)</span> is hard (aside from the first case)</li>
+</ul>
+</section>
+<section id="bayes-factor-bf" class="slide level2">
+<h2>Bayes Factor (BF)</h2>
+<ul>
+<li class="fragment">Bayes’ theorem provides a natural way to test hypotheses and compare models. Suppose we have two competing hypotheses: <strong>H1</strong> and an alternative hypothesis <strong>H0</strong></li>
+<li class="fragment">What if we compared the likelihood of the data given two competing hypotheses (i.e., models)?
+<ul>
+<li class="fragment"><span class="math inline">\(P(data|H_{0})\)</span> / <span class="math inline">\(P(data|H_{1})\)</span></li>
+</ul></li>
+<li class="fragment">This ratio of likelihoods is known as the <strong>Bayes Factor</strong> (BF)
+<ul>
+<li class="fragment">It quantifies the relative strength of evidence in favor of <strong>one hypothesis over another</strong> based on the observed evidence (data)</li>
+<li class="fragment">It tells us how much more likely the data (evidence) is under one hypothesis compared to another (often taking into account prior probabilities in the definition of the likelihood model)</li>
+</ul></li>
+<li class="fragment"><span class="math inline">\(BF_{10} = \frac{P(data|H_{1})}{P(data|H_{0})}\)</span></li>
+<li class="fragment"><span class="math inline">\(BF_{01} = \frac{P(data|H_{0})}{P(data|H_{1})}\)</span>
+<ul>
+<li class="fragment">Note the convention of writing what is the numerator</li>
+</ul></li>
+</ul>
+<!-- - From Bayes' theorem, it follows that:  -->
+<!-- - $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior~odds} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior~odds}$ -->
+</section>
+<section id="bfs-with-bic-approximation" class="slide level2 scrollable">
+<h2>BFs with BIC approximation</h2>
+<ul>
+<li class="fragment">The Bayes Factor is a ratio of likelihoods, which is often difficult to compute, especially for Bayesian models where parameters are themselves probabilistic</li>
+<li class="fragment">Wagenmakers (2007)<sup>1</sup> <sub><sup><em>(one of the principal proponent of Bayes factors)</em></sup></sub> proposed an approximation of the Bayes Factor based on the <strong>Bayesian Information Criterion</strong> (BIC), that can easily be computed for traditional Frequentist models (e.g., linear models)</li>
+<li class="fragment"><span class="math inline">\(BF_{01} \approx exp(\frac{BIC_{1} - BIC_{0}}{2})\)</span></li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Wagenmakers, E. J. (2007). A practical solution to the pervasive problems of p values. Psychonomic bulletin &amp; review, 14(5), 779-804.</p></li></ol></aside></section>
+<section id="model-0-qsec-mpg" class="slide level2">
+<h2>Model 0: qsec ~ mpg</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars[<span class="fu">c</span>(<span class="st">"mpg"</span>, <span class="st">"qsec"</span>, <span class="st">"wt"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg  qsec    wt
+Mazda RX4         21.0 16.46 2.620
+Mazda RX4 Wag     21.0 17.02 2.875
+Datsun 710        22.8 18.61 2.320
+Hornet 4 Drive    21.4 19.44 3.215
+Hornet Sportabout 18.7 17.02 3.440
+Valiant           18.1 20.22 3.460</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>mpg, <span class="at">y=</span>qsec)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">"y ~ x"</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column">
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>model0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars)</span>
+<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = qsec ~ mpg, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.8161 -1.0287  0.0954  0.8623  4.7149 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 15.35477    1.02978  14.911 2.05e-15 ***
+mpg          0.12414    0.04916   2.525   0.0171 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.65 on 30 degrees of freedom
+Multiple R-squared:  0.1753,    Adjusted R-squared:  0.1478 
+F-statistic: 6.377 on 1 and 30 DF,  p-value: 0.01708</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment"><code>mpg</code> is a significant predictor of <code>qsec</code> (<span class="math inline">\(\beta\)</span> = 0.12, <em>p</em> &lt; .05)</li>
+<li class="fragment">Is it worth it to add another predictor? Does it improve the model?</li>
+</ul>
+</div></div>
+</section>
+<section id="model-1-qsec-mpg-wt" class="slide level2">
+<h2>Model 1: qsec ~ mpg + wt</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>wt, <span class="at">y=</span>qsec)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> <span class="st">"y ~ x"</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Do you think adding <code>wt</code> will improve the model?</li>
+</ul>
+</div><div class="column">
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> mpg <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = qsec ~ mpg + wt, data = mtcars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.1092 -0.9617 -0.2343  0.8399  4.2769 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)  6.92949    3.53431   1.961   0.0596 . 
+mpg          0.32039    0.09138   3.506   0.0015 **
+wt           1.39324    0.56286   2.475   0.0194 * 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.524 on 29 degrees of freedom
+Multiple R-squared:  0.3191,    Adjusted R-squared:  0.2722 
+F-statistic: 6.797 on 2 and 29 DF,  p-value: 0.003796</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Be careful! A model with multiple predictors is different from individual models taken separately (because variables interact with each other)</li>
+</ul>
+</div></div>
+<ul>
+<li class="fragment">Is <strong>model1</strong> better than <strong>model0</strong>?</li>
+<li class="fragment">Higher R2, but more parameters (more complex model). Comparing BICs is an alternative that takes into account the number of parameters</li>
+</ul>
+</section>
+<section id="extract-bics" class="slide level2">
+<h2>Extract BICs</h2>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>In R, functions can have aliases (i.e., two names for the same function):</p>
+<ul>
+<li class="fragment">📦 <strong>performance</strong>: <code>model_performance()</code> = <code>performance()</code></li>
+<li class="fragment">📦 <strong>parameters</strong>: <code>model_parameters()</code> = <code>parameters()</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="" aria-hidden="true" tabindex="-1"></a>perf0 <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">performance</span>(model0)</span>
+<span id="cb10-2"><a href="" aria-hidden="true" tabindex="-1"></a>perf0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Indices of model performance
+
+AIC     |    AICc |     BIC |    R2 | R2 (adj.) |  RMSE | Sigma
+---------------------------------------------------------------
+126.781 | 127.638 | 131.178 | 0.175 |     0.148 | 1.597 | 1.650</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a>bic0 <span class="ot">&lt;-</span> perf0<span class="sc">$</span>BIC</span>
+<span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a>bic0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 131.1783</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="" aria-hidden="true" tabindex="-1"></a>bic1 <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">performance</span>(model1)<span class="sc">$</span>BIC</span>
+<span id="cb14-2"><a href="" aria-hidden="true" tabindex="-1"></a>bic1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 128.5105</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Normally, the lower the BIC, the better the model</li>
+<li class="fragment">Hard to interpret in absolute terms (the unit is meaningless), but we can compare models (if they are related to the same data)</li>
+</ul>
+</section>
+<section id="compare-bics" class="slide level2">
+<h2>Compare BICs</h2>
+<ul>
+<li class="fragment"><span class="math inline">\(BF_{10} \approx exp(\frac{BIC_{0} - BIC_{1}}{2})\)</span></li>
+<li class="fragment">We can apply the formula to <code>bic1</code> and <code>bic0</code></li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="" aria-hidden="true" tabindex="-1"></a>bf10 <span class="ot">&lt;-</span> <span class="fu">exp</span>((bic0 <span class="sc">-</span> bic1) <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb16-2"><a href="" aria-hidden="true" tabindex="-1"></a>bf10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.795896</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">You computed an approximation of the Bayes Factor “by hand”!</li>
+</ul>
+</section>
+<section id="using-bayestestr" class="slide level2">
+<h2>Using <code>bayestestR</code></h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model1, <span class="at">denominator=</span>model0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes Factors for Model Comparison
+
+         Model      BF
+[model1] mpg + wt 3.80
+
+* Against Denominator: [model0] mpg
+*   Bayes Factor Type: BIC approximation</code></pre>
+</div>
+</div>
+</section>
+<section id="bf10-vs.-bf01" class="slide level2">
+<h2>BF10 vs.&nbsp;BF01</h2>
+<ul>
+<li class="fragment">Bayes factors are a <strong>ratio</strong> of likelihood of data under some hypothesis</li>
+<li class="fragment">They quantify “how much” the data is more likely under one model compared to another</li>
+<li class="fragment"><span class="math inline">\(BF_{10} = 3.80\)</span> means the data is 3.80 times more likely under <strong>model1</strong> than <strong>model0</strong></li>
+<li class="fragment"><strong>Importantly</strong>, BFs are “reversable”:</li>
+<li class="fragment"><span class="math inline">\(BF_{01} = \frac{1}{BF_{10}} = 1 / 3.80 = 0.263\)</span></li>
+<li class="fragment">The data is 0.26 times more likely under <strong>model0</strong> than <strong>model1</strong></li>
+<li class="fragment">We gather evidence <strong>both ways</strong> (in <em>favour</em> or <em>against</em> a hypothesis)</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model0, <span class="at">denominator=</span>model1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes Factors for Model Comparison
+
+         Model    BF
+[model0] mpg   0.263
+
+* Against Denominator: [model1] mpg + wt
+*   Bayes Factor Type: BIC approximation</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Is this “big”? How to interpret BFs?</li>
+</ul>
+</section>
+<section id="bayes-factor-interpretation" class="slide level2">
+<h2>Bayes Factor Interpretation</h2>
+<div style="font-size: 90%">
+<ul>
+<li class="fragment">The standard threshold for a “significant” BF is 3 or 10
+<ul>
+<li class="fragment"><em>Jeffreys, H. (1961), Theory of Probability, 3rd ed., Oxford University Press, Oxford</em></li>
+</ul></li>
+</ul>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Bayes Factor (<span class="math inline">\(BF_{10}\)</span>)</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&gt; 100</td>
+<td>Extreme evidence for H1</td>
+</tr>
+<tr class="even">
+<td>30 – 100</td>
+<td>Very strong evidence for H1</td>
+</tr>
+<tr class="odd">
+<td>10 – 30</td>
+<td>Strong evidence for H1</td>
+</tr>
+<tr class="even">
+<td>3 – 10</td>
+<td>Moderate evidence for H1</td>
+</tr>
+<tr class="odd">
+<td>1 – 3</td>
+<td>Anecdotal evidence for H1</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>No evidence</td>
+</tr>
+<tr class="odd">
+<td>1/3 – 1</td>
+<td>Anecdotal evidence for H0</td>
+</tr>
+<tr class="even">
+<td>1/3 – 1/10</td>
+<td>Moderate evidence for null H0</td>
+</tr>
+<tr class="odd">
+<td>1/10 – 1/30</td>
+<td>Strong evidence for null H0</td>
+</tr>
+<tr class="even">
+<td>1/30 – 1/100</td>
+<td>Very strong evidence for H0</td>
+</tr>
+<tr class="odd">
+<td>&lt; 1/100</td>
+<td>Extreme evidence for H0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="bayes-factor-interpretation-1" class="slide level2">
+<h2>Bayes Factor Interpretation</h2>
+<ul>
+<li class="fragment">The <code>effectsize</code> package provides many automated interpretation functions</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="" aria-hidden="true" tabindex="-1"></a>effectsize<span class="sc">::</span><span class="fu">interpret_bf</span>(bf10)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "moderate evidence in favour of"
+(Rules: jeffreys1961)</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Note that because BFs can be very big or very small, they are sometimes presented on the log scale (<span class="math inline">\(log~BF_{10}\)</span>)</li>
+<li class="fragment">Importantly, <span class="math inline">\(BF = 1\)</span> (no evidence either side) corresponds to <span class="math inline">\(log~BF = 0\)</span></li>
+<li class="fragment">Easy interpretation: negative <span class="math inline">\(log~BF\)</span> numbers mean <span class="math inline">\(BF\)</span> &lt; 1 mean evidence <strong>against</strong></li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="fl">3.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.335001</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">1</span><span class="sc">/</span><span class="fl">3.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.335001</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">To “unlog” a logged BF, use <code>exp()</code></li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="fl">3.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.335001</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">1.335001</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.8</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="exercice" class="slide level2" data-background-color="#FFAB91">
+<h2>Exercice</h2>
+<ul>
+<li class="fragment">Compute the Bayes Factor for the following models: <code>qsec ~ wt</code> vs.&nbsp;a <strong>constant model</strong></li>
+<li class="fragment">A constant model, aka an “intercept-only” model, is a model with no predictors (only an intercept)</li>
+<li class="fragment">A constant model basically predicts the mean of the outcome variable for all observations</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(mtcars<span class="sc">$</span>qsec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17.84875</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="" aria-hidden="true" tabindex="-1"></a>model0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> mtcars)</span>
+<span id="cb34-2"><a href="" aria-hidden="true" tabindex="-1"></a>model0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = qsec ~ 1, data = mtcars)
+
+Coefficients:
+(Intercept)  
+      17.85  </code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Compute the BF and interpret it. Make a conclusion</li>
+</ul>
+</section>
+<section id="solution" class="slide level2">
+<h2>Solution</h2>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(qsec <span class="sc">~</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb36-2"><a href="" aria-hidden="true" tabindex="-1"></a>model1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = qsec ~ wt, data = mtcars)
+
+Coefficients:
+(Intercept)           wt  
+    18.8753      -0.3191  </code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model1, <span class="at">denominator=</span>model0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes Factors for Model Comparison
+
+         Model    BF
+[model1] wt    0.290
+
+* Against Denominator: [model0] (Intercept only)
+*   Bayes Factor Type: BIC approximation</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">BF &lt; 1/3 (0.3333)</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="" aria-hidden="true" tabindex="-1"></a>effectsize<span class="sc">::</span><span class="fu">interpret_bf</span>(<span class="fl">0.290</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "moderate evidence against"
+(Rules: jeffreys1961)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="exercice-2" class="slide level2" data-background-color="#FFAB91">
+<h2>Exercice 2</h2>
+<ul>
+<li class="fragment">“I try to analyze the linear relationship between the sepal length and the sepal width of the iris flowers (<code>iris</code> built in dataset). Should I control for <em>Species</em>?”</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width, <span class="at">data =</span> iris)</span>
+<span id="cb42-2"><a href="" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width <span class="sc">+</span> Species, <span class="at">data =</span> iris)</span>
+<span id="cb42-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="" aria-hidden="true" tabindex="-1"></a>bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(m1, <span class="at">denominator=</span>m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bayes Factors for Model Comparison
+
+     Model             BF
+[m1] Sepal.Width 2.96e-40
+
+* Against Denominator: [m2] Sepal.Width + Species
+*   Bayes Factor Type: BIC approximation</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">Pizzas can help us get a intuitive feeling for BFs</li>
+</ul>
+</section>
+<section id="section" class="slide level2" data-background-image="img/LetsPokeAPizza1.jpg" data-background-size="contain">
+<h2>1</h2>
+</section>
+<section id="section-1" class="slide level2" data-background-image="img/LetsPokeAPizza2.jpg" data-background-size="contain">
+<h2>2</h2>
+</section>
+<section id="pizza-plot" class="slide level2">
+<h2>Pizza plot</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bayestestR<span class="sc">::</span><span class="fu">bayesfactor_models</span>(model1, <span class="at">denominator=</span>model0)) <span class="sc">+</span></span>
+<span id="cb44-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"yellow"</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-23-1.png" width="3000" class="r-stretch"></section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<ul>
+<li class="fragment">Bayes Factors are indices that compare two “hypotheses”</li>
+<li class="fragment">They correspond to the ratio of “likelihoods”</li>
+<li class="fragment">They can be approximated for frequentist models via the BIC-approximation</li>
+<li class="fragment">There are interpretation rules of thumb (&gt; 3, &gt; 10, &gt; 30, &gt; 100)</li>
+<li class="fragment">They can be expressed on the log scale</li>
+</ul>
+</section>
+<section id="the-end-for-now" class="slide level2 center" data-background-color="#212121">
+<h2>The End <sub><sup>(for now)</sup></sub></h2>
+<p><em>Thank you!</em></p>
+
+</section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png" class="slide-logo"></p>
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="index_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="index_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="index_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="index_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="index_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="index_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

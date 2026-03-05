@@ -1,0 +1,605 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**5. Bayes Factors (BIC approximation)**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/480px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+```
+
+## Recap {.center background-color="#1A237E"}
+
+- We learned about the **Bayes' Theorem**: 
+  - $P(H|X) =\frac{P(H)~P(X|H)}{P(X)}$
+- And how it can be used to update our beliefs about a hypothesis given new data
+
+::: {.fragment}
+
+```{r}
+#| fig-height: 3.5
+
+cointypes <- c(0.3, 0.4, 0.5, 0.6, 0.7)
+posterior <- c(1, 2, 3, 2, 1)  # We assign "weights" to each coin type
+posterior <- posterior / sum(posterior)  
+likelihood <- c(0.3, 0.4, 0.5, 0.6, 0.7) 
+
+dat <- data.frame()
+for(n in 1:3) {
+  posterior <- posterior * likelihood
+  posterior <- posterior / sum(posterior)
+
+  dat <- rbind(dat, 
+               data.frame(cointypes=cointypes, posterior=posterior, prior_type="Prior", nobs=n, 
+                          prior = c(1, 2, 3, 2, 1) / 9))
+  }
+
+dat[dat$n==3, ] |> 
+  ggplot(aes(x=cointypes, y=posterior)) +
+  geom_line(data=dat[dat$n==1, ], aes(y=prior, color="Prior")) +
+  geom_point(data=dat[dat$n==1, ], aes(y=prior, color="Prior"), size=3) +
+  geom_line(aes(color="Posterior"), linewidth=1) + 
+  geom_point(aes(color="Posterior"), size=3) +  
+  scale_color_manual(values=c(Prior="blue", Posterior="#4CAF50")) +
+  scale_x_continuous(breaks=cointypes, 
+                     labels = paste0(cointypes, "\n", c("Biased", "Imperfect", "Fair", "Imperfect", "Biased"))) +
+  labs(x="Coin type", y="Probability", title="After 3 coin toss") +
+  theme_bw()
+```
+
+:::
+
+
+
+
+## Final nail in the coffin for the *p*-value
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+<!-- ![](img/LuciferLikesP.jpg){width="30%"} -->
+![](img/BayesBurstsThePValueBalloon.jpg){width="45%"} 
+
+- Another thing often heard about the *p*-value is that it can only be used to **reject** the **null hypothesis** (effect = 0), not as an index of evidence **in favour of the null**
+- This is because the *p*-value, by definition, is **uniformly distributed** under the null hypothesis
+  - This means that, if the null hypothesis is true, all values of the *p*-value are equally likely; *p* = .001 is just as likely as *p* = 1
+
+
+
+::::
+
+:::: {.column}
+
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+p <- c()
+for(i in 1:10000) {
+  x <- rnorm(100)
+  y <- rnorm(100)
+  test <- cor.test(x, y)
+  p <- c(p, test$p.value)
+}
+
+data.frame(p = p) |> 
+  ggplot(aes(x=p)) +
+  geom_histogram(bins=40, color="white", fill="grey") +
+  labs(x="p-values", y="Count") +
+  theme_bw()
+```
+
+:::::
+
+::::
+
+:::
+
+## Evidence against the null hypothesis?
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+- Altough Frequentists recently came up with some workarounds (region of practical equivalence testing), it is still seen as a limitation of the Frequentist framework
+- This is problematic in science because we are often interested in disproving a hypothesis, or proving that there is no effect
+- Does Uncle Bayes have a trick in his hat?
+
+::::
+
+:::: {.column}
+
+![](img/BayesMagic.jpg)
+
+
+::::
+
+:::
+
+## The "Likelihood" as a *known* model
+
+::: {.columns}
+
+:::: {.column width="55%" style="font-size: 85%;"}
+
+- **Bayes' Theorem**: $P(H|data) =P(H)~P(data|H)$
+  - Bayes' theorem relates the probability of a hypothesis (H) given some observed evidence (data X) to the probability of data given the hypothesis, as well as the prior probability of the hypothesis
+- $P(data|H)$ is the **likelihood** of the data given a hypothesis
+- It typically corresponds to a "model of the world"
+- In the previous example, we had "the model" of coin tosses. We know the likelihood of outcomes given various coin types because it corresponds to a physical reality (a fair coin gives 50% heads). So the "model" was obvious and easy to define.
+
+
+::::
+
+:::: {.column width="45%" style="font-size: 80%;"}
+
+::::: {.fragment}
+
+![](img/likelihood1.png)
+
+:::::
+
+- Conceptually, in this experiment:
+  - The **likelihood** was a statistical model linking a parameter ***x*** (the probability by which a coin is biased towards heads: 0.3, 0.4, 0.5, 0.6, 0.7) to the outcome (heads). 
+  - The **prior** corresponded to the distribution of our credibility across the different possible ***x*** values.
+  - The **posterior** corresponded to the updated distribution of our credibility across the different possible ***x*** values after observing the data (coin tosses).
+
+::::
+
+:::
+
+## The "Likelihood" as a model with *probabilistic* parameters
+
+
+::: {.columns}
+
+:::: {.column width="65%"}
+
+- We often have general beliefs about probabilistic models. 
+  - *What are the odds that more type of coints exist?* 
+  - *What are the odds that my model of the coin is True*
+  - ...
+- In practice, the model's likelihood depends on uncertain parameter over which we have other priors, or a combination of priors (e.g., Intercept + Slope)
+
+::::
+
+:::: {.column width="35%"}
+
+![](img/likelihood2.png)
+
+
+::::
+
+:::
+
+- The "likelihood", as well as the "hypothesis", can represent different things (a statistical model, beliefs about whether a general hypothesis is True, etc.)
+- Problems can be specified in different ways (it is flexible framework)
+- In typical real-life statistical scenarios, the **likelihood** term $P(data|H)$ is very complex to establish mathematically (i.e., it is hard to compute/approximate it)
+- But it is not impossible. And accessing the likelihood is very useful...
+  
+## The "Likelihood": Summary
+
+- The likelihood $P(data|H)$ represents "the probability of the data given a hypothesis"
+- This hypothesis can be:
+  - A statistical model with fixed and known parameters (e.g., $y = 2x + 3$)
+  - A statistical model with unknown (probabilistic) parameters (e.g., $y = \beta x + Intercept$ with $\beta \sim Normal(0, 1)$ and $Intercept \sim Normal(3, 2)$)
+  - Any other statement about the world (e.g., a hypothesis like "this model is *true*")
+- Mathematically computing the value of $P(data|H)$ is hard (aside from the first case)
+
+## Bayes Factor (BF) 
+
+- Bayes' theorem provides a natural way to test hypotheses and compare models. Suppose we have two competing hypotheses: **H1** and an alternative hypothesis **H0**
+- What if we compared the likelihood of the data given two competing hypotheses (i.e., models)?
+  - $P(data|H_{0})$ / $P(data|H_{1})$
+- This ratio of likelihoods is known as the **Bayes Factor** (BF)
+  - It quantifies the relative strength of evidence in favor of **one hypothesis over another** based on the observed evidence (data)
+  - It tells us how much more likely the data (evidence) is under one hypothesis compared to another (often taking into account prior probabilities in the definition of the likelihood model)
+- $BF_{10} = \frac{P(data|H_{1})}{P(data|H_{0})}$
+- $BF_{01} = \frac{P(data|H_{0})}{P(data|H_{1})}$
+  - Note the convention of writing what is the numerator
+
+<!-- - From Bayes' theorem, it follows that:  -->
+<!-- - $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior~odds} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior~odds}$ -->
+
+## BFs with BIC approximation
+
+- The Bayes Factor is a ratio of likelihoods, which is often difficult to compute, especially for Bayesian models where parameters are themselves probabilistic
+- Wagenmakers (2007)^[Wagenmakers, E. J. (2007). A practical solution to the pervasive problems of p values. Psychonomic bulletin & review, 14(5), 779-804.] <sub><sup>*(one of the principal proponent of Bayes factors)*</sup></sub> proposed an approximation of the Bayes Factor based on the **Bayesian Information Criterion** (BIC), that can easily be computed for traditional Frequentist models (e.g., linear models)
+- $BF_{01} \approx exp(\frac{BIC_{1} - BIC_{0}}{2})$
+
+## Model 0: qsec ~ mpg
+
+::: {.columns}
+
+:::: {.column width="50%"}
+```{r}
+#| echo: true
+
+head(mtcars[c("mpg", "qsec", "wt")])
+
+mtcars |> 
+  ggplot(aes(x=mpg, y=qsec)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = "y ~ x") +
+  theme_bw()
+```
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+model0 <- lm(qsec ~ mpg, data = mtcars)
+summary(model0)
+```
+
+:::::
+
+- `mpg` is a significant predictor of `qsec` ($\beta$ = 0.12, *p* < .05)
+- Is it worth it to add another predictor? Does it improve the model?
+
+::::
+
+:::
+
+## Model 1: qsec ~ mpg + wt
+
+::: {.columns}
+
+:::: {.column width="50%"}
+
+```{r}
+#| echo: true
+
+mtcars |> 
+  ggplot(aes(x=wt, y=qsec)) +
+  geom_point() +
+  geom_smooth(method="lm", formula = "y ~ x") +
+  theme_bw()
+```
+
+- Do you think adding `wt` will improve the model?
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+model1 <- lm(qsec ~ mpg + wt, data = mtcars)
+summary(model1)
+```
+
+:::::
+
+- Be careful! A model with multiple predictors is different from individual models taken separately (because variables interact with each other)
+
+
+::::
+
+:::
+
+- Is **model1** better than **model0**?
+- Higher R2, but more parameters (more complex model). Comparing BICs is an alternative that takes into account the number of parameters
+
+## Extract BICs
+
+::: {.callout-tip}
+
+In R, functions can have aliases (i.e., two names for the same function):
+
+- 📦 **performance**: `model_performance()` = `performance()`
+- 📦 **parameters**: `model_parameters()` = `parameters()` 
+
+:::
+
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+perf0 <- performance::performance(model0)
+perf0
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bic0 <- perf0$BIC
+bic0
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bic1 <- performance::performance(model1)$BIC
+bic1
+```
+
+:::
+
+- Normally, the lower the BIC, the better the model
+- Hard to interpret in absolute terms (the unit is meaningless), but we can compare models (if they are related to the same data)
+
+## Compare BICs
+
+- $BF_{10} \approx exp(\frac{BIC_{0} - BIC_{1}}{2})$
+- We can apply the formula to `bic1` and `bic0`
+
+
+:::: {.fragment}
+
+```{r}
+#| echo: true
+
+bf10 <- exp((bic0 - bic1) / 2)
+bf10
+```
+
+::::
+
+- You computed an approximation of the Bayes Factor "by hand"!
+
+## Using `bayestestR`
+
+```{r}
+#| echo: true
+
+bayestestR::bayesfactor_models(model1, denominator=model0)
+```
+
+
+## BF10 vs. BF01
+
+- Bayes factors are a **ratio** of likelihood of data under some hypothesis
+- They quantify "how much" the data is more likely under one model compared to another
+- $BF_{10} = 3.80$ means the data is 3.80 times more likely under **model1** than **model0**
+- **Importantly**, BFs are "reversable":
+- $BF_{01} = \frac{1}{BF_{10}} = 1 / 3.80 = 0.263$
+- The data is 0.26 times more likely under **model0** than **model1**
+- We gather evidence **both ways** (in *favour* or *against* a hypothesis)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::bayesfactor_models(model0, denominator=model1)
+```
+
+:::
+
+- Is this "big"? How to interpret BFs?
+
+## Bayes Factor Interpretation
+
+::: {style="font-size: 90%"}
+
+- The standard threshold for a "significant" BF is 3 or 10
+  - *Jeffreys, H. (1961), Theory of Probability, 3rd ed., Oxford University Press, Oxford*
+
+:::: {.fragment}
+
+| Bayes Factor ($BF_{10}$)       | Interpretation        |
+|--------------------|-----------------------------------|
+| > 100              | Extreme evidence for H1           |
+| 30 – 100           | Very strong evidence for H1       |
+| 10 – 30            | Strong evidence for H1            |
+| 3 – 10             | Moderate evidence for H1          |
+| 1 – 3              | Anecdotal evidence for H1         |
+| 1                  | No evidence                       |
+| 1/3 – 1            | Anecdotal evidence for H0         |
+| 1/3 – 1/10         | Moderate evidence for null H0     |
+| 1/10 – 1/30        | Strong evidence for null H0       |
+| 1/30 – 1/100       | Very strong evidence for H0       |
+| < 1/100            | Extreme evidence for H0           |
+
+::::
+
+:::
+
+## Bayes Factor Interpretation
+
+- The `effectsize` package provides many automated interpretation functions
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+effectsize::interpret_bf(bf10)
+```
+
+:::
+
+- Note that because BFs can be very big or very small, they are sometimes presented on the log scale ($log~BF_{10}$)
+- Importantly, $BF = 1$ (no evidence either side) corresponds to $log~BF = 0$
+- Easy interpretation: negative $log~BF$ numbers mean $BF$ < 1 mean evidence **against**
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+log(3.8)
+log(1/3.8)
+```
+
+:::
+
+
+- To "unlog" a logged BF, use `exp()`
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+log(3.8)
+exp(1.335001)
+```
+
+:::
+
+
+## Exercice {background-color="#FFAB91"}
+
+- Compute the Bayes Factor for the following models: `qsec ~ wt` vs. a **constant model**
+- A constant model, aka an "intercept-only" model, is a model with no predictors (only an intercept)
+- A constant model basically predicts the mean of the outcome variable for all observations
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mean(mtcars$qsec)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model0 <- lm(qsec ~ 1, data = mtcars)
+model0
+```
+
+:::
+
+
+- Compute the BF and interpret it. Make a conclusion
+
+## Solution
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model1 <- lm(qsec ~ wt, data = mtcars)
+model1
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+bayestestR::bayesfactor_models(model1, denominator=model0)
+```
+
+:::
+
+- BF < 1/3 (0.3333)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+effectsize::interpret_bf(0.290)
+```
+
+:::
+
+
+## Exercice 2 {background-color="#FFAB91"}
+
+- "I try to analyze the linear relationship between the sepal length and the sepal width of the iris flowers (`iris` built in dataset). Should I control for *Species*?"
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+m1 <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+m2 <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
+
+bayestestR::bayesfactor_models(m1, denominator=m2)
+```
+
+:::
+
+- Pizzas can help us get a intuitive feeling for BFs
+
+## 1 {background-image="img/LetsPokeAPizza1.jpg" background-size="contain"}
+
+## 2 {background-image="img/LetsPokeAPizza2.jpg" background-size="contain"}
+
+## Pizza plot
+
+```{r}
+#| echo: true
+
+plot(bayestestR::bayesfactor_models(model1, denominator=model0)) +
+  scale_fill_manual(values = c("red", "yellow")) 
+```
+
+## Summary
+
+- Bayes Factors are indices that compare two "hypotheses"
+- They correspond to the ratio of "likelihoods"
+- They can be approximated for frequentist models via the BIC-approximation
+- There are interpretation rules of thumb (> 3, > 10, > 30, > 100)
+- They can be expressed on the log scale
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+
+
+
+*Thank you!*
+
+
+
