@@ -26,7 +26,7 @@
   - Remove the fluff at the beginning 
 - Week 2: Distributions until Cauchy (had to rush a lot)
 - Week 3: Distributions from Cauchy + Frequentist (rushed, skipped the quantile function and manual computation of the p-value, but ended 10 min before the end)
-
+- Week 5 and 6 on BFs: light, could make it more compact
 
 ## 2025
 

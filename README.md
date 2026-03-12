@@ -14,7 +14,8 @@ I also offer workshops to external universities (see [here for details](https://
 - **Week 4:** [Bootstrapping](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/3_Bootstrapping)
 - **Week 5:** [Bayesian Theorem](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/4_BayesTheorem)
 - **Week 6:** [Bayes Factors (BIC Approximation)](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/5_BayesFactorsBIC)
-- **Week 7:** [Bayes Factors](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+- **Week 7:** [Bayes Factors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/6_BayesFactors)
+- **Week 8:** [Posteriors](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 ### Workshops
 

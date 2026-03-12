@@ -134,6 +134,12 @@ brm(mpg ~ wt, data=mtcars)
 - How we can set priors over parameters of interest (e.g., correlation coefficients) using distributions
 
 
+## Last Week Recap
+
+- $\underbrace{\frac{P(H_1 | D)}{P(H_0 | D)}}_{posterior} = \underbrace{\frac{P(D | H_1)}{P(D | H_0)}}_{Bayes~Factor} \cdot \underbrace{\frac{P(H_1)}{P(H_0)}}_{prior}$
+- We have seen what Bayes Factors are
+- We have seen how we can place *priors* on parameters (e.g., for correlations)
+- But... what about the *posterior*?
 
 ## Recap of Differences (1)
 
@@ -149,7 +155,7 @@ brm(mpg ~ wt, data=mtcars)
   - What we want to know: $p(Hypothesis|data)$
   
   
-<!-- TODO: retrive quote that illustrates this -->
+<!-- TODO: retrieve quote that illustrates this -->
 ::::
 
 :::: {.column}
