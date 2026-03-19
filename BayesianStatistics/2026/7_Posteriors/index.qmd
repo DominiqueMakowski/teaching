@@ -44,13 +44,13 @@ set.seed(333)
 
 
 
-## Bayesian vs. Frequentist
+<!-- ## Bayesian vs. Frequentist -->
 
-- Main difference is that it doesn't rely on complicated assumptions and algorithms to estimate parameters
-- Instead, it relies on **Bayes' theorem** to compute the **posterior distribution** of the parameters of interest
-- Frequentist estimation: Data * Model * Optimization Algorithm -> result (best fitting parameters) -> inference relies on further assumptions
-- Bayesian estimation does not rely on assumptions, but instead, starts with initial "results" (priors), and then updates these results based on the data
-- Every statistical parameter that we want to estimate has to start with a prior distribution
+<!-- - Main difference is that it doesn't rely on complicated assumptions and algorithms to estimate parameters -->
+<!-- - Instead, it relies on **Bayes' theorem** to compute the **posterior distribution** of the parameters of interest -->
+<!-- - Frequentist estimation: Data * Model * Optimization Algorithm -> result (best fitting parameters) -> inference relies on further assumptions -->
+<!-- - Bayesian estimation does not rely on assumptions, but instead, starts with initial "results" (priors), and then updates these results based on the data -->
+<!-- - Every statistical parameter that we want to estimate has to start with a prior distribution -->
 
 ## History of Statistics
 
@@ -220,7 +220,7 @@ plot(posterior)
 :::::
 
 - The plot on the right is the density plot of the parameter, and on the left it shows the **"trace plots"** of the MCMC chain
-- Trace plots should look like "Hairy Caterpillars", i.e., stationary (overall flat) and "random" (noisy)
+- Trace plots should look like "Hairy Caterpillars" 🐛, i.e., stationary (overall flat) and "random" (noisy)
 - **Put a pin in that**: We will come back to "model diagnostic" in the future
 
 ::::
@@ -601,8 +601,7 @@ as.numeric(bayestestR::map_estimate(rvals))
 - The index of centrality that we reported is often referred to as a "point-estimate" of the parameter's central tendency (e.g., "the" correlation coefficient)
   - *Note that we can also talk about "point-estimates of dispersion" etc., point-estimate just means "single value" summary*
 - When re-used (in other analyses, meta-analyses, ...), it inevitably carries a loss of information (e.g., uncertainty).
-  - E.g., computing the Bayesian correlation within each participant between RT and number of errors, and then using the "point-estimate" to further relate it to personality traits
-- Unfortunately, *propagating uncertainty* is not common practice (and is technically challenging)
+  - E.g., computing the Bayesian correlation within each participant between RT and number of errors, and then using the "point-estimate" to further relate it to personality traits^[Unfortunately, *propagating uncertainty*, i.e., re-using estimations of uncertainty in follow-up analyses, is not common practice (and is technically challenging)]
 
 
 ## Indices of Uncertainty - Deviation
@@ -946,6 +945,7 @@ plot(posterior)
 
 - Make trace plot with `ggplot`
   - Plot the iterations "in order" of their sampling (from 1 to *i*)
+  - It should look like a hairy caterpillar 🐛
 
 ::::: {.fragment}
 

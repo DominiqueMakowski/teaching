@@ -213,16 +213,12 @@
 <ul>
 <li class="fragment">Make sure you have successfuly made <code>brms</code> work (see last week’s instructions). If not, get in touch!</li>
 </ul>
-</section>
-<section id="bayesian-vs.-frequentist" class="slide level2">
-<h2>Bayesian vs.&nbsp;Frequentist</h2>
-<ul>
-<li class="fragment">Main difference is that it doesn’t rely on complicated assumptions and algorithms to estimate parameters</li>
-<li class="fragment">Instead, it relies on <strong>Bayes’ theorem</strong> to compute the <strong>posterior distribution</strong> of the parameters of interest</li>
-<li class="fragment">Frequentist estimation: Data * Model * Optimization Algorithm -&gt; result (best fitting parameters) -&gt; inference relies on further assumptions</li>
-<li class="fragment">Bayesian estimation does not rely on assumptions, but instead, starts with initial “results” (priors), and then updates these results based on the data</li>
-<li class="fragment">Every statistical parameter that we want to estimate has to start with a prior distribution</li>
-</ul>
+<!-- ## Bayesian vs. Frequentist -->
+<!-- - Main difference is that it doesn't rely on complicated assumptions and algorithms to estimate parameters -->
+<!-- - Instead, it relies on **Bayes' theorem** to compute the **posterior distribution** of the parameters of interest -->
+<!-- - Frequentist estimation: Data * Model * Optimization Algorithm -> result (best fitting parameters) -> inference relies on further assumptions -->
+<!-- - Bayesian estimation does not rely on assumptions, but instead, starts with initial "results" (priors), and then updates these results based on the data -->
+<!-- - Every statistical parameter that we want to estimate has to start with a prior distribution -->
 </section>
 <section id="history-of-statistics" class="slide level2">
 <h2>History of Statistics</h2>
@@ -425,7 +421,7 @@ Thinning interval = 1
 </div>
 <ul>
 <li class="fragment">The plot on the right is the density plot of the parameter, and on the left it shows the <strong>“trace plots”</strong> of the MCMC chain</li>
-<li class="fragment">Trace plots should look like “Hairy Caterpillars”, i.e., stationary (overall flat) and “random” (noisy)</li>
+<li class="fragment">Trace plots should look like “Hairy Caterpillars” 🐛, i.e., stationary (overall flat) and “random” (noisy)</li>
 <li class="fragment"><strong>Put a pin in that</strong>: We will come back to “model diagnostic” in the future</li>
 </ul>
 </div></div>
@@ -751,7 +747,7 @@ Thinning interval = 1
 </ul>
 </div>
 </section>
-<section id="point-estimates---note" class="slide level2">
+<section id="point-estimates---note" class="slide level2 scrollable">
 <h2>Point-estimates - Note</h2>
 <ul>
 <li class="fragment">The index of centrality that we reported is often referred to as a “point-estimate” of the parameter’s central tendency (e.g., “the” correlation coefficient)
@@ -760,11 +756,10 @@ Thinning interval = 1
 </ul></li>
 <li class="fragment">When re-used (in other analyses, meta-analyses, …), it inevitably carries a loss of information (e.g., uncertainty).
 <ul>
-<li class="fragment">E.g., computing the Bayesian correlation within each participant between RT and number of errors, and then using the “point-estimate” to further relate it to personality traits</li>
+<li class="fragment">E.g., computing the Bayesian correlation within each participant between RT and number of errors, and then using the “point-estimate” to further relate it to personality traits<sup>1</sup></li>
 </ul></li>
-<li class="fragment">Unfortunately, <em>propagating uncertainty</em> is not common practice (and is technically challenging)</li>
 </ul>
-</section>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>Unfortunately, <em>propagating uncertainty</em>, i.e., re-using estimations of uncertainty in follow-up analyses, is not common practice (and is technically challenging)</p></li></ol></aside></section>
 <section id="indices-of-uncertainty---deviation" class="slide level2">
 <h2>Indices of Uncertainty - Deviation</h2>
 <ul>
@@ -822,7 +817,7 @@ Thinning interval = 1
 <li class="fragment">(I recommend 95%)</li>
 </ul>
 </div></div>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>Even though one can find reasons to prefer this</p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn3"><p>Even though one can find reasons to prefer this</p></li></ol></aside></section>
 <section id="indices-of-uncertainty---intervals-type" class="slide level2">
 <h2>Indices of Uncertainty - Intervals (Type)</h2>
 <div class="columns">
@@ -947,7 +942,7 @@ Posterior | 98.40%</code></pre>
 <li class="fragment">The <em>pd</em> is a good index because of its simplicity and its intuitive interpretation</li>
 </ul>
 </div></div>
-<aside><ol class="aside-footnotes"><li id="fn3"><p>Makowski et al., (2019). <em>Indices of effect existence and significance in the Bayesian framework</em>. Frontiers in psychology, 10, 2767.</p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn4"><p>Makowski et al., (2019). <em>Indices of effect existence and significance in the Bayesian framework</em>. Frontiers in psychology, 10, 2767.</p></li></ol></aside></section>
 <section id="rope-region-of-practical-equivalence" class="slide level2">
 <h2>ROPE (Region Of Practical Equivalence)</h2>
 <div class="columns">
@@ -1120,6 +1115,7 @@ Inside ROPE
 <li class="fragment">Make trace plot with <code>ggplot</code>
 <ul>
 <li class="fragment">Plot the iterations “in order” of their sampling (from 1 to <em>i</em>)</li>
+<li class="fragment">It should look like a hairy caterpillar 🐛</li>
 </ul></li>
 </ul>
 <div class="fragment">

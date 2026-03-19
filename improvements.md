@@ -37,6 +37,7 @@
   - Replace Week 3 Frequentist + Week 4 Boostrapping by Week 3 Freq + Boostrapping (correlation and indices of centrality), Week 4 Boostrapping (rest of indices, ROPE, application to linear models)
 - Lecture 4: Add "ROPEs don't like Defaults"
 - Lecture 4: Bootstrapping: apply bootstrapping to simple lm model, to start thinking of parameters of models as distributions 
+- Lecture 4: Move the ETI/HDI examples from Lecture 7-8 (posterior) to here, the illustration with Gamma are more impactful
 - Lecture 8 is too much for one (need to introduce data grids, posterior predictive checks, intercept-only models etc)
 - Lecture 8/9: change PP checks to use modelbased's estimate_predictions and estimate_relation()
 - MCMC: read https://www.jeremykun.com/2015/04/06/markov-chain-monte-carlo-without-all-the-bullshit/
