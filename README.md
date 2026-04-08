@@ -16,7 +16,8 @@ I also offer workshops to external universities (see [here for details](https://
 - **Week 6:** [Bayes Factors (BIC Approximation)](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/5_BayesFactorsBIC)
 - **Week 7:** [Bayes Factors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/6_BayesFactors)
 - **Week 8:** [Posteriors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/7_Posteriors)
-- **Week 9:** [brms - Priors](https://www.youtube.com/watch?v=xvFZjo5PgG0)
+- **Week 9:** [brms - Priors](https://dominiquemakowski.github.io/teaching/BayesianStatistics/2026/8_LinearModelsPriors)
+- **Week 10:** [brms - Posterior](https://www.youtube.com/watch?v=xvFZjo5PgG0)
 
 ### Workshops
 
