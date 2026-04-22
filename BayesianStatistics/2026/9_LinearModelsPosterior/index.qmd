@@ -1,0 +1,607 @@
+---
+title: "Bayesian Statistics"
+subtitle: "**9. Linear Models (Posterior)**"
+author: "<sub>Dominique Makowski</sub><br><sub><sup>*D.Makowski@sussex.ac.uk*</sup></sub>"
+# institute: "University of Sussex"
+title-slide-attributes:
+  data-background-image: "https://github.com/RealityBending/RealityBending.github.io/blob/main/assets/media/sussex.png?raw=true"
+  data-background-opacity: "0.2"
+  data-background-color: "black"
+  # data-background-size: contain
+format:
+  revealjs:
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/University_of_Sussex_Logo.svg/500px-University_of_Sussex_Logo.svg.png"
+    incremental: true
+    chalkboard: true
+    scrollable: true
+    slide-number: "c/t"
+    highlight-style: "github-dark"
+    code-line-numbers: false
+    fontsize: "170%"
+    # theme: blood
+    # title-slide-attributes:
+    #   data-background-color: "#1A3F82"
+editor_options: 
+  chunk_output_type: console
+execute:
+  cache: true
+fig-dpi: 300
+params:
+  show_answers: true
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(patchwork)
+library(easystats)
+
+set.seed(333)
+```
+
+## Recap {background-color="#003B49"}
+
+- 1. Formula specification
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+library(brms)
+
+f <- brms::brmsformula(qsec ~ 0 + Intercept + mpg)
+```
+
+:::
+
+- 2. Prior specification
+  - Intercept
+    - e.g., $\mu$ = `mean(mtcars$qsec)` and $\sigma$ = `10 * sd(mtcars$qsec)`
+  - Slope
+    - e.g., $\mu$ = 0 and $\sigma$ = 5
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+priors <- c(
+  brms::set_prior("normal(17.85, 17.9)", class = "b", coef = "Intercept"),
+  brms::set_prior("normal(0, 5)", class = "b", coef = "mpg")
+) |> 
+  brms::validate_prior(f, data=mtcars)
+
+priors
+```
+
+:::
+
+3. Prior Predictive Checks
+
+- Predicted response density and relationships based on the priors only
+
+## Fitting the model
+
+- Pass the formula, the data, and the priors (optional) to `brms::brm()` ("Bayesian Regression Model")
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| eval: false
+
+model <- brms::brm(f, 
+                   data = mtcars, 
+                   prior = priors)
+```
+
+:::
+
+- Options pertaining to the **sampling algorithm** can be specified^[See the function documentation for the massive list of options]
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+model <- brms::brm(f, 
+                   data = mtcars, 
+                   prior = priors,
+                   chains = 4, # Number of independent sampling processes 
+                   iter = 1000,  # Number of draws per chain
+                   refresh = 0)  # Print progress
+```
+
+:::
+
+## MCMC - NUTS
+
+::: {.columns}
+
+:::: {.column width=50%}
+
+- By default, `brms` uses MCMC
+  - In particular, the **No-U-Turn Sampler (NUTS)** algorithm, which is a self-adjusting variant of **Hamiltonian Monte Carlo (HMC)**
+  - The key idea behind HMC is that it treats sampling as a physics problem, where we imagine the posterior distribution space as a hilly landscape and use momentum to explore it efficiently
+  - Instead of setting a fixed number of steps, NUTS keeps "rolling the ball" until it detects a U-turn (where the trajectory starts going back toward its starting point)
+  
+:::: 
+
+:::: {.column}
+
+![](img/hmc.gif)
+
+::::
+
+:::
+
+## MCMC vs. Variational Inference (VI)
+
+::: {.columns}
+
+:::: {.column width=70% style="font-size: 70%;"}
+
+- Stan (the language used by `brms` in the background) also implements **variational inference** algorithms that sample from an approximation of the posterior, which are faster but less accurate
+  - You can use them by specifying: `brm(..., algorithm = "meanfield")` (or`"fullrank"` or `"pathfinder"`)
+  - Unlike MCMC, which samples from the true posterior, Variational Inference (VI) approximates it using simpler distribution (e.g., Gaussian) and minimizes the difference between the two (e.g., optimizing the Kullback-Leibler KL divergence)
+- **Pros:**
+  - Can be useful for "quick" checks and adjustments but should not necessarily be used for final results
+  - If the uncertainty estimation is not the main goal but speed is
+- **Cons:**
+  - Less accurate
+  - Fragile (algorithm can easily fail)
+  - VI posteriors may be overconfident (narrower CI)
+
+:::: 
+
+:::: {.column width=30%}
+
+![](img/KullbackLeibler.png)
+
+::::
+
+:::
+
+## Variational Inference (VI) in the Brain
+
+::: {.columns}
+
+:::: {.column width=70% style="font-size: 70%;"}
+
+
+- The brain is thought to be a Bayesian inference machine (Friston et al.), constantly predicting sensory input and updating beliefs based on errors
+- **Prediction errors** (mismatch between expectation and reality) drive learning, perception, and action
+- Computing exact posteriors would be too computationally expensive for the brain
+- Instead, it might approximates the posterior in a way similar to VI:
+  - The brain represents beliefs with simpler distributions (e.g., Gaussian-like approximations).
+  - Instead of exploring all possibilities, it minimizes a function ("Free Energy") to find the best fit
+- The brain minimizes Free Energy to improve its model could be mathematically identical to VI minimizing the Kullback-Leibler (KL) divergence between an approximate posterior and the true posterior[^In fact, Friston’s "Variational Free Energy" is mathematically equivalent to what computer scientists call the Evidence Lower Bound (ELBO) in machine learning.]
+- Cognitive and neural processing could be optimized for **efficiency** rather than exactness, much like how VI trades accuracy for speed
+
+:::: 
+
+:::: {.column width=30%}
+
+![](img/PredictiveProcessing.jpg)
+
+::::
+
+:::
+
+## MCMC parameters
+
+- For this module we will focus on MCMC, which is slowest but the "true" Bayesian solution
+- MCMC can be tuned
+  - Number of **chains**, number of **iterations**
+  - **Warm-up**: the number of initial samples that are discarded (burn-in phase)
+  - **Thinning**: the number of samples that are kept (every n-th sample)
+  - **Adaptation**: the algorithm can adapt its parameters during the burn-in phase
+  - ...
+- In most cases, the default values are fine
+- It's only when there are problems that you should start considering tweaking these parameters
+
+
+## Sampling Diagnostics - Trace Plots 
+
+::: {.columns}
+
+:::: {.column width=70%}
+
+
+- **HAIRY CATERPILLARS**
+- The MCMC algorithm is supposed to draw **independent** samples from the posterior
+- There should be no autocorrelation between successive samples (i.e., no patterns in the trace plot)
+  - They should look like [**hairy caterpillars**]{.fragment}
+- We typically draw multiple independent **chains** (useful for parallel computing, e.g., one chain per core)
+
+::::
+
+:::: {.column width=30%}
+
+![](img/colin.webp)
+
+::::
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+#| fig-width: 12
+
+plot(model)
+```
+
+:::
+
+- The plots shows 1) the **posterior** distribution of the parameters and 2) the **trace** plot of the MCMC algorithm
+- One trace per chain: there should not be any pattern 
+  
+## Sampling Diagnostics - Effective Sample Size (ESS)
+
+
+```{r}
+#| echo: true
+
+model
+```
+
+
+- The **effective sample size** (ESS) is an estimation of the number of independent samples that we have
+  - ESS ("Bulk" ESS) is a measure of how well the **centre** of the posterior distribution is described
+  - Can be see as an index of the accuracy of the indices of centrality
+  - "Tail" ESS is a measure of how well the **tails** of the distribution are described
+  - Can be see as an index of the accuracy of the indices based on range
+- ESS should be at least 400 (for Bulk), but better if at least 1000 (see `effectsize::interpret_ess()`)
+
+## Sampling Diagnostics - $\hat{R}$
+
+- The $\hat{R}$ ("R-hat") is a measure of **convergence**
+- It compares the **variance** within chains to the **variance** between chains
+- If the chains have not converged to a common distribution, the $\hat{R}$ statistic will be greater than one
+- Should be lower than 1.01 (see `effectsize::interpret_rhat()`)
+
+## Posterior Description
+
+
+```{r}
+#| echo: true
+
+parameters::parameters(model)
+```
+
+- Indices of centrality, uncertainty, existence, significance
+- *Note that ESS computed by `parameters` (a "general" ESS) is currently different from the one computed by `brms`, but it doesn't matter which one you use, they are all estimates anyways and should be relatively close.*
+- Customize the parameters shown
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+parameters::parameters(model,
+                       centrality="mean", 
+                       dispersion=TRUE,
+                       ci=0.89)
+```
+
+:::
+
+
+## Effect Significance
+
+```{r}
+#| echo: false
+
+parameters::parameters(model)
+```
+
+
+- Easiest is to use *pd* or decision threshold based on CI overlapping 0 (similar to Frequentist NHST)
+- **ROPE?** But what ROPE bounds to use?
+  - Not straightforward to define
+  - Easier to use when data is standardized (and parameters are expressed in terms of SD)
+  - Or when you have clear hypotheses on the effect size
+- **BF?** 
+  - Complicated to compute for model parameters
+  
+  
+## Model Performance - R2
+
+- Once that sampling quality has been assessed, and that the posteriors have been described, we can assess the model's performance
+- How well does the model fit/predict the data?
+- R-squared, the percentage of variance explained by the model (for linear models), can be computed
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+performance::r2(model)
+```
+
+:::
+
+- With Bayesian statistics - where every parameter is **probabilistic**, we also get a posterior distribution of the R-squared, and can thus compute **credible intervals**
+- Note that R-squared is straightforward to interpret for **linear** model but gets tricky for GLMs (because there is no "variance" of the outcome in the same sense). We cannot say "the model explains X% of the variance" baed on the R2 for GLMs.
+
+## Model Performance - Relative Indices
+
+- Other **"relative" indices of fit** exist to compare models between them (we will see that next week)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+performance::performance(model)
+```
+
+:::
+
+## Posterior Predictive Check
+
+- **Posterior predictive checks** is a way to assess the model by comparing the **observed** data to the **predicted** data
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred <- estimate_prediction(model, keep_iterations=250) |>  
+  reshape_iterations()
+```
+
+:::
+
+<!-- TODO: Use performance::check_predictions() next year -->
+
+## Posterior Predictive Check - Distribution
+
+- We can see whether the distribution of predicted values are closer to the observed values (in particular, its mean when using linear models)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+ggplot(mtcars, aes(x=qsec)) +
+  geom_line(data=pred, aes(x=iter_value, group=iter_group), 
+            stat="density",  alpha=0.3) +
+  geom_density(fill="skyblue", alpha=0.5) +
+  theme_minimal()
+```
+
+:::
+
+- Note the use of `geom_line(stat="density")` for the lines instead of `geom_density()` to be able to modify the alpha of the lines (and not the *filling*)
+- Posterior predictive checks of the distribution is particularly useful for more complex models to see if the model manages to reproduce the 
+
+## Visualizing the Effects - Relationship
+
+
+
+- We typically are interested in visualizing the **effects** (i.e., the impact of the predictors)
+- This means predicting the outcome for different values of the predictor
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred_wide <- estimate_relation(model, keep_iterations=250) 
+
+head(pred_wide)
+
+print(paste("n-rows =", nrow(pred_wide), "; n-cols =", ncol(pred_wide)))
+```
+
+:::
+
+- We can also `reshape` these iterations to easily plot all the individual lines
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred_long <- reshape_iterations(pred_wide)
+
+head(pred_long)
+
+print(paste("n-rows =", nrow(pred_long), "; n-cols =", ncol(pred_long)))
+```
+
+:::
+
+
+## Visualizing the Effects - Plot (1)
+
+- Step 1: plot the raw data points
+
+::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+ggplot(mtcars, aes(x=mpg)) +
+  geom_point(aes(y=qsec), size=3) 
+```
+
+:::
+
+- Note that we specify the **"y-aesthetic"** in the `geom_point()` layer and not in the `ggplot()` layer, because other layers will different variable names for their y-axis (e.g., `Predicted` for the predicted line)
+
+
+## Visualizing the Effects - Plot (2)
+
+- Step 2: add the median predicted line with the CI bounds
+- Using the information from the "wide" format
+
+::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+ggplot(mtcars, aes(x=mpg)) +
+  geom_point(aes(y=qsec), size=3)  +
+  geom_ribbon(data=pred_wide, aes(ymin=CI_low, ymax=CI_high), fill="darkred", alpha=0.2) +
+  geom_line(data=pred_wide, aes(y=Predicted), linewidth=2, color="orange")
+```
+
+:::
+
+## Visualizing the Effects - Plot (3)
+
+- Step 3: add the individual lines
+
+::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+ggplot(mtcars, aes(x=mpg)) +
+  geom_point(aes(y=qsec), size=3)  +
+  geom_ribbon(data=pred_wide, aes(ymin=CI_low, ymax=CI_high), fill="darkred", alpha=0.2) +
+  geom_line(data=pred_wide, aes(y=Predicted), linewidth=2, color="orange") +
+  geom_line(data=pred_long, aes(y=iter_value, group=iter_group), alpha=0.1)
+```
+
+:::
+
+
+- Each line corresponds to one "plausible" regression line (given our posterior beliefs about the model parameters)
+- Most of them indicate a positive relationship between `mpg` and `qsec`
+
+
+## What to Report
+
+- [x] Type of Model 
+- [x] Sampling algorithm and parameters
+
+::: {.fragment}
+
+:::: {.callout-tip}
+
+
+
+## What about... Model Assumptions
+
+![](https://c.tenor.com/JF49Wc6yTgoAAAAC/tenor.gif)
+
+- Most model assumptions that applied for Frequentist models still apply for Bayesian models (e.g., linearity, homoscedasticity, normality of residuals...)
+- They are not assumptions of the estimation process, but rather assumptions of the model itself
+  - For instance, the assumption of Homoskedasticity directly comes from the fact that there's a single fixed $\sigma$ parameter for the model (which corresponds to the general uncertainty in predictions).
+  - The Normality of the residuals comes from the distribution that is being fit  to the data (a Gaussian one, see lecture on OLS/MLE).
+- However, the Bayesian framework is much more flexible and allows to easily relax some of these assumptions by using different families of models.
+
+::: {.fragment}
+
+
+```{r}
+#| echo: true
+
+check_model(model)
+```
+
+:::
+
+
+
+### Example of Phrasing
+
+"We fitted a Bayesian linear model (estimated using MCMC sampling with 4 chains of 2000 iterations) to predict qsec with mpg."
+::::
+
+:::
+
+- [x] Priors
+
+::: {.fragment}
+
+:::: {.callout-tip}
+
+### Example of Phrasing
+
+"Mildly informative priors were set for the intercept, $Normal(M_{qsec},  10*SD_{qsec})$, and the prior for the effect of mpg was set to $Normal(0, 5)$."
+
+::::
+
+:::
+
+- [x] Model convergence
+
+::: {.fragment}
+
+:::: {.callout-tip}
+
+### Example of Phrasing
+
+Convergence and stability of the Bayesian sampling has been assessed by inspecting the trace plot, as well as with diagnostic indices like the R-hat, which should be below 1.01 (Vehtari et al., 2019), and Effective Sample Size (ESS), which should be greater than 1000 (Burkner, 2017). 
+
+The model converged and all parameters had satisfactory ESS and R-hat values.
+
+::::
+
+:::
+
+
+- [x] Model performance
+
+::: {.fragment}
+
+:::: {.callout-tip}
+
+### Example of Phrasing
+
+The model's explanatory power is substantial (R2 = 0.75, 95% CI [0.65, 0.80]).
+
+::::
+
+:::
+
+- [x] Indices description
+- [x] Model parameters
+
+::: {.fragment}
+
+:::: {.callout-tip}
+
+### Example of Phrasing
+
+We will report the median of the posterior distribution as the point estimate of the parameters, along with the 95% Highest Density Intervals (HDI) as credible intervals (CI) for uncertainty. The probability of the parameter being positive (pd) will be used as an index of existence, with a threshold of 97.5% for "significance" (Makowski et al., 2019). **ROPE?**
+
+Within this model:
+
+The Intercept (Median = 15.34, 95% CI [13.07, 17.53.12]) has a 100% probability of being positive. **[Interpretation]**
+
+The effect of mpg (Median = 0.13, 95% CI [0.02, 0.23]) has a 98.55% probability of being positive. **[Interpretation]**
+
+::::
+
+:::
+
+- [x] **INTEPRETATION**: Put in perspective and context.
+- [x] **Figures**: Trace plots, prior predictive checks, posterior predictive checks, relationship plots....
+
+
+## Exercice {background-color="#FFAB91"}
+
+- Is there a link between  **raises** (whether a company makes wage raises based on performance) predicted by **critical** (whether a company is judged "too critical" towards its employee) (`attitude` builtin dataset)?
+  - Make 1 model with default priors
+  - Another with strong priors that the effect is 0 (a prior on the slope of `Normal(0, 0.1)`)
+
+
+## The End <sub><sup>(for now)</sup></sub> {.center background-color="#212121"}
+
+*Thank you!*
+
+
+
+

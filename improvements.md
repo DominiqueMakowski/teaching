@@ -26,18 +26,17 @@
   - Remove the fluff at the beginning
 - Week 2: Distributions until Cauchy (had to rush a lot)
 - Week 3: Distributions from Cauchy + Frequentist (rushed, skipped the quantile function and manual computation of the p-value, but ended 10 min before the end)
-- Week 5 and 6 on BFs: light, could make it more compact
-
-## 2025
-
-- 2025: did everything in 10 weeks, but semester is 11.
-- https://github.com/benjamin-rosenbaum/bayesian-intro
 - Probably need to drop a bit of Frequentist stats to have more time on boostrapping and Bayesian
   - Just say that *t*, *df*, p and CIs are complicated and convoluted, focus on the notion of "repeated the experiment an infinite amount of times" and then move on to bootstrapping.
   - Replace Week 3 Frequentist + Week 4 Boostrapping by Week 3 Freq + Boostrapping (correlation and indices of centrality), Week 4 Boostrapping (rest of indices, ROPE, application to linear models)
 - Lecture 4: Add "ROPEs don't like Defaults"
 - Lecture 4: Bootstrapping: apply bootstrapping to simple lm model, to start thinking of parameters of models as distributions
 - Lecture 4: Move the ETI/HDI examples from Lecture 7-8 (posterior) to here, the illustration with Gamma are more impactful
-- Lecture 8 is too much for one (need to introduce data grids, posterior predictive checks, intercept-only models etc)
-- Lecture 8/9: change PP checks to use modelbased's estimate_predictions and estimate_relation()
+- Week 5 and 6 on BFs: light, could make it more compact
+- Week 9: Too much. Split the prior predictive check (with predictions + reshaping iterations etc) to new lecture.
+
+## 2025
+
+- 2025: did everything in 10 weeks, but semester is 11.
+- https://github.com/benjamin-rosenbaum/bayesian-intro
 - MCMC: read https://www.jeremykun.com/2015/04/06/markov-chain-monte-carlo-without-all-the-bullshit/
