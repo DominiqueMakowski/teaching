@@ -345,17 +345,40 @@ performance::performance(model)
 ## Posterior Predictive Check
 
 - **Posterior predictive checks** is a way to assess the model by comparing the **observed** data to the **predicted** data
+- The `estimate_*` functions from the `modelbased` package allow us to generate predictions, either for every observation of the dataset, or for a new datasset (e.g., equally spread predictor values to use to plot the regression line)
 
 ::: {.fragment}
 
 ```{r}
 #| echo: true
 
-pred <- estimate_prediction(model, keep_iterations=250) |>  
-  reshape_iterations()
+pred_wide <- estimate_prediction(model, keep_iterations=250) 
+
+head(pred_wide[, 1:8])
+
+print(paste("n-rows =", nrow(pred_wide), "; n-cols =", ncol(pred_wide)))
 ```
 
 :::
+
+- By default, the `Predicted` column correspond to the **Median** of the posterior prediction (the median of the N iterations)
+- The `keep_iterations` argument keeps a subset (or all if `TRUE`) of individual iterations as additional columns
+- For plotting, useful to reshape that in a "long-format" (putting iterations in a single column instead of multiple columns)
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+pred_long <- reshape_iterations(pred_wide)
+
+head(pred_long)
+
+print(paste("n-rows =", nrow(pred_long), "; n-cols =", ncol(pred_long)))
+```
+
+:::
+
 
 <!-- TODO: Use performance::check_predictions() next year -->
 
@@ -369,7 +392,7 @@ pred <- estimate_prediction(model, keep_iterations=250) |>
 #| echo: true
 
 ggplot(mtcars, aes(x=qsec)) +
-  geom_line(data=pred, aes(x=iter_value, group=iter_group), 
+  geom_line(data=pred_long, aes(x=iter_value, group=iter_group), 
             stat="density",  alpha=0.3) +
   geom_density(fill="skyblue", alpha=0.5) +
   theme_minimal()
@@ -394,7 +417,7 @@ ggplot(mtcars, aes(x=qsec)) +
 
 pred_wide <- estimate_relation(model, keep_iterations=250) 
 
-head(pred_wide)
+head(pred_wide[, 1:8])
 
 print(paste("n-rows =", nrow(pred_wide), "; n-cols =", ncol(pred_wide)))
 ```
@@ -480,16 +503,6 @@ ggplot(mtcars, aes(x=mpg)) +
 - Most of them indicate a positive relationship between `mpg` and `qsec`
 
 
-## What to Report
-
-- [x] Type of Model 
-- [x] Sampling algorithm and parameters
-
-::: {.fragment}
-
-:::: {.callout-tip}
-
-
 
 ## What about... Model Assumptions
 
@@ -513,10 +526,19 @@ check_model(model)
 :::
 
 
+## What to Report
+
+- [x] Type of Model 
+- [x] Sampling algorithm and parameters
+
+::: {.fragment}
+
+:::: {.callout-tip}
 
 ### Example of Phrasing
 
 "We fitted a Bayesian linear model (estimated using MCMC sampling with 4 chains of 2000 iterations) to predict qsec with mpg."
+
 ::::
 
 :::
