@@ -34,9 +34,9 @@
 - Lecture 4: Move the ETI/HDI examples from Lecture 7-8 (posterior) to here, the illustration with Gamma are more impactful
 - Week 5 and 6 on BFs: light, could make it more compact
 - Week 9: Too much. Split the prior predictive check (with predictions + reshaping iterations etc) to new lecture.
+- More examples & exercices
 
 ## 2025
 
-- 2025: did everything in 10 weeks, but semester is 11.
 - https://github.com/benjamin-rosenbaum/bayesian-intro
 - MCMC: read https://www.jeremykun.com/2015/04/06/markov-chain-monte-carlo-without-all-the-bullshit/
