@@ -35,6 +35,7 @@
 - Week 5 and 6 on BFs: light, could make it more compact
 - Week 9: Too much. Split the prior predictive check (with predictions + reshaping iterations etc) to new lecture.
 - More examples & exercices
+- MCSE: https://avehtari.github.io/Bayesian-Workflow/digits/digits.html
 
 ## 2025
 
