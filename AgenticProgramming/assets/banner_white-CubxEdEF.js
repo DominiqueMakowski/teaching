@@ -1,0 +1,1 @@
+var e=new URL(`banner_white-BnaOLyfs.png`,import.meta.url).href;export{e as t};

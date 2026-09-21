@@ -1,0 +1,211 @@
+/* ---------------------------------------------------------------------------
+   Reality Bending Lab theme
+   Palette taken from the lab's chromostereopsis logo: pure red against pure
+   blue on black, which is what makes the two planes float apart.
+--------------------------------------------------------------------------- */
+
+:root {
+  --rebel-red: #e60000;
+  --rebel-blue: #1414ff;
+  --rebel-ink: #0a0a0c;
+  --slidev-theme-primary: #e60000;
+}
+
+/* --- Band ---------------------------------------------------------------- */
+
+.rebel-band {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  height: 30px;
+  padding: 0 18px 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--rebel-ink);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* The chromostereopsis hairline */
+.rebel-band::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--rebel-blue) 0%, #7a00c8 55%, #ff0000 100%);
+}
+
+.rebel-band-deck {
+  color: #7d7d85;
+}
+
+.rebel-band-lab {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.rebel-band-lab img {
+  height: 17px;
+  opacity: 0.92;
+}
+
+.rebel-band-no {
+  color: #f2f2f2;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* Lift Slidev's hover toolbar clear of the band */
+.slidev-page + div nav,
+#slide-container nav {
+  margin-bottom: 26px;
+}
+
+/* --- Content slides ------------------------------------------------------ */
+
+/* Leave room for the band */
+.slidev-layout:not(.rebel-dark) {
+  padding-bottom: 44px;
+}
+
+/* Gradient rule under every slide title */
+.slidev-layout:not(.rebel-dark) h1::after {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 3px;
+  margin-top: 6px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--rebel-blue), #ff0000);
+}
+
+.slidev-layout a {
+  color: var(--rebel-red);
+}
+
+/* --- Dark slides (cover, chalkboard) ------------------------------------- */
+
+.rebel-dark {
+  background: #050507;
+  color: #f4f4f6;
+}
+
+.rebel-dark h1,
+.rebel-dark h2 {
+  color: #fff;
+}
+
+/* Red/blue fringing: the logo's illusion, applied to type */
+.rebel-cover h1 {
+  font-size: 3.4rem;
+  line-height: 1.05;
+  text-shadow:
+    -1.5px 0 0 rgba(255, 0, 0, 0.55),
+    1.5px 0 0 rgba(30, 30, 255, 0.55),
+    0 0 42px rgba(120, 0, 200, 0.35);
+}
+
+.rebel-cover h1::after {
+  content: none;
+}
+
+.cover-art {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  height: 122%;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  pointer-events: none;
+  /* Fade the square artwork into the black slide */
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 45%, transparent 72%);
+  mask-image: radial-gradient(ellipse at center, #000 45%, transparent 72%);
+}
+
+.cover-sub {
+  margin-top: 0.6rem;
+  font-size: 1.05rem;
+  color: #b9b9c4;
+}
+
+.cover-meta {
+  margin-top: 2.6rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #e6e6ec;
+}
+
+.cover-logo {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 26px;
+  opacity: 0.95;
+}
+
+/* Presenter's shortcut reminder, cover slide only.
+   It breathes slowly, so it reads as chrome rather than as content. */
+.cover-keys {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  font-size: 9px;
+  line-height: 1.9;
+  text-align: right;
+  color: #8b8b99;
+  white-space: nowrap;
+  animation: rebel-keys-breathe 4s ease-in-out infinite;
+}
+
+.cover-keys kbd {
+  margin: 0 1px;
+  padding: 1px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #cfcfda;
+  font-size: 9px;
+  box-shadow: none;
+}
+
+@keyframes rebel-keys-breathe {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-keys {
+    animation: none;
+    opacity: 0.4;
+  }
+}
+
+/* --- Chalkboard ---------------------------------------------------------- */
+
+.rebel-chalkboard {
+  background: #0b0b0d;
+}
+
+/* Ghost of the lab icon, anchored to the slide rather than to its content */
+.rebel-chalkboard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("./img/icon.png") no-repeat center / auto 55%;
+  filter: invert(1);
+  opacity: 0.045;
+  pointer-events: none;
+}
