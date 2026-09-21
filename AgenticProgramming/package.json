@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "slidev slides.md --open",
-    "build": "slidev build slides.md --out dist --base ./ && rm -rf assets && cp -r dist/index.html . && cp -r dist/assets . && rm -rf dist",
+    "build": "rm -f index.html && slidev build slides.md --out dist --base ./ && rm -rf assets && cp dist/index.html . && cp -r dist/assets . && rm -rf dist",
     "pdf": "slidev export slides.md --output AgenticProgramming.pdf"
   },
   "dependencies": {

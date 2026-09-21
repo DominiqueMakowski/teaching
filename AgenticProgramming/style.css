@@ -142,13 +142,26 @@
   color: #e6e6ec;
 }
 
-.cover-logo {
+/* Lab banner and university logo, locked up at the foot of the cover */
+.cover-lockup {
   position: absolute;
-  bottom: 30px;
+  bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
-  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
   opacity: 0.95;
+}
+
+.cover-lab {
+  height: 26px;
+}
+
+/* The Sussex mark ships as black artwork; invert it for the dark cover */
+.cover-sussex {
+  height: 34px;
+  filter: invert(1);
 }
 
 /* Presenter's shortcut reminder, cover slide only.

@@ -23,12 +23,15 @@ routerMode: hash
 
 <div class="cover-meta">
   Dominique Makowski<br>
-  <span class="opacity-60">D.Makowski@sussex.ac.uk &middot; University of Sussex</span>
+  <span class="opacity-60">D.Makowski@sussex.ac.uk</span>
 </div>
 
 </div>
 
-<img src="./img/banner_white.png" class="cover-logo" alt="Reality Bending Lab">
+<div class="cover-lockup">
+  <img src="./img/sussex-brighton.svg" class="cover-sussex" alt="University of Sussex">
+  <img src="./img/banner_white.png" class="cover-lab" alt="Reality Bending Lab">
+</div>
 
 <div class="cover-keys">
   <div><kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate &middot; <kbd>b</kbd> draw &middot; <kbd>c</kbd> chalkboard</div>

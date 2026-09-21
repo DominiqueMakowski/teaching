@@ -29,7 +29,7 @@ they are then saved as SVG under `.slidev/drawings` and baked into the build and
 | --- | --- |
 | [`style.css`](style.css) | palette and all theme rules (auto-loaded by Slidev) |
 | [`slide-top.vue`](slide-top.vue) | the black band drawn on top of every content slide |
-| [`img/`](img) | lab logos, copied from `RealityBendingLab/Lab/visuals/logo` |
+| [`img/`](img) | lab logos (from `RealityBendingLab/Lab/visuals/logo`) and the Sussex mark |
 
 The palette is taken from the lab's chromostereopsis logo — pure red against pure blue — which
 shows up as the hairline above the band, the rule under each slide title, and the red/blue
@@ -41,18 +41,30 @@ frontmatter. Dark slides use `class: rebel-dark`.
 
 ## Editing
 
+`index.html` is a **built** file. Editing `slides.md` changes nothing on the page until you rebuild:
+
 ```bash
-bun install          # once
-bun run dev          # live preview on http://localhost:3030
-bun run build        # regenerate index.html + assets/
+bash build.sh
 ```
 
-`npm` works too if you install Node; the `build` script relies on Bun's shell for `cp`/`rm`.
+That installs dependencies on first run, rebuilds `index.html` + `assets/`, and cleans up after
+itself. `bun run build` does exactly the same thing if you prefer. Then **hard-refresh the browser**
+(<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>) — it caches the old build otherwise.
+
+While actually writing the deck, skip the rebuild loop entirely:
+
+```bash
+bun run dev
+```
+
+It serves the deck at <http://localhost:3030> and reloads on every save. Run `bash build.sh` once at
+the end, before committing.
 
 ## Notes
 
 - The built deck is a JS app: opening `index.html` by double-click will **not** work
   (browsers block ES modules on `file://`). Use `bun run dev`, a local server
   (`python -m http.server`), or the published GitHub Pages URL.
-- `node_modules/` is git-ignored, but Dropbox will still sync it. To stop that:
+- `node_modules/` (~400 MB) is git-ignored, and `build.sh` marks it as Dropbox-ignored on first
+  install so it is not synced. To redo that by hand:
   `Set-Content -Path node_modules -Stream com.dropbox.ignored -Value 1`
