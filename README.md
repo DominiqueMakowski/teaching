@@ -3,6 +3,12 @@
 I teach Bayesian statistics in R and psychophysiology at the University of Sussex.
 I also offer workshops to external universities (see [here for details](https://dominiquemakowski.github.io/services/))
 
+## 2026-27
+
+### Workshops
+
+- [**Agentic Programming** *(Lab)*](https://dominiquemakowski.github.io/teaching/AgenticProgramming/)
+
 
 ## 2025-26
 
