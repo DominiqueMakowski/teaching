@@ -19,7 +19,7 @@ routerMode: hash
 
 # Agentic Coding
 
-<div class="cover-sub">Coding with an AI agent in the loop</div>
+<div class="cover-sub">Programming with an AI agent</div>
 
 <div class="cover-meta">
   Dominique Makowski<br>
@@ -97,7 +97,7 @@ Any project where an AI has freedom **must** be tracked by git & GitHub.
 
 <div v-click class="mt-6 p-4 border-l-4 border-red-500 bg-red-500 bg-opacity-10">
 
-**Master GitHub *first*.** Vibe coding on untracked files is not fast - it is a recipe for disaster. The speed of agentic coding comes entirely from being able to say *"no, undo that"* without fear.
+**Master GitHub *first*.** Vibe coding on untracked files is a recipe for disaster. The speed of agentic coding comes entirely from being able to say *"no, undo that"* without fear.
 
 </div>
 
@@ -267,7 +267,7 @@ Context windows are finite, and agents get worse as they fill up.
   - ❌ *"Clean the data, run the ANOVA, make the plots and write the report."*
   - ✅ *"Write the cleaning script."* - commit - `/clear` - *"Now the plots."*
 - A fresh session costs you nothing: `AGENTS.md` plus a clean, committed repo bring it up to speed in seconds
-- Same broken fix twice? Don't argue with it - `Ctrl+C`, `git restore`, fresh session, rephrase
+- Same broken fix twice? Don't argue with it, restore from before the changes, fresh session, and rephrase
 
 </v-clicks>
 
