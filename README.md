@@ -7,7 +7,7 @@ I also offer workshops to external universities (see [here for details](https://
 
 ### Workshops
 
-- [**Agentic Programming** *(Lab)*](https://dominiquemakowski.github.io/teaching/AgenticProgramming/)
+- [**Agentic Coding** *(Lab)*](https://dominiquemakowski.github.io/teaching/AgenticCoding/)
 
 
 ## 2025-26
