@@ -19,7 +19,7 @@ routerMode: hash
 
 # Agentic Programming
 
-<div class="cover-sub">Letting AI write and run your code</div>
+<div class="cover-sub">Coding with an AI agent in the loop</div>
 
 <div class="cover-meta">
   Dominique Makowski<br>
@@ -49,7 +49,7 @@ Not autocomplete. Not a chatbot you copy-paste from.
 <v-clicks>
 
 - An **agent** is given a *goal* and acts: reads your files, writes code, runs commands, fixes its own errors
-- You say *what*; it decides *how*. Your job moves from **writing** code to **steering** and **reviewing** it
+- You can still write the code yourself - and use it to **edit**, **review**, **explain**, or **find context**
 
 </v-clicks>
 
@@ -164,11 +164,11 @@ A plain-markdown README **for the agent**, at the root of your project.
 
 <v-clicks>
 
-- Read at the start of every session - you stop repeating yourself
-- The emerging **cross-tool standard** (Codex, Cursor, Copilot, Gemini...); `CLAUDE.md` is Claude Code's equivalent
-- **Golden rule: under 100 lines.** Long rule sets get skimmed and ignored
-- Machine paths, API keys, personal habits: `CLAUDE.local.md`, **git-ignored**
-- Nestable: one at the root, more in sub-folders
+- Read at the start of every session: no more repeating yourself
+- The **cross-tool standard** (Codex, Cursor, Copilot...); `CLAUDE.md` for Claude Code
+- **Keep it under ~100 lines** - long rule sets get skimmed
+- **More than one is fine:** one per sub-folder, plus `.md` files for the details (plan, codebook, notes) that it points to
+- Paths, API keys: `CLAUDE.local.md`, **git-ignored**
 
 </v-clicks>
 
@@ -184,12 +184,14 @@ Interoception analysis (R, targets).
 
 ## Commands
 - Tests: `testthat::test_dir("tests")`
-- Render: `quarto render index.qmd`
 
 ## Conventions
 - tidyverse + easystats, not base R
-- Native pipe `|>`, never `%>%`
 - Never edit files in `data/raw/`
+
+## Read when relevant
+- Analysis plan: `docs/analysis-plan.md`
+- Variables: `data/README.md`
 ```
 
 <div class="mt-2 text-xs opacity-60">Thirty lines like these beat a three-page essay.</div>
@@ -218,7 +220,7 @@ layout: default
 
 <div class="p-4 rounded border border-emerald-500 bg-emerald-500 bg-opacity-5">
   <div class="text-xl font-bold text-emerald-700">3. Implement</div>
-  <div class="text-xs mt-2 opacity-80">Let it write the code <i>and</i> run the checks.</div>
+  <div class="text-xs mt-2 opacity-80">One small change - yours or the agent's. Then run the checks.</div>
 </div>
 
 <div class="p-4 rounded border border-amber-500 bg-amber-500 bg-opacity-5">
@@ -269,6 +271,79 @@ Context windows are finite, and agents get worse as they fill up.
 
 </v-clicks>
 
+
+---
+layout: default
+---
+
+# Trust, but Verify
+
+<div class="mt-1 mb-3 p-3 border-l-4 border-red-500 bg-red-500 bg-opacity-10 text-lg">
+
+**Golden rule:** you don't know the code does what the agent *says* it does until **you** understand how it works.
+
+</div>
+
+<v-clicks>
+
+- Agents make mistakes, confidently: *"All tests pass ✅"* can mean it edited the tests
+- Their code is often **harder to read**: over-engineered, over-defensive, errors swallowed
+- So ask for **small things, one at a time**: a short diff is one you can actually check
+- Can't follow it? Don't commit it. Ask it to *explain* or *simplify* - or throw it away
+- Check the **result**, not the claim: run it, look at the data, plot it
+
+</v-clicks>
+
+<div v-click class="mt-3 text-sm opacity-70">
+
+Code that runs is not code that is right: a wrong reference level, silently dropped `NA`s or a bad join all run without a single error.
+
+</div>
+
+---
+layout: default
+---
+
+# Learn With It, Not Instead of It
+
+<div class="text-xl mt-2 mb-4">
+
+The most patient tutor you will ever have - or the fastest way to never learn anything.
+
+</div>
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
+
+<v-clicks>
+
+- **Try first**, even if it's clumsy. Then ask the agent to **review** it
+- Ask it to *teach*, not to fix: what is wrong, **why**, and what to look up
+- Ask for hints, not solutions - then have another go yourself
+- Use it to **explain** code: its own, a package's, a colleague's
+- Tell it you're learning, in `AGENTS.md`: *"Explain before you edit."*
+
+</v-clicks>
+
+</div>
+
+<div v-click>
+
+```text
+I'm learning R. Here is my attempt at
+reshaping this data to long format.
+
+Don't rewrite it. Tell me what's wrong,
+why, and which function I should look
+up. I'll try again myself.
+```
+
+<div class="mt-2 text-xs opacity-60">Claude Code also has built-in <b>Explanatory</b> and <b>Learning</b> output styles: the latter leaves parts of the code for you to write.</div>
+
+</div>
+
+</div>
 
 
 ---
