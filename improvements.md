@@ -18,7 +18,7 @@
   - https://link.springer.com/article/10.1007/s42761-022-00151-4
 - Respiration:
   - Difference between belt, Impendence pneumography (electrodes on the chest), Spirometers (air flow), Thermistors (hot air vs cold air)
-- Interoception model: Tallon -Baurdry 's two modes: information vs.coordinatio (TICS 2026)
+- Interoception model: Tallon -Baurdry 's two modes: information vs.coordination (TICS 2026)
 
 
 # Bayesian
@@ -40,7 +40,7 @@
 - More examples & exercices
 - MCSE: https://avehtari.github.io/Bayesian-Workflow/digits/digits.html
 - TODO: Add section about new sampling methods: Tempering, Bayesflow, RxInfer, Pathfinder, etc.
-
+- TODO: Add PriorSense: https://mc-stan.org/priorsense/reference/powerscale-sensitivity.html
 ## 2025
 
 - https://github.com/benjamin-rosenbaum/bayesian-intro
