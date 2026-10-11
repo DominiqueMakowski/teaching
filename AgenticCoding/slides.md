@@ -252,6 +252,57 @@ One cycle, one commit. If you can't describe the change in a commit message, the
 layout: default
 ---
 
+# Prompts & Models
+
+<div class="grid grid-cols-2 gap-8 mt-2 text-sm">
+
+<div>
+
+## Prompting
+
+<v-clicks>
+
+- **Name files by path**: `@R/clean.R` - don't make it search
+- **Point to examples**, even elsewhere: `../thesis/R/plots.R`
+- **Define "done"**: a test, an output file, a number
+- **Paste the real thing**: the full error, a plot screenshot
+- **Say what not to touch**, and *why* you want it
+- **Let it ask**: *"Ask me questions before you start."*
+
+</v-clicks>
+
+</div>
+
+<div>
+
+## Models
+
+<v-clicks>
+
+- **Big** (Opus): vague, open-ended - plans, design, odd bugs
+- **Cheap** (Sonnet, Haiku): clear tasks - *even big ones*
+- Plan with the big one, execute with the cheap one
+- Cheap model + vague task = the expensive option
+
+</v-clicks>
+
+</div>
+
+</div>
+
+<div v-click class="mt-4 text-sm">
+
+❌ *"Fix the plot."*<br>
+✅ *"In `R/plot_rt.R` the x-axis labels overlap. Rotate them like in `R/plot_acc.R`. Done = `figures/rt.png` rebuilds with no warnings."*
+
+<div class="mt-1 opacity-70">The specific prompt is what makes the cheap model good enough.</div>
+
+</div>
+
+---
+layout: default
+---
+
 # One Task, One Session
 
 <div class="text-xl mt-2 mb-4">
