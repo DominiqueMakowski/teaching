@@ -5,6 +5,12 @@ I also offer workshops to external universities (see [here for details](https://
 
 ## 2026-27
 
+
+### Psychophysiology
+
+- **Topics in Neuroscience** *(CogNeuro MSc)*
+  - [Interoception](https://dominiquemakowski.github.io/teaching/Physiology/2026_PG_TopicsNeuroscience)
+
 ### Workshops
 
 - [**Agentic Coding** *(Lab)*](https://dominiquemakowski.github.io/teaching/AgenticCoding/)

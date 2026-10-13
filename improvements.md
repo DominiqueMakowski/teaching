@@ -1,16 +1,8 @@
 # GitHub
 
-- Timing MRes workshop: 1h30 for part 1 and 2 (relatively fast paced).
 
 # Physiology
 
-- Timing "Embodied Brain" (UG)
-  - 50 min till the the how would you measure interoception break. Good how it was.
-- Timing 2025: 2h topics: had to rush through HRV part
-  - Remove ANS part
-  - OR Focus on ECG + Cardiac phase (skip ANS + HRV)
-- Multidimentional: add https://www.nature.com/articles/s44271-026-00404-z
-- Add bodily state illustration: defecation benefits on cognition: https://www.sciencedirect.com/science/article/pii/S2666337624000404
 - On Respiratory Cycles:
   - The respiratory cycle modulates distinct dynamics of affective and perceptual decision-making: https://www.researchgate.net/publication/379401636_The_respiratory_cycle_modulates_distinct_dynamics_of_affective_and_perceptual_decision-making
 - Pupil dilation and prediction error: https://www.researchgate.net/publication/385429455_Pupil_dilation_offers_a_time-window_on_prediction_error
@@ -18,7 +10,6 @@
   - https://link.springer.com/article/10.1007/s42761-022-00151-4
 - Respiration:
   - Difference between belt, Impendence pneumography (electrodes on the chest), Spirometers (air flow), Thermistors (hot air vs cold air)
-- Interoception model: Tallon -Baurdry 's two modes: information vs.coordination (TICS 2026)
 
 
 # Bayesian
@@ -41,7 +32,17 @@
 - MCSE: https://avehtari.github.io/Bayesian-Workflow/digits/digits.html
 - TODO: Add section about new sampling methods: Tempering, Bayesflow, RxInfer, Pathfinder, etc.
 - TODO: Add PriorSense: https://mc-stan.org/priorsense/reference/powerscale-sensitivity.html
+
 ## 2025
 
 - https://github.com/benjamin-rosenbaum/bayesian-intro
 - MCMC: read https://www.jeremykun.com/2015/04/06/markov-chain-monte-carlo-without-all-the-bullshit/
+
+# Timing
+
+- Timing MRes workshop: 1h30 for part 1 and 2 (relatively fast paced).
+- Timing "Embodied Brain" (UG)
+  - 50 min till the the how would you measure interoception break. Good how it was.
+- Timing 2025: 2h topics: had to rush through HRV part
+  - Remove ANS part
+  - OR Focus on ECG + Cardiac phase (skip ANS + HRV)
