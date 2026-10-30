@@ -67,7 +67,7 @@ Not autocomplete. Not a chatbot you copy-paste from.
 
 <div v-click class="mt-3 opacity-70 text-sm">
 
-**Claude Code** (used here) is Anthropic's terminal agent: running bash and editing files are part of its loop, not add-ons.
+**Claude Code** (used here) is Anthropic's agent, in the terminal or its desktop app: running commands and editing files are part of its loop, not add-ons.
 Tools differ in interface and price, far less in principle - learn the *workflow*, not the tool.
 
 </div>
@@ -150,6 +150,45 @@ Rule of thumb: if you would be uncomfortable letting the agent delete the folder
 layout: default
 ---
 
+# Environments
+
+<div class="text-xl mt-2 mb-4">
+
+In the desktop app, every session starts from an **environment**: *where* the agent runs, and *on which folder*.
+
+</div>
+
+<div class="grid grid-cols-2 gap-8 text-sm">
+
+<div>
+
+<v-clicks>
+
+- **Local**: your own machine, your own files
+- **Cloud**: Anthropic's servers - keeps going when you close the laptop, but only sees what is **pushed to GitHub**
+- **SSH**: a remote machine (a lab server, the cluster)
+- **Folders**: the project folder the session starts in - its whole world
+- **Environment variables**: API keys go *here*, not in a file that could end up on GitHub
+- **One environment per project**: pick it, start a session, nothing to set up again
+
+</v-clicks>
+
+</div>
+
+<div v-click>
+
+<img src="./img/screenshot1.png" class="h-64 mx-auto rounded shadow-lg" alt="The New environment dialog: Local, Cloud, SSH and Remote Control tabs, then name, folders and environment variables">
+
+<div class="mt-2 text-xs opacity-60"><b>Remote Control</b> is not a place: it lets you follow and steer a local session from your phone or the browser.</div>
+
+</div>
+
+</div>
+
+---
+layout: default
+---
+
 # AGENTS.md
 
 <div class="text-xl mt-2 mb-3">
@@ -165,10 +204,10 @@ A plain-markdown README **for the agent**, at the root of your project.
 <v-clicks>
 
 - Read at the start of every session: no more repeating yourself
-- The **cross-tool standard** (Codex, Cursor, Copilot...); `CLAUDE.md` for Claude Code
+- The **cross-tool standard**: Codex, Cursor, Copilot, Claude Code (it used to be named `CLAUDE.md`)
 - **Keep it under ~100 lines** - long rule sets get skimmed
 - **More than one is fine:** one per sub-folder, plus `.md` files for the details (plan, codebook, notes) that it points to
-- Paths, API keys: `CLAUDE.local.md`, **git-ignored**
+- No API keys in it: use **environment variables**
 
 </v-clicks>
 
@@ -225,7 +264,7 @@ layout: default
 
 <div class="p-4 rounded border border-amber-500 bg-amber-500 bg-opacity-5">
   <div class="text-xl font-bold text-amber-700">4. Commit</div>
-  <div class="text-xs mt-2 opacity-80">Read the <code>git diff</code> yourself, sanity-check, commit.</div>
+  <div class="text-xs mt-2 opacity-80">Read the diff yourself (<b>Changes</b> pane or <code>git diff</code>), sanity-check, commit.</div>
 </div>
 
 </div>
@@ -236,7 +275,7 @@ layout: default
 
 <div class="mt-6 p-4 border-l-4 border-blue-500 bg-blue-500 bg-opacity-10 text-sm">
 
-**Tip:** for anything non-trivial, use **Plan Mode** - it keeps the agent read-only until you approve the blueprint. Most bad sessions are skipped plans.
+**Tip:** for anything non-trivial, switch to **Plan** mode (the mode selector, or `Shift+Tab` in the terminal) - it keeps the agent read-only until you approve the blueprint. Most bad sessions are skipped plans.
 
 </div>
 
@@ -314,13 +353,40 @@ Context windows are finite, and agents get worse as they fill up.
 <v-clicks>
 
 - Every file read, command output and error trace stays in context. After ~15-20 turns the agent turns **forgetful, stubborn and expensive**
-- **The rhythm:** one task, verify, **commit**, `/clear`, next task
+- **The rhythm:** one task, verify, **commit**, **new session** (`Ctrl+N`, or `/clear` in the terminal), next task
   - ❌ *"Clean the data, run the ANOVA, make the plots and write the report."*
-  - ✅ *"Write the cleaning script."* - commit - `/clear` - *"Now the plots."*
+  - ✅ *"Write the cleaning script."* - commit - new session - *"Now the plots."*
 - A fresh session costs you nothing: `AGENTS.md` plus a clean, committed repo bring it up to speed in seconds
 - Same broken fix twice? Don't argue with it, restore from before the changes, fresh session, and rephrase
 
 </v-clicks>
+
+---
+layout: default
+---
+
+# Worktrees: One Session, One Branch
+
+<div class="text-xl mt-2 mb-4">
+
+Two sessions editing the same folder trip over each other. A worktree gives each one its own copy.
+
+</div>
+
+<v-clicks>
+
+- A **worktree** is a second checkout of your repo, on its **own branch**, sharing the same history
+- Turn on **Worktree** before you start the session (or `claude --worktree plots` in the terminal): the agent works in `.claude/worktrees/`, your folder stays untouched
+- **Parallel tasks**: the cleaning in one session, the plots in another - no collisions
+- **Free experiments**: a good result gets merged back (or opened as a PR); a bad one you just throw away, and your main branch never saw it
+
+</v-clicks>
+
+<div v-click class="mt-5 p-4 border-l-4 border-amber-500 bg-amber-500 bg-opacity-10 text-sm">
+
+**A worktree only holds what is committed.** Uncommitted changes and git-ignored files (`data/raw/`, `.env`) are *not* in it: commit first, and list the ignored files it needs in `.worktreeinclude`. Each worktree is a full copy on disk - archive the sessions you are done with.
+
+</div>
 
 
 ---
