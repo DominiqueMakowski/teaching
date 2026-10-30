@@ -42,6 +42,19 @@ routerMode: hash
 layout: default
 ---
 
+# Positionality
+
+<v-clicks>
+
+- **Pragmatic reality:** use it or be outraced
+- **General belief:** AI is good for science, bad for scientists
+
+</v-clicks>
+
+---
+layout: default
+---
+
 # What is Agentic Coding?
 
 Not autocomplete. Not a chatbot you copy-paste from.
