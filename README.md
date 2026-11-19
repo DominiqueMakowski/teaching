@@ -8,6 +8,8 @@ I also offer workshops to external universities (see [here for details](https://
 
 ### Psychophysiology
 
+- **Cognitive Neuroscience** *(Undergrad)*
+  - [The Embodied Brain](https://dominiquemakowski.github.io/teaching/Physiology/2026_UG_CognitiveNeuroscience)
 - **Topics in Neuroscience** *(CogNeuro MSc)*
   - [Interoception](https://dominiquemakowski.github.io/teaching/Physiology/2026_PG_TopicsNeuroscience)
 
@@ -15,6 +17,7 @@ I also offer workshops to external universities (see [here for details](https://
 
 - [**Agentic Coding** *(Lab)*](https://dominiquemakowski.github.io/teaching/AgenticCoding/)
 
+---
 
 ## 2025-26
 
@@ -37,12 +40,7 @@ I also offer workshops to external universities (see [here for details](https://
 
 - [**GitHub Workshop** *(MRes - 12/25)*](https://dominiquemakowski.github.io/teaching/Github/2025_MRes/)
 
-### Psychophysiology
-
-- **Cognitive Neuroscience** *(Undergrad)*
-  - [The Embodied Brain](https://dominiquemakowski.github.io/teaching/Physiology/2025_UG_CognitiveNeuroscience)
-- **Topics in Neuroscience** *(CogNeuro MSc)*
-  - [Interoception](https://dominiquemakowski.github.io/teaching/Physiology/2025_PG_TopicsNeuroscience)
+---
 
 ## 2024-25
 
@@ -85,6 +83,8 @@ I also offer workshops to external universities (see [here for details](https://
   - [The Embodied Brain](https://dominiquemakowski.github.io/teaching/Physiology/2024_UG_CognitiveNeuroscience)
 - **Topics in Neuroscience** *(CogNeuro MSc)*
   - [Interoception](https://dominiquemakowski.github.io/teaching/Physiology/2024_PG_TopicsNeuroscience)
+
+---
 
 ## 2023-24
 

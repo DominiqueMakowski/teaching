@@ -12,6 +12,8 @@
   - Difference between belt, Impendence pneumography (electrodes on the chest), Spirometers (air flow), Thermistors (hot air vs cold air)
 - New insula segmentation: https://x.com/AndrewZalesky/status/2113384416953430069
 - Gaze saccades synchronize with respiration: https://lnkd.in/p/eFzbUbGQ
+
+
 # Bayesian
 
 ## 2026
@@ -32,6 +34,7 @@
 - MCSE: https://avehtari.github.io/Bayesian-Workflow/digits/digits.html
 - TODO: Add section about new sampling methods: Tempering, Bayesflow, RxInfer, Pathfinder, etc.
 - TODO: Add PriorSense: https://mc-stan.org/priorsense/reference/powerscale-sensitivity.html
+- Extend on MCMC with a metaphor of battleship game
 
 ## 2025
 
